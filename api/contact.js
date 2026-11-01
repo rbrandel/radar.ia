@@ -78,7 +78,7 @@ module.exports = async (req, res) => {
       throw new Error('RESEND_API_KEY is not configured');
     }
 
-    const fromEmail = process.env.FROM_EMAIL || 'no-reply@seu-dominio.com';
+    const fromEmail = process.env.FROM_EMAIL || 'rbrandel@gmail.com.com';
     const toEmail = process.env.TO_EMAIL || 'rbrandel@gmail.com';
 
     const response = await fetch('https://api.resend.com/emails', {
