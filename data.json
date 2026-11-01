@@ -2,75 +2,268 @@
   "edicao": "1 de Novembro de 2026",
   "data_checagem": "2026-11-01",
   "categorias": [
-    {
-      "id": "modelos",
-      "name": "Modelos",
-      "short": "Modelos",
-      "color": "#3b82f6"
-    },
-    {
-      "id": "agentes",
-      "name": "Agentes e Assistentes",
-      "short": "Agentes",
-      "color": "#f97316"
-    },
-    {
-      "id": "voz",
-      "name": "Voz e Áudio",
-      "short": "Voz",
-      "color": "#10b981"
-    },
-    {
-      "id": "video",
-      "name": "Vídeo e Imagem",
-      "short": "Vídeo",
-      "color": "#eab308"
-    }
+    { "id": "modelos", "name": "Modelos", "short": "Modelos", "color": "#3b82f6" },
+    { "id": "agentes", "name": "Agentes e Assistentes", "short": "Agentes", "color": "#f97316" },
+    { "id": "voz", "name": "Voz e Áudio", "short": "Voz", "color": "#10b981" },
+    { "id": "video", "name": "Vídeo e Imagem", "short": "Vídeo", "color": "#eab308" }
   ],
   "perfis": [
-    {
-      "id": "todos",
-      "name": "Todos os Perfis",
-      "icon": "🌐"
-    },
-    {
-      "id": "dev",
-      "name": "Dev & Infra",
-      "icon": "👨‍💻"
-    },
-    {
-      "id": "negocios",
-      "name": "Negócios & Gestão",
-      "icon": "💼"
-    },
-    {
-      "id": "criativo",
-      "name": "Criadores & Mídia",
-      "icon": "🎨"
-    }
+    { "id": "todos", "name": "Todos os Perfis", "icon": "🌐" },
+    { "id": "dev", "name": "Dev & Infra", "icon": "👨‍💻" },
+    { "id": "negocios", "name": "Negócios & Gestão", "icon": "💼" },
+    { "id": "criativo", "name": "Criadores & Mídia", "icon": "🎨" }
   ],
-  "candidatos_semana": [],
-  "diretorios_volume": [],
-  "fontes": [],
+  "candidatos_semana": [
+    { "id": "c1", "name": "Claude Code 2.5", "org": "Anthropic", "votes": 524, "badge": "Líder Produtividade" },
+    { "id": "c2", "name": "GPT-6.1 Terra", "org": "OpenAI", "votes": 489, "badge": "Favorito Devs" },
+    { "id": "c3", "name": "Ideogram Vector 1.0", "org": "Ideogram", "votes": 312, "badge": "Inovação Design" }
+  ],
+  "diretorios_volume": [
+    { "name": "RankmyAI", "count": 63000 },
+    { "name": "Toolify.ai", "count": 26000 },
+    { "name": "TopAI.tools", "count": 19000 },
+    { "name": "There's An AI For That", "count": 12000 },
+    { "name": "PoweredbyAI", "count": 10000 },
+    { "name": "Futurepedia", "count": 5000 }
+  ],
+  "fontes": [
+    { "name": "Hugging Face Hub", "type": "API / Catálogo", "desc": "Modelos, datasets e Spaces com atualização em tempo real.", "status": "Ativo", "ok": true },
+    { "name": "Product Hunt API", "type": "GraphQL v2", "desc": "Lançamentos diários com curadoria da comunidade.", "status": "Ativo", "ok": true },
+    { "name": "OpenRouter API", "type": "API REST", "desc": "Catálogo de modelos comercializados e preços por token.", "status": "Ativo", "ok": true },
+    { "name": "BenchLM / LLM Stats", "type": "Agregador Web", "desc": "Acompanhamento diário de benchmarks e liberações.", "status": "Público", "ok": true }
+  ],
   "especialista": {
-    "nome": "",
-    "cargo": "",
-    "linkedin": "",
-    "instagram": "",
-    "email": "",
-    "bio": []
+    "nome": "Rodrigo Brandelero",
+    "cargo": "Cientista da Computação, Mestre em TIC (UFSC) & Gestor de Negócios Digitais",
+    "linkedin": "https://www.linkedin.com/in/rodrigo-brandelero/",
+    "instagram": "https://www.instagram.com/rodrigobrandelero.ia/",
+    "email": "rbrandel@gmail.com",
+    "bio": [
+      "Há 30 anos vivo na linha de frente onde a educação encontra a tecnologia e a gestão de negócios.",
+      "Como cientista da computação e mestre em TIC (UFSC), dedico minha trajetória a traduzir inovações em competitividade real.",
+      "Atualmente desenvolvo o projeto autoral 'Bytes de Memória', conectando evolução tecnológica ao Futuro do Trabalho."
+    ]
   },
   "lancamentos": [
     {
       "d": "2026-11-01",
-      "n": "Nome do Modelo ou Ferramenta",
-      "o": "Empresa / Laboratório",
+      "n": "Claude Code 2.5 CLI",
+      "o": "Anthropic",
+      "c": "agentes",
+      "p": "dev",
+      "l": "proprietario",
+      "s": "Orquestrador de agentes de terminal integrado com MCP nativo e automações de terminal para produtividade.",
+      "a": "Aumenta velocidade de execução e automação direta no ambiente de desenvolvimento.",
+      "t": "Use para orquestrar tarefas em terminal, validação de código e automação de fluxos dev."
+    },
+    {
+      "d": "2026-10-27",
+      "n": "Agent Tree",
+      "o": "Não informada",
       "c": "agentes",
       "p": "dev",
       "l": "aberto",
-      "s": "Resumo objetivo da novidade técnica ou funcional em até duas frases.",
-      "a": "O principal benefício ou ganho direto de produtividade.",
-      "t": "Dica prática de como aplicar no dia a dia ou comando de uso."
+      "s": "Monitor em terminal, de código aberto, que mostra ao vivo a árvore de tarefas e execução de agentes.",
+      "a": "Melhora observabilidade e debugging de workflows multiagente.",
+      "t": "Aplique em ambientes de agentes, testes e acompanhamento de execução em tempo real."
+    },
+    {
+      "d": "2026-10-27",
+      "n": "Identidade e Controle para Agentes",
+      "o": "IBM",
+      "c": "agentes",
+      "p": "negocios",
+      "l": "proprietario",
+      "s": "Soluções para autenticar, identificar e controlar agentes em ambientes corporativos.",
+      "a": "Garante governança e segurança para automações com múltiplos agentes.",
+      "t": "Use para auditar permissões, identidade e fluxos de decisão em operações corporativas."
+    },
+    {
+      "d": "2026-10-26",
+      "n": "GPT-6.1 Terra",
+      "o": "OpenAI",
+      "c": "modelos",
+      "p": "dev",
+      "l": "proprietario",
+      "s": "Modelo da OpenAI pensado para ser mais rápido e econômico em visão, escrita e raciocínio multimodal.",
+      "a": "Reduz custo e latência mantendo bom nível de qualidade em uso prático.",
+      "t": "Ideal para copilots, análise de documentos e suporte operacional com visão."
+    },
+    {
+      "d": "2026-10-26",
+      "n": "Bubble Agent 2 e Bubble MCP",
+      "o": "Bubble",
+      "c": "agentes",
+      "p": "dev",
+      "l": "proprietario",
+      "s": "Agente de IA da Bubble reconstruído com integração MCP em beta para fluxos de desenvolvimento.",
+      "a": "Simplifica integração com ferramentas e contextos externos em apps produtivos.",
+      "t": "Use para conectar IA a plataformas internas com automação contextual."
+    },
+    {
+      "d": "2026-10-26",
+      "n": "Joule Work e Joule Studio",
+      "o": "SAP",
+      "c": "agentes",
+      "p": "negocios",
+      "l": "proprietario",
+      "s": "Expansão do assistente Joule com agentes para execução de fluxos de trabalho e automação de processos.",
+      "a": "Ajuda empresas a transformar processos internos em automações com menor fricção.",
+      "t": "Aplicável em operações, vendas, compras e suporte interno com supervisão humana."
+    },
+    {
+      "d": "2026-10-26",
+      "n": "Siri com IA em novos idiomas",
+      "o": "Apple",
+      "c": "agentes",
+      "p": "negocios",
+      "l": "proprietario",
+      "s": "Atualização de iOS/macOS que amplia suporte de linguagem para francês, japonês e coreano com IA assistida.",
+      "a": "Expande adoção de assistentes em uso cotidiano para mercados internacionais.",
+      "t": "Use para validar experiência de voz em contexto global e acessibilidade."
+    },
+    {
+      "d": "2026-10-24",
+      "n": "Doubao-Seedance-1.0-pro-fast",
+      "o": "ByteDance",
+      "c": "video",
+      "p": "criativo",
+      "l": "proprietario",
+      "s": "Modelo de vídeo no Volcano Ark, até 3x mais rápido que versões anteriores em geração de vídeo.",
+      "a": "Acelera criação de vídeos de alta qualidade para marketing e comunicação.",
+      "t": "Útil para campanhas, protótipos visuais e produção criativa de conteúdo."
+    },
+    {
+      "d": "2026-10-24",
+      "n": "Agensh",
+      "o": "Microsoft Research",
+      "c": "agentes",
+      "p": "dev",
+      "l": "aberto",
+      "s": "Estrutura de código aberto para coordenar até 1.024 agentes em execução distribuída.",
+      "a": "Ajuda a escalar experimentos e sistemas multiagente com arquitetura mais previsível.",
+      "t": "Use para simulação, orquestração e testes de agentes colaborativos."
+    },
+    {
+      "d": "2026-10-23",
+      "n": "Kimi K3.1 Pro",
+      "o": "Moonshot AI",
+      "c": "modelos",
+      "p": "dev",
+      "l": "proprietario",
+      "s": "Modelo de 3 trilhões de parâmetros com janela de 1 milhão de tokens e foco em inferência robusta.",
+      "a": "Permite maior contexto e melhor qualidade em tarefas longas e complexas.",
+      "t": "Bom para conhecimento profundo, revisão extensa e raciocínio longo."
+    },
+    {
+      "d": "2026-10-23",
+      "n": "Nemotron 3.5 Bolt E4B 4GB",
+      "o": "NVIDIA",
+      "c": "modelos",
+      "p": "dev",
+      "l": "aberto",
+      "s": "Modelo pequeno de ~4B parâmetros para agentes de conversa locais, com eficiência para execução em hardware moderado.",
+      "a": "Permite rodar IA localmente com melhor custo/benefício.",
+      "t": "Ótimo para infra local, agentes e aplicação interna sem depender de nuvem."
+    },
+    {
+      "d": "2026-10-23",
+      "n": "Dessa",
+      "o": "Block",
+      "c": "voz",
+      "p": "negocios",
+      "l": "proprietario",
+      "s": "Modelo de fala treinado diretamente em conversas humanas sem conversão para texto, melhorando naturalidade.",
+      "a": "Aumenta qualidade de voz e compreensão contextual de conversas reais.",
+      "t": "Útil para atendimento, call center e assistentes de voz com mais naturalidade."
+    },
+    {
+      "d": "2026-10-23",
+      "n": "Experiência Unificada do Claude",
+      "o": "Anthropic",
+      "c": "agentes",
+      "p": "negocios",
+      "l": "proprietario",
+      "s": "Unifica chat e execução de tarefas na nuvem em um mesmo ambiente de agente.",
+      "a": "Reduz atrito entre conversa, ação e ferramentas internas.",
+      "t": "Use para ambientes de produtividade e automação com supervisão humana."
+    },
+    {
+      "d": "2026-10-23",
+      "n": "TanStack AI 1.0",
+      "o": "TanStack",
+      "c": "agentes",
+      "p": "dev",
+      "l": "aberto",
+      "s": "Versão estável do kit para criar agentes, subagentes e fluxos de programação e automação.",
+      "a": "Facilita construção de agentes em desenvolvimento de software e operação.",
+      "t": "Use para prototipar agentes de desenvolvimento e apoio de código."
+    },
+    {
+      "d": "2026-10-22",
+      "n": "1Password for Agents",
+      "o": "1Password",
+      "c": "agentes",
+      "p": "negocios",
+      "l": "proprietario",
+      "s": "Camada de login que permite a agentes de IA aprovados autenticar e acessar sistemas sensíveis com segurança.",
+      "a": "Melhora governança e segurança para IA em ambientes corporativos.",
+      "t": "Aplicável em automação com acesso a credenciais, integrações e ferramentas críticas."
+    },
+    {
+      "d": "2026-10-22",
+      "n": "VideoGen Model 1",
+      "o": "VideoGen",
+      "c": "video",
+      "p": "criativo",
+      "l": "proprietario",
+      "s": "Primeiro modelo proprietário capaz de gerar vídeos multi-cena em alta qualidade com duração estendida.",
+      "a": "Acelera criação de peças visuais com narrativa e contexto mais complexos.",
+      "t": "Útil para campanhas, vídeos promocionais e conteúdo criativo de marketing."
+    },
+    {
+      "d": "2026-10-22",
+      "n": "Ideogram Vector 1.0",
+      "o": "Ideogram",
+      "c": "video",
+      "p": "criativo",
+      "l": "proprietario",
+      "s": "Gera arquivos vetoriais SVG totalmente editáveis a partir de texto, com design gráfico refinado.",
+      "a": "Acelera produção de ilustrações, identidade visual e elementos criativos.",
+      "t": "Ótimo para design, branding e geração de ativos visuais editáveis."
+    },
+    {
+      "d": "2026-10-21",
+      "n": "Claude Duet",
+      "o": "Anthropic",
+      "c": "agentes",
+      "p": "negocios",
+      "l": "proprietario",
+      "s": "Aplicativo de agente proativo construído sobre o Claude Opus 5.5 para tarefas de escritório e execução.",
+      "a": "Eleva produtividade em tarefas do dia a dia com automação inteligente.",
+      "t": "Use para suporte executivo, organização e operações de rotina."
+    },
+    {
+      "d": "2026-10-21",
+      "n": "ElevenLabs Chimera",
+      "o": "ElevenLabs",
+      "c": "voz",
+      "p": "criativo",
+      "l": "proprietario",
+      "s": "Nova plataforma unificada para fluxos de trabalho combinados de voz e IA em múltiplos formatos.",
+      "a": "Permite criar experiências de voz mais ricas e personalizadas.",
+      "t": "Aplicável em locuções, narração, assistentes e educação digital."
+    },
+    {
+      "d": "2026-10-17",
+      "n": "DeepSeek V4.1 Flash",
+      "o": "DeepSeek",
+      "c": "modelos",
+      "p": "dev",
+      "l": "aberto",
+      "s": "Versão otimizada de alta velocidade do DeepSeek V4.1 com licença aberta e foco em desempenho.",
+      "a": "Reduz custo operacional e aumenta velocidade de inferência.",
+      "t": "Bom para implantação em ambientes de desenvolvimento, suporte e automação."
     }
   ]
 }
