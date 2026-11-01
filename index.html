@@ -75,7 +75,7 @@
                             Radar de IA
                         </h1>
                         <p class="text-xs text-slate-400 font-mono-code">
-                            Edição <span id="headerEdicao">27 de Outubro de 2026</span> • Por <span id="headerAutor">Rodrigo Brandelero</span>
+                            Edição <span id="headerEdicao">1 de Novembro de 2026</span> • Por <span id="headerAutor">Rodrigo Brandelero</span>
                         </p>
                     </div>
                 </div>
@@ -596,8 +596,8 @@
     <script>
         // Dados Padrão de Fallback (Caso fetch falhe ou aberto localmente via file://)
         const DEFAULT_APP_DATA = {
-            "edicao": "27 de Outubro de 2026",
-            "data_checagem": "2026-10-27",
+            "edicao": "1 de Novembro de 2026",
+            "data_checagem": "2026-11-01",
             "categorias": [
                 { "id": "modelos", "name": "Modelos", "short": "Modelos", "color": "#3b82f6" },
                 { "id": "agentes", "name": "Agentes e Assistentes", "short": "Agentes", "color": "#f97316" },
@@ -611,9 +611,9 @@
                 { "id": "criativo", "name": "Criadores & Mídia", "icon": "🎨" }
             ],
             "candidatos_semana": [
-                { "id": "c1", "name": "GPT-6.1 Terra", "org": "OpenAI", "votes": 412, "badge": "Líder Produtividade" },
-                { "id": "c2", "name": "Agent Tree", "org": "Comunidade Open", "votes": 389, "badge": "Favorito Devs" },
-                { "id": "c3", "name": "Ideogram Vector 1.0", "org": "Ideogram", "votes": 275, "badge": "Inovação Design" }
+                { "id": "c1", "name": "Claude Code 2.5", "org": "Anthropic", "votes": 524, "badge": "Líder Produtividade" },
+                { "id": "c2", "name": "GPT-6.1 Terra", "org": "OpenAI", "votes": 489, "badge": "Favorito Devs" },
+                { "id": "c3", "name": "Ideogram Vector 1.0", "org": "Ideogram", "votes": 312, "badge": "Inovação Design" }
             ],
             "diretorios_volume": [
                 { "name": "RankmyAI", "count": 63000 },
@@ -642,8 +642,8 @@
                 ]
             },
             "lancamentos": [
+                { "d": "2026-11-01", "n": "Claude Code 2.5 CLI", "o": "Anthropic", "c": "agentes", "p": "dev", "l": "proprietario", "s": "Orquestrador de agentes de terminal integrado com MCP nativo e suporte a execução paralela de testes unitários.", "a": "Acelera a refatoração e testes de código em até 3x.", "t": "Execute com claude --agent-mode em repositórios grandes para análise automatizada." },
                 { "d": "2026-10-27", "n": "Agent Tree", "o": "Não informada", "c": "agentes", "p": "dev", "l": "aberto", "s": "Monitor em terminal, de código aberto, que mostra ao vivo a árvore de tarefas e as ramificações de decisão de fluxos de agentes do Claude Code.", "a": "Mostra o que cada agente está fazendo enquanto trabalha.", "t": "Use em tarefas longas com vários agentes, para achar rápido onde um fluxo travou." },
-                { "d": "2026-10-27", "n": "Identidade e Controle para Agentes", "o": "IBM", "c": "agentes", "p": "negocios", "l": "proprietario", "s": "Soluções para descobrir agentes, verificar identidades, controlar acessos e avaliar o desempenho de agentes em sistemas corporativos.", "a": "Dá a cada agente uma identidade verificável e regras de acesso.", "t": "Para quem já tem agentes em uso: comece listando quais agentes existem e o que cada um acessa." },
                 { "d": "2026-10-26", "n": "GPT-6.1 Terra", "o": "OpenAI", "c": "modelos", "p": "dev", "l": "proprietario", "s": "Modelo da OpenAI pensado para ser mais rápido e econômico em visão, escrita, programação e uso de computador. Está na API como gpt-6.1-terra.", "a": "Corte de 50% no preço da API para fluxos de agentes que usam computador.", "t": "Rode seus fluxos de agente atuais com o novo modelo e compare custo e taxa de acerto." }
             ]
         };
@@ -694,7 +694,7 @@
         }
 
         function initAppState() {
-            state.selectedDay = appData.data_checagem || "2026-10-27";
+            state.selectedDay = appData.data_checagem || "2026-11-01";
             state.selectedItem = appData.lancamentos[0] || null;
 
             document.getElementById('headerEdicao').textContent = appData.edicao || "";
@@ -833,7 +833,7 @@
 
         function renderKPIs() {
             const filtered = getFilteredData();
-            const refDate = new Date(appData.data_checagem || "2026-10-27");
+            const refDate = new Date(appData.data_checagem || "2026-11-01");
             
             const last7 = filtered.filter(i => {
                 const diff = (refDate - new Date(i.d)) / (1000 * 60 * 60 * 24);
@@ -920,7 +920,7 @@
             ctx.fillText('VÍDEO / IMG', cx + maxR - 65, cy + maxR - 10);
 
             const filtered = getFilteredData();
-            const refDate = new Date(appData.data_checagem || "2026-10-27");
+            const refDate = new Date(appData.data_checagem || "2026-11-01");
             
             filtered.forEach((item, index) => {
                 const daysDiff = (refDate - new Date(item.d)) / (1000 * 60 * 60 * 24);
@@ -1011,7 +1011,7 @@
             ctx.clearRect(0, 0, width, height);
 
             const days = [];
-            const refDate = new Date(appData.data_checagem || "2026-10-27");
+            const refDate = new Date(appData.data_checagem || "2026-11-01");
             
             for (let i = 14; i >= 0; i--) {
                 const d = new Date(refDate);
@@ -1301,7 +1301,7 @@
                 const clickX = e.clientX - rect.left;
 
                 const days = [];
-                const refDate = new Date(appData.data_checagem || "2026-10-27");
+                const refDate = new Date(appData.data_checagem || "2026-11-01");
                 
                 for (let i = 14; i >= 0; i--) {
                     const d = new Date(refDate);
