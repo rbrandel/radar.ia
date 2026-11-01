@@ -2,7 +2,7 @@
 """
 Script de Atualização Semanal - Radar de IA
 Autor: Rodrigo Brandelero
-Uso: python3 mesclar.py novos-2026-11-03.json
+Uso: python3 mesclar.py novos-2026-11-01.json
 
 Executa a mesclagem dos novos lançamentos ao `data.json`, valida campos obrigatórios,
 muda a data de checagem, arquiva lançamentos antigos (>21 dias) e gera estatísticas.
@@ -45,7 +45,7 @@ def validate_item(item, index):
 def main():
     if len(sys.argv) < 2:
         print("❌ Erro: Informe o arquivo com os novos lançamentos.")
-        print("   Exemplo: python3 mesclar.py novos-2026-11-03.json")
+        print("   Exemplo: python3 mesclar.py novos-2026-11-01.json")
         sys.exit(1)
 
     new_file = sys.argv[1]
