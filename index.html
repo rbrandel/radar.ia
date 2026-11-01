@@ -10,7 +10,7 @@
             style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
             img-src 'self' data: https:;
             font-src 'self' https://fonts.gstatic.com data:;
-            connect-src 'self' https://api.resend.com;
+            connect-src 'self' https://formspree.io;
           ">
     <title>Radar de IA | Plataforma de Inteligência e Lançamentos</title>
 
@@ -372,32 +372,37 @@
                                     <span class="text-[10px] text-emerald-400 font-mono-code bg-emerald-950/80 border border-emerald-800 px-2.5 py-1 rounded-lg hidden sm:block">⚡ Resposta Rápida</span>
                                 </div>
 
-                                <form id="contactForm" class="space-y-3" novalidate>
+                                <form id="contactForm" action="https://formspree.io/f/SEU_ID" method="POST" class="space-y-3" novalidate>
                                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                         <div>
                                             <label for="contactName" class="block text-xs text-slate-300 font-mono-code mb-1">Seu Nome *</label>
-                                            <input type="text" id="contactName" name="name" required autocomplete="name" maxlength="120" placeholder="Ex: Roberto Silva" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition-colors">
+                                            <input type="text" id="contactName" name="name" required autocomplete="name" maxlength="120" placeholder="Ex: Roberto Silva"
+                                                class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition-colors">
                                         </div>
 
                                         <div>
                                             <label for="contactEmail" class="block text-xs text-slate-300 font-mono-code mb-1">Seu E-mail *</label>
-                                            <input type="email" id="contactEmail" name="email" required autocomplete="email" maxlength="160" placeholder="Ex: roberto@empresa.com" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition-colors">
+                                            <input type="email" id="contactEmail" name="email" required autocomplete="email" maxlength="160" placeholder="Ex: roberto@empresa.com"
+                                                class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition-colors">
                                         </div>
                                     </div>
 
                                     <div>
                                         <label for="contactWhats" class="block text-xs text-slate-300 font-mono-code mb-1">Contato WhatsApp *</label>
-                                        <input type="tel" id="contactWhats" name="whatsapp" required autocomplete="tel" maxlength="30" placeholder="Ex: (48) 99999-8888" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition-colors">
+                                        <input type="tel" id="contactWhats" name="whatsapp" required autocomplete="tel" maxlength="30" placeholder="Ex: (48) 99999-8888"
+                                            class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition-colors">
                                     </div>
 
                                     <div>
                                         <label for="contactMsg" class="block text-xs text-slate-300 font-mono-code mb-1">Mensagem ou Assunto</label>
-                                        <textarea id="contactMsg" name="message" rows="4" maxlength="2000" placeholder="Como posso ajudar em seu projeto de IA?" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition-colors resize-none"></textarea>
+                                        <textarea id="contactMsg" name="message" rows="4" maxlength="2000" placeholder="Como posso ajudar em seu projeto de IA?"
+                                            class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition-colors resize-none"></textarea>
                                     </div>
 
                                     <div class="flex items-center justify-between pt-1">
                                         <span class="text-[10px] text-slate-500 font-mono-code">* Seus dados são confidenciais.</span>
-                                        <button type="submit" id="contactSubmitBtn" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs transition-colors flex items-center gap-1.5 shadow-lg shadow-indigo-600/20 disabled:opacity-60 disabled:cursor-not-allowed">
+                                        <button type="submit" id="contactSubmitBtn"
+                                            class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs transition-colors flex items-center gap-1.5 shadow-lg shadow-indigo-600/20 disabled:opacity-60 disabled:cursor-not-allowed">
                                             <span>📩</span>
                                             <span>Enviar Contato</span>
                                         </button>
@@ -1147,25 +1152,23 @@
                     submitBtn.innerHTML = '<span>⏳</span><span>Enviando...</span>';
 
                     try {
-                        const response = await fetch('/api/contact', {
+                        const response = await fetch(form.action, {
                             method: 'POST',
                             headers: {
-                                'Content-Type': 'application/json',
                                 'Accept': 'application/json'
                             },
-                            body: JSON.stringify(formData)
+                            body: new FormData(form)
                         });
 
-                        const data = await response.json().catch(() => ({}));
-
                         if (!response.ok) {
-                            throw new Error(data.error || 'Erro ao enviar mensagem.');
+                            throw new Error('Erro no envio do formulário.');
                         }
 
                         form.reset();
                         successMsg.classList.remove('hidden');
                         errorMsg.classList.add('hidden');
                         setTimeout(() => successMsg.classList.add('hidden'), 5000);
+
                     } catch (error) {
                         console.error(error);
                         errorMsg.classList.remove('hidden');
