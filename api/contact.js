@@ -1,75 +1,85 @@
-const { readFileSync } = require('fs');
-
-const getBody = async (req) => {
-  const chunks = [];
-  for await (const chunk of req) chunks.push(Buffer.from(chunk));
-  const body = Buffer.concat(chunks).toString('utf8');
-  if (!body) return {};
-
-  try {
-    return JSON.parse(body);
-  } catch (error) {
-    return {};
-  }
-};
-
-function sanitizeText(value, maxLength = 2000) {
-  return String(value ?? '')
-    .replace(/[<>]/g, '')
-    .replace(/\s+/g, ' ')
-    .trim()
-    .slice(0, maxLength);
-}
-
-function normalizePhone(value) {
-  return String(value ?? '')
-    .replace(/[^\d+\-\s()]/g, '')
-    .trim();
-}
-
-function validateEmail(email) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email).trim());
-}
-
 module.exports = async (req, res) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  const setJson = (statusCode, payload) => {
+    res.statusCode = statusCode;
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.end(JSON.stringify(payload));
+  };
 
   if (req.method === 'OPTIONS') {
-    res.statusCode = 200;
-    res.end(JSON.stringify({ ok: true }));
+    setJson(200, { ok: true });
     return;
   }
 
   if (req.method !== 'POST') {
-    res.statusCode = 404;
-    res.end(JSON.stringify({ error: 'Not found' }));
+    setJson(404, { error: 'Not found' });
     return;
   }
 
   try {
-    const body = await getBody(req);
+    let body = {};
+    if (req.body) {
+      if (typeof req.body === 'string') {
+        try {
+          body = JSON.parse(req.body);
+        } catch (error) {
+          body = {};
+        }
+      } else if (typeof req.body === 'object') {
+        body = req.body;
+      }
+    } else {
+      const chunks = [];
+      for await (const chunk of req) {
+        chunks.push(Buffer.from(chunk));
+      }
+      const raw = Buffer.concat(chunks).toString('utf8');
+      if (raw) {
+        try {
+          body = JSON.parse(raw);
+        } catch (error) {
+          body = {};
+        }
+      }
+    }
+
+    const sanitizeText = (value, maxLength = 2000) => {
+      return String(value ?? '')
+        .replace(/[<>]/g, '')
+        .replace(/\s+/g, ' ')
+        .trim()
+        .slice(0, maxLength);
+    };
+
+    const normalizePhone = (value) => {
+      return String(value ?? '')
+        .replace(/[^\d+\-\s()]/g, '')
+        .trim();
+    };
+
+    const validateEmail = (email) => {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email).trim());
+    };
+
     const name = sanitizeText(body.name, 120);
     const email = sanitizeText(body.email, 160).toLowerCase();
     const whatsapp = normalizePhone(body.whatsapp);
     const message = sanitizeText(body.message, 2000);
 
     if (!name || !email || !whatsapp) {
-      res.statusCode = 400;
-      res.end(JSON.stringify({ error: 'Campos obrigatórios faltando.' }));
+      setJson(400, { error: 'Campos obrigatórios faltando.' });
       return;
     }
 
     if (!validateEmail(email)) {
-      res.statusCode = 400;
-      res.end(JSON.stringify({ error: 'E-mail inválido.' }));
+      setJson(400, { error: 'E-mail inválido.' });
       return;
     }
 
     if (whatsapp.length < 8) {
-      res.statusCode = 400;
-      res.end(JSON.stringify({ error: 'WhatsApp inválido.' }));
+      setJson(400, { error: 'WhatsApp inválido.' });
       return;
     }
 
@@ -104,15 +114,15 @@ module.exports = async (req, res) => {
     });
 
     if (!response.ok) {
-      const text = await response.text();
-      throw new Error(text || 'Resend request failed');
+      const errorText = await response.text();
+      throw new Error(errorText || 'Resend request failed');
     }
 
-    res.statusCode = 200;
-    res.end(JSON.stringify({ ok: true, message: 'Mensagem enviada com sucesso.' }));
+    setJson(200, { ok: true, message: 'Mensagem enviada com sucesso.' });
   } catch (error) {
-    console.error('Contact function error:', error);
-    res.statusCode = 500;
-    res.end(JSON.stringify({ error: error.message || 'Não foi possível enviar o e-mail.' }));
+    console.error('Contact API error:', error);
+    setJson(500, {
+      error: error.message || 'Não foi possível enviar o e-mail.'
+    });
   }
 };
