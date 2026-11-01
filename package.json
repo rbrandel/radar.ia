@@ -1,0 +1,12 @@
+{
+  "name": "radar-ia",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "resend": "^4.0.0"
+  }
+}
