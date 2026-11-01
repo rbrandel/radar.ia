@@ -1,0 +1,76 @@
+{
+  "edicao": "1 de Novembro de 2026",
+  "data_checagem": "2026-11-01",
+  "categorias": [
+    {
+      "id": "modelos",
+      "name": "Modelos",
+      "short": "Modelos",
+      "color": "#3b82f6"
+    },
+    {
+      "id": "agentes",
+      "name": "Agentes e Assistentes",
+      "short": "Agentes",
+      "color": "#f97316"
+    },
+    {
+      "id": "voz",
+      "name": "Voz e Áudio",
+      "short": "Voz",
+      "color": "#10b981"
+    },
+    {
+      "id": "video",
+      "name": "Vídeo e Imagem",
+      "short": "Vídeo",
+      "color": "#eab308"
+    }
+  ],
+  "perfis": [
+    {
+      "id": "todos",
+      "name": "Todos os Perfis",
+      "icon": "🌐"
+    },
+    {
+      "id": "dev",
+      "name": "Dev & Infra",
+      "icon": "👨‍💻"
+    },
+    {
+      "id": "negocios",
+      "name": "Negócios & Gestão",
+      "icon": "💼"
+    },
+    {
+      "id": "criativo",
+      "name": "Criadores & Mídia",
+      "icon": "🎨"
+    }
+  ],
+  "candidatos_semana": [],
+  "diretorios_volume": [],
+  "fontes": [],
+  "especialista": {
+    "nome": "",
+    "cargo": "",
+    "linkedin": "",
+    "instagram": "",
+    "email": "",
+    "bio": []
+  },
+  "lancamentos": [
+    {
+      "d": "2026-11-01",
+      "n": "Nome do Modelo ou Ferramenta",
+      "o": "Empresa / Laboratório",
+      "c": "agentes",
+      "p": "dev",
+      "l": "aberto",
+      "s": "Resumo objetivo da novidade técnica ou funcional em até duas frases.",
+      "a": "O principal benefício ou ganho direto de produtividade.",
+      "t": "Dica prática de como aplicar no dia a dia ou comando de uso."
+    }
+  ]
+}
