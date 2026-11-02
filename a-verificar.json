@@ -1,0 +1,14 @@
+[
+  {
+    "d": "2026-11-01",
+    "n": "Claude Code 2.5 CLI",
+    "o": "Anthropic",
+    "c": "agentes",
+    "p": "dev",
+    "l": "proprietario",
+    "s": "Orquestrador de agentes de terminal integrado com MCP nativo e automações de terminal para produtividade.",
+    "a": "Aumenta velocidade de execução e automação direta no ambiente de desenvolvimento.",
+    "t": "Use para orquestrar tarefas em terminal, validação de código e automação de fluxos dev.",
+    "_aviso": "Removido do data.json em 01/11/2026: não encontrei fonte para \"Claude Code 2.5 CLI\". Confirme em uma fonte oficial, preencha \"f\" com {\"n\": nome, \"u\": endereço} e mova para um novos-AAAA-MM-DD.json."
+  }
+]

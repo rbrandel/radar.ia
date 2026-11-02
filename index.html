@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com data:; connect-src 'self' https://formspree.io https://*.supabase.co; form-action https://formspree.io; base-uri 'self'; object-src 'none'">
+    <meta name="theme-color" content="#020617">
+    <meta name="color-scheme" content="dark">
+    <meta name="description" content="Radar de IA: painel semanal com os lançamentos de inteligência artificial por categoria, com resumo, vantagem, dica de uso e fonte em cada cartão.">
+    <title>Radar de IA | Plataforma de Inteligência e Lançamentos</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+        body {
+            font-family: 'Instrument Sans', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        h1, h2, h3, .font-display {
+            font-family: 'Bricolage Grotesque', sans-serif;
+        }
+        .font-mono-code {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        :focus-visible { outline: 2px solid #a5b4fc; outline-offset: 2px; }
+        @media (prefers-reduced-motion: reduce) {
+            .animate-pulse { animation: none; }
+            * { transition-duration: 0.01ms !important; }
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between selection:bg-indigo-500 selection:text-white">
+    <a href="#conteudo" class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:bg-white focus:text-slate-950 focus:px-3 focus:py-2 focus:rounded-lg">Ir para o conteúdo</a>
+    <noscript><p class="p-4 text-center text-slate-300">O Radar de IA precisa de JavaScript para mostrar os lançamentos.</p></noscript>
+
+
+    <div class="pb-28">
+        <header class="border-b border-slate-800 bg-slate-950/90 backdrop-blur-md sm:sticky sm:top-0 z-30">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                    <button type="button" data-go="panorama" aria-label="Ir para o panorama" class="h-11 w-11 rounded-xl bg-gradient-to-br from-indigo-500 via-purple-500 to-emerald-500 flex items-center justify-center text-white font-bold">
+                        📡
+                    </button>
+                    <div>
+                        <h1 class="text-xl sm:text-2xl font-extrabold tracking-tight text-white">
+                            Radar de IA
+                        </h1>
+                        <p class="text-xs text-slate-400 font-mono-code">
+                            Edição <span id="headerEdicao">1 de Novembro de 2026</span> • Por <span id="headerAutor">Rodrigo Brandelero</span>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <button type="button" data-go="metodologia" class="hidden sm:flex items-center gap-1.5 text-xs font-medium bg-slate-900 hover:bg-slate-800 border border-slate-800 px-3 py-1.5 min-h-[44px] rounded-xl text-slate-200">
+                        <span>📐</span>
+                        <span>Metodologia</span>
+                    </button>
+                    <button type="button" data-go="sobre" class="hidden sm:flex items-center gap-1.5 text-xs font-medium bg-indigo-950 hover:bg-indigo-900 border border-indigo-800/80 px-3 py-1.5 min-h-[44px] rounded-xl text-indigo-100">
+                        <span>👤</span>
+                        <span>Especialista</span>
+                    </button>
+                    <div id="dataSyncBadge" class="flex items-center gap-1.5 text-xs font-mono-code bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-lg text-slate-300">
+                        <span class="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                        <span id="syncText" role="status">Carregando dados...</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div id="filterBar" class="sm:sticky sm:top-[61px] z-20 bg-slate-950/95 border-b border-slate-800/80 backdrop-blur-md space-y-2 py-2.5">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6">
+                <div class="flex items-center justify-between gap-2">
+                    <div id="categoryChips" class="flex items-center gap-2 overflow-x-auto no-scrollbar py-0.5"></div>
+                </div>
+
+                <div class="flex items-center gap-2 pt-2 border-t border-slate-800/50 overflow-x-auto no-scrollbar text-xs">
+                    <span class="text-slate-400 font-mono-code text-xs uppercase tracking-wider whitespace-nowrap">Foco Profissional:</span>
+                    <div id="profileChips" class="flex items-center gap-1.5"></div>
+                </div>
+            </div>
+        </div>
+
+        <main id="conteudo" tabindex="-1" class="max-w-6xl mx-auto px-4 sm:px-6 pt-6 focus:outline-none">
+            <section id="view-panorama" class="space-y-6">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                    <div class="lg:col-span-7 bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6 space-y-4 shadow-xl">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                            <div>
+                                <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400 text-xs font-mono-code font-semibold border border-indigo-500/20">
+                                    <span>🎯</span> Visão Expandida • Últimos <span data-window>21</span> Dias
+                                </div>
+                                <h2 class="text-lg sm:text-xl font-bold text-white">Radar Espacial de Lançamentos</h2>
+                                <p class="text-xs text-slate-400 mt-0.5">Mapeamento por categoria e recência (janela móvel de <span data-window>21</span> dias).</p>
+                            </div>
+                            <div class="flex items-center gap-1.5 text-xs text-slate-400 font-mono-code bg-slate-950 px-2.5 py-1 rounded-lg border border-slate-800 self-start sm:self-auto">
+                                <span>💡 Toque nos pontos</span>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-center my-3">
+                            <div class="relative w-full max-w-[440px] aspect-square">
+                                <canvas id="radarCanvas" tabindex="0" role="img" aria-label="Radar de lançamentos por categoria e recência. Toque em um ponto para ver o lançamento; com teclado, use as setas." class="w-full h-full cursor-pointer rounded-2xl bg-slate-950/70 border border-slate-800 shadow-inner"></canvas>
+                            </div>
+                        </div>
+
+                        <div id="radarReadout" class="bg-slate-950 border border-slate-800/90 rounded-xl p-4 space-y-3 min-h-[140px] flex flex-col justify-between shadow-inner"></div>
+                    </div>
+
+                    <div class="lg:col-span-5 bg-gradient-to-b from-indigo-950/70 via-slate-900 to-slate-900 border border-indigo-500/30 rounded-2xl p-5 shadow-xl shadow-indigo-950/20 space-y-5">
+                        <div class="space-y-3 border-b border-slate-800/80 pb-4">
+                            <div class="flex items-center justify-between gap-2">
+                                <span class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-500/30 flex items-center gap-1">
+                                    <span>🏆</span> IA da Semana
+                                </span>
+                                <span id="cycleLabel" class="text-xs text-slate-400 font-mono-code">Edição Ativa</span>
+                            </div>
+
+                            <div id="topWinnerCard" class="space-y-1.5"></div>
+
+                            <div id="topWinnerScores"></div>
+                        </div>
+
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between">
+                                <h3 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
+                                    <span>🗳️</span> Vote na Melhor IA
+                                </h3>
+                                <span id="votingScope" class="text-xs text-slate-400 font-mono-code">Enquete neste aparelho</span>
+                            </div>
+
+                            <div id="votingCandidatesList" class="space-y-2"></div>
+
+                            <p id="votingNote" class="text-xs text-slate-400 text-center font-mono-code pt-1">Seu voto fica salvo só neste aparelho e não entra em ranking.</p>
+                            <p id="votingStatus" role="status" aria-live="polite" class="text-xs text-amber-300 text-center font-mono-code empty:hidden"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="kpiContainer" class="grid grid-cols-2 md:grid-cols-4 gap-3"></div>
+
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6 space-y-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <div>
+                            <h2 class="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
+                                <span>📈</span> Volume Diário dos Últimos <span data-window>21</span> Dias
+                            </h2>
+                            <p class="text-xs sm:text-sm text-slate-400">Distribuição diária detalhada de anúncios de IA para melhor análise visual.</p>
+                        </div>
+                        <div class="text-xs font-mono-code text-indigo-400 bg-indigo-950/60 border border-indigo-800/60 px-3 py-1 rounded-lg self-start sm:self-auto">
+                            <span>📅 Janela: <span data-window>21</span> Dias</span>
+                        </div>
+                    </div>
+
+                    <div class="w-full h-60 relative">
+                        <canvas id="dailyCanvas" role="img" aria-label="Gráfico de barras com o volume diário de lançamentos." class="w-full h-full cursor-pointer"></canvas>
+                    </div>
+
+                    <div id="dayReadout" aria-live="polite" class="bg-slate-950 border border-slate-800 rounded-xl p-4 min-h-[90px]"></div>
+                </div>
+            </section>
+
+            <section id="view-lancamentos" class="space-y-5 hidden">
+                <div class="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between">
+                    <div class="relative flex-1">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400 text-sm">🔍</span>
+                        <input type="search" id="searchInput" aria-label="Buscar lançamentos" placeholder="Buscar por nome, empresa, caso de uso ou linguagem..." class="w-full pl-9 pr-4 py-3 bg-slate-900 border border-slate-700 rounded-xl text-base sm:text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition-colors">
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button type="button" id="btnOpenOnly" aria-pressed="false" class="px-3.5 py-2 min-h-[44px] rounded-xl text-xs font-semibold bg-slate-900 border border-slate-800 text-slate-300 hover:border-slate-700 transition-colors">
+                            Só código aberto
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between text-xs text-slate-400 px-1 font-mono-code">
+                    <span id="resultsCount" role="status">Exibindo 0 lançamentos</span>
+                </div>
+
+                <div id="cardsList" class="space-y-6"></div>
+
+                <div id="emptyResults" class="hidden text-center py-16 bg-slate-900 border border-slate-800 rounded-2xl">
+                    <div class="text-3xl mb-2">🔎</div>
+                    <h3 class="text-base font-bold text-white">Nenhum lançamento encontrado</h3>
+                    <p class="text-xs text-slate-400 mt-1">Tente ajustar a busca, trocar a categoria ou limpar o filtro de perfil.</p>
+                </div>
+            </section>
+
+            <section id="view-metodologia" class="space-y-6 hidden">
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-8 space-y-6">
+                    <div>
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 text-indigo-400 text-xs font-mono-code font-semibold mb-3 border border-indigo-500/20">
+                            📐 Transparência Curatorial
+                        </div>
+                        <h2 class="text-2xl font-bold text-white">Metodologia de Busca e Critérios do Radar</h2>
+                        <p class="text-sm text-slate-400 mt-1 leading-relaxed">Como mapeamos, filtramos e avaliamos os lançamentos para entregar valor real com embasamento técnico e visão executiva de negócios.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 pt-2">
+                        <div class="bg-slate-950 border border-slate-800/80 rounded-xl p-4 space-y-2">
+                            <div class="text-indigo-400 font-mono-code font-bold text-xs">01. RASTREAMENTO</div>
+                            <h3 class="text-sm font-bold text-white">Coleta Semanal Assistida</h3>
+                            <p class="text-xs text-slate-400">Consulta semanal a portais e rastreadores públicos de lançamentos, conferida manualmente. APIs como Hugging Face, Product Hunt e OpenRouter estão previstas para automatizar esta etapa.</p>
+                        </div>
+                        <div class="bg-slate-950 border border-slate-800/80 rounded-xl p-4 space-y-2">
+                            <div class="text-indigo-400 font-mono-code font-bold text-xs">02. FILTRAGEM</div>
+                            <h3 class="text-sm font-bold text-white">Filtro de Ruído</h3>
+                            <p class="text-xs text-slate-400">Eliminação de relançamentos comerciais sem novidade técnica, focando em saltos reais de eficiência, novos pesos ou novas APIs.</p>
+                        </div>
+                        <div class="bg-slate-950 border border-slate-800/80 rounded-xl p-4 space-y-2">
+                            <div class="text-indigo-400 font-mono-code font-bold text-xs">03. CLASSIFICAÇÃO</div>
+                            <h3 class="text-sm font-bold text-white">Enquadramento de Perfil</h3>
+                            <p class="text-xs text-slate-400">Categorização em 4 eixos (Modelos, Agentes, Voz, Vídeo) e etiquetagem por perfil de público (Dev vs Negócios vs Criativo).</p>
+                        </div>
+                        <div class="bg-slate-950 border border-slate-800/80 rounded-xl p-4 space-y-2">
+                            <div class="text-indigo-400 font-mono-code font-bold text-xs">04. VALIDAÇÃO</div>
+                            <h3 class="text-sm font-bold text-white">Critérios da IA da Semana</h3>
+                            <p class="text-xs text-slate-400">Escolha editorial considerando inovação, praticidade de adoção, custo-benefício e impacto na produtividade.</p>
+                        </div>
+                    </div>
+
+                    <div class="border-t border-slate-800 pt-6 space-y-4">
+                        <h3 class="text-lg font-bold text-white flex items-center gap-2"><span>💡</span> Como Extrair o Melhor do Radar Segundo Seu Perfil</h3>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-5 space-y-3">
+                                <div class="flex items-center gap-2 text-indigo-400 font-bold text-sm"><span>👨‍💻</span> Para Desenvolvedores e Engenheiros</div>
+                                <ul class="text-xs text-slate-300 space-y-2 list-disc list-inside">
+                                    <li>Filtre por <strong>Só Código Aberto</strong> para encontrar modelos com pesos liberados para execução local.</li>
+                                    <li>Busque por <strong>MCP</strong> ou pelo nome da ferramenta para achar agentes que se integram ao seu editor.</li>
+                                    <li>Aproveite as <strong>Dicas Práticas</strong> com comandos ou orientações de API.</li>
+                                </ul>
+                            </div>
+
+                            <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-5 space-y-3">
+                                <div class="flex items-center gap-2 text-emerald-400 font-bold text-sm"><span>💼</span> Para Gestores e Inovação</div>
+                                <ul class="text-xs text-slate-300 space-y-2 list-disc list-inside">
+                                    <li>Utilize a categoria <strong>Agentes e Assistentes</strong> para identificar automações corporativas.</li>
+                                    <li>Veja a <strong>IA da Semana</strong>, o destaque escolhido pela curadoria da edição.</li>
+                                    <li>Analise o custo/benefício das APIs para orçamentos.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="view-volume" class="space-y-6 hidden">
+                <div>
+                    <h2 class="text-xl font-bold text-white">Volume Global do Ecossistema de IA</h2>
+                    <p class="text-xs sm:text-sm text-slate-400">Estimativas de ferramentas catalogadas nos principais diretórios do mundo.</p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-2">
+                        <span class="text-xs font-mono-code text-slate-400 uppercase tracking-wider">Maior Catalogador</span>
+                        <div id="volumeTop" class="text-3xl font-extrabold text-indigo-400">–</div>
+                        <p id="volumeTopLabel" class="text-xs text-slate-400">Ferramentas de IA cadastradas no maior diretório</p>
+                    </div>
+                    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-2">
+                        <span class="text-xs font-mono-code text-slate-400 uppercase tracking-wider">Média nos Diretórios Listados</span>
+                        <div id="volumeAvg" class="text-3xl font-extrabold text-emerald-400">–</div>
+                        <p id="volumeAvgLabel" class="text-xs text-slate-400">Ferramentas por diretório, em média</p>
+                    </div>
+                </div>
+
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-6 space-y-4">
+                    <h3 class="text-base font-bold text-white">Ferramentas Mapeadas por Diretório</h3>
+                    <div id="directoriesList" class="space-y-3"></div>
+                    <p id="volumeNote" class="text-xs text-slate-400 leading-relaxed"></p>
+                </div>
+            </section>
+
+            <section id="view-fontes" class="space-y-6 hidden">
+                <div>
+                    <h2 class="text-xl font-bold text-white">Fontes e Agregadores Monitorados</h2>
+                    <p class="text-xs sm:text-sm text-slate-400">De onde vêm os lançamentos desta edição e quais APIs estão previstas.</p>
+                </div>
+
+                <div class="space-y-3">
+                    <h3 class="text-sm font-bold text-white">Consultadas nesta edição</h3>
+                    <p class="text-xs text-slate-400">Cada lançamento traz o link da fonte onde foi encontrado. A consulta é manual.</p>
+                    <div id="sourcesList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+                </div>
+                <div class="space-y-3">
+                    <h3 class="text-sm font-bold text-white">APIs previstas</h3>
+                    <p class="text-xs text-slate-400">Documentadas, mas ainda sem coleta automática ligada ao Radar.</p>
+                    <div id="sourcesPlanned" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+                </div>
+            </section>
+
+            <section id="view-sobre" class="space-y-6 hidden">
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 space-y-6 shadow-xl">
+                    <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 pb-6 border-b border-slate-800">
+                        <div class="flex items-center gap-4">
+                            <div class="h-20 w-20 rounded-2xl bg-gradient-to-br from-indigo-500 via-purple-600 to-emerald-500 p-1 flex-shrink-0 shadow-lg shadow-indigo-500/20">
+                                <div class="h-full w-full bg-slate-950 rounded-[14px] flex items-center justify-center text-2xl font-extrabold text-white font-mono-code">RB</div>
+                            </div>
+                            <div class="space-y-1">
+                                <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400 text-xs font-mono-code font-semibold border border-indigo-500/20">
+                                    <span>🎓</span> Especialista em Inteligência Artificial
+                                </div>
+                                <h2 id="displayAuthorName" class="text-2xl sm:text-3xl font-extrabold text-white">Rodrigo Brandelero</h2>
+                                <p id="displayAuthorRole" class="text-xs sm:text-sm text-indigo-300 font-mono-code">Cientista da Computação, Mestre em TIC (UFSC) & Gestor de Negócios Digitais</p>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-wrap items-center gap-2 w-full md:w-auto">
+                            <a id="displayLinkedinBtn" href="https://www.linkedin.com/in/rodrigo-brandelero/" target="_blank" rel="noopener noreferrer" class="flex-1 md:flex-initial px-3.5 py-2.5 min-h-[44px] rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs transition-colors flex items-center justify-center gap-1.5">
+                                <span>🔗</span>
+                                <span>LinkedIn</span>
+                            </a>
+                            <a id="displayInstagramBtn" href="https://www.instagram.com/rodrigobrandelero.ia/" target="_blank" rel="noopener noreferrer" class="flex-1 md:flex-initial px-3.5 py-2.5 min-h-[44px] rounded-xl bg-gradient-to-r from-purple-600 via-pink-600 to-amber-500 hover:opacity-95 text-white font-semibold text-xs transition-colors flex items-center justify-center gap-1.5">
+                                <span>📸</span>
+                                <span>Instagram</span>
+                            </a>
+                            <a id="displayEmailBtn" href="mailto:rbrandel@gmail.com" class="flex-1 md:flex-initial px-3.5 py-2.5 min-h-[44px] rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-semibold text-xs transition-colors flex items-center justify-center gap-1.5">
+                                <span>✉️</span>
+                                <span>E-mail</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
+                        <div class="md:col-span-2 space-y-6">
+                            <div class="space-y-3">
+                                <h3 class="text-base font-bold text-white flex items-center gap-2"><span>🚀</span> Trajetória Profissional</h3>
+                                <div id="displayAuthorBio" class="text-xs sm:text-sm text-slate-300 leading-relaxed space-y-3 bg-slate-950/60 p-4 sm:p-5 rounded-2xl border border-slate-800/60"></div>
+                            </div>
+
+                            <div class="bg-gradient-to-r from-indigo-950/60 via-slate-950 to-purple-950/40 border border-indigo-500/30 rounded-2xl p-4 sm:p-5 space-y-3">
+                                <div class="flex items-center justify-between">
+                                    <h4 class="text-xs font-bold text-indigo-300 font-mono-code uppercase tracking-wider flex items-center gap-2"><span>📜</span> Projeto Autoral: 'Bytes de Memória'</h4>
+                                    <span class="text-xs bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 px-2 py-0.5 rounded-full font-mono-code">Futuro do Trabalho</span>
+                                </div>
+                                <p class="text-xs text-slate-300 leading-relaxed">Iniciativa autoral que conecta cinco décadas de evolução tecnológica às transformações atuais da inteligência ocupacional, abordando estratégias práticas para adaptação, produtividade e liderança em ambientes digitais.</p>
+                            </div>
+
+                            <div class="bg-slate-950 border border-indigo-500/30 rounded-2xl p-5 space-y-4 shadow-xl">
+                                <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                                    <div>
+                                        <h3 class="text-base font-bold text-white flex items-center gap-2"><span>💬</span> Fale Direto com o Especialista</h3>
+                                        <p class="text-xs text-slate-400 mt-0.5">Envie uma mensagem para consultorias, palestras ou projetos corporativos.</p>
+                                    </div>
+                                    <span class="text-xs text-emerald-400 font-mono-code bg-emerald-950/80 border border-emerald-800 px-2.5 py-1 rounded-lg hidden sm:block">⚡ Resposta Rápida</span>
+                                </div>
+
+                                <form id="contactForm" action="https://formspree.io/f/SEU_ID" method="POST" class="space-y-3" novalidate>
+                                    <!-- TROQUE SEU_ID pelo código do seu formulário no Formspree (formspree.io > New Form). -->
+                                    <input type="hidden" name="_subject" value="Contato pelo Radar de IA">
+                                    <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true">
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                        <div>
+                                            <label for="contactName" class="block text-xs text-slate-300 font-mono-code mb-1">Seu Nome *</label>
+                                            <input type="text" id="contactName" name="name" required autocomplete="name" maxlength="120" placeholder="Ex: Roberto Silva"
+                                                class="w-full bg-slate-900 border border-slate-600 rounded-xl px-3 py-3 text-base sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition-colors">
+                                        </div>
+                                        <div>
+                                            <label for="contactEmail" class="block text-xs text-slate-300 font-mono-code mb-1">Seu E-mail *</label>
+                                            <input type="email" id="contactEmail" name="email" required autocomplete="email" inputmode="email" maxlength="160" placeholder="Ex: roberto@empresa.com"
+                                                class="w-full bg-slate-900 border border-slate-600 rounded-xl px-3 py-3 text-base sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition-colors">
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label for="contactWhats" class="block text-xs text-slate-300 font-mono-code mb-1">Contato WhatsApp *</label>
+                                        <input type="tel" id="contactWhats" name="whatsapp" required autocomplete="tel" inputmode="tel" maxlength="30" placeholder="Ex: (48) 99999-8888"
+                                            class="w-full bg-slate-900 border border-slate-600 rounded-xl px-3 py-3 text-base sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition-colors">
+                                    </div>
+                                    <div>
+                                        <label for="contactMsg" class="block text-xs text-slate-300 font-mono-code mb-1">Mensagem ou Assunto</label>
+                                        <textarea id="contactMsg" name="message" rows="4" maxlength="2000" placeholder="Como posso ajudar em seu projeto de IA?"
+                                            class="w-full bg-slate-900 border border-slate-600 rounded-xl px-3 py-3 text-base sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition-colors resize-none"></textarea>
+                                    </div>
+                                    <label class="flex items-start gap-3 text-xs text-slate-300 leading-relaxed cursor-pointer py-1">
+                                        <input type="checkbox" id="contactConsent" name="consent" value="sim" required class="mt-0.5 h-5 w-5 flex-shrink-0 rounded border-slate-600 bg-slate-900 accent-indigo-500">
+                                        <span>Concordo em enviar meu nome, e-mail e WhatsApp para que o autor responda a esta mensagem. Os dados são usados só para esse contato e podem ser apagados a pedido, pelo e-mail desta página.</span>
+                                    </label>
+                                    <div class="flex items-center justify-between gap-3 pt-1">
+                                        <span class="text-xs text-slate-400 font-mono-code">* Campos obrigatórios</span>
+                                        <button type="submit" id="contactSubmitBtn"
+                                            class="px-5 min-h-[44px] rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm transition-colors flex items-center gap-1.5 shadow-lg shadow-indigo-600/20 disabled:opacity-60 disabled:cursor-not-allowed">
+                                            <span aria-hidden="true">📩</span>
+                                            <span data-label>Enviar Contato</span>
+                                        </button>
+                                    </div>
+                                </form>
+
+                                <div id="contactFeedback" role="alert" class="hidden"></div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-4">
+                            <div class="bg-slate-950 border border-slate-800/90 rounded-2xl p-5 space-y-4">
+                                <h3 class="text-xs font-bold text-slate-400 font-mono-code uppercase tracking-wider">Ficha do Especialista</h3>
+
+                                <div class="space-y-2.5 text-xs">
+                                    <div class="p-2.5 rounded-xl bg-slate-900 border border-slate-800/80 space-y-0.5">
+                                        <span class="text-xs text-slate-400 font-mono-code block">NOME</span>
+                                        <span id="cardAuthorName" class="font-semibold text-slate-200">Rodrigo Brandelero</span>
+                                    </div>
+                                    <div class="p-2.5 rounded-xl bg-slate-900 border border-slate-800/80 space-y-0.5">
+                                        <span class="text-xs text-slate-400 font-mono-code block">TITULAÇÃO ACADÊMICA</span>
+                                        <span class="font-semibold text-indigo-300 font-mono-code block">Mestre em TIC (UFSC)</span>
+                                        <span class="text-xs text-slate-400">Cientista da Computação</span>
+                                    </div>
+                                    <div class="p-2.5 rounded-xl bg-slate-900 border border-slate-800/80 space-y-0.5">
+                                        <span class="text-xs text-slate-400 font-mono-code block">EXPERIÊNCIA</span>
+                                        <span class="font-semibold text-emerald-400 font-mono-code block">30 Anos em Tech & Negócios</span>
+                                    </div>
+                                    <div class="p-2.5 rounded-xl bg-slate-900 border border-slate-800/80 space-y-0.5">
+                                        <span class="text-xs text-slate-400 font-mono-code block">E-MAIL OFICIAL</span>
+                                        <a href="mailto:rbrandel@gmail.com" class="font-semibold text-indigo-300 font-mono-code truncate block py-3.5 hover:underline">rbrandel@gmail.com</a>
+                                    </div>
+                                    <div class="p-2.5 rounded-xl bg-slate-900 border border-slate-800/80 space-y-0.5">
+                                        <span class="text-xs text-slate-400 font-mono-code block">INSTAGRAM OFICIAL</span>
+                                        <a href="https://www.instagram.com/rodrigobrandelero.ia/" target="_blank" rel="noopener noreferrer" class="font-semibold text-pink-400 font-mono-code truncate block py-3.5 hover:underline">@rodrigobrandelero.ia</a>
+                                    </div>
+                                    <div class="p-2.5 rounded-xl bg-slate-900 border border-slate-800/80 space-y-0.5">
+                                        <span class="text-xs text-slate-400 font-mono-code block">LINKEDIN DIRETO</span>
+                                        <a href="https://www.linkedin.com/in/rodrigo-brandelero/" target="_blank" rel="noopener noreferrer" class="font-semibold text-indigo-400 font-mono-code truncate block py-3.5 hover:underline">/in/rodrigo-brandelero</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <nav aria-label="Navegação principal" class="fixed bottom-0 left-0 right-0 z-40 bg-slate-900/95 border-t border-slate-800 backdrop-blur-lg sm:max-w-xl sm:mx-auto sm:bottom-4 sm:rounded-full sm:border">
+        <div class="grid grid-cols-6 h-16">
+            <button type="button" data-tab="panorama" class="tab-btn active flex flex-col items-center justify-center gap-1 text-indigo-400 hover:text-white transition-colors">
+                <span class="text-base sm:text-lg">📡</span>
+                <span class="text-[11px] font-medium leading-tight">Panorama</span>
+            </button>
+            <button type="button" data-tab="lancamentos" class="tab-btn flex flex-col items-center justify-center gap-1 text-slate-400 hover:text-white transition-colors">
+                <span class="text-base sm:text-lg">🚀</span>
+                <span class="text-[11px] font-medium leading-tight">Novidades</span>
+            </button>
+            <button type="button" data-tab="metodologia" class="tab-btn flex flex-col items-center justify-center gap-1 text-slate-400 hover:text-white transition-colors">
+                <span class="text-base sm:text-lg">📐</span>
+                <span class="text-[11px] font-medium leading-tight">Método</span>
+            </button>
+            <button type="button" data-tab="volume" class="tab-btn flex flex-col items-center justify-center gap-1 text-slate-400 hover:text-white transition-colors">
+                <span class="text-base sm:text-lg">📊</span>
+                <span class="text-[11px] font-medium leading-tight">Volume</span>
+            </button>
+            <button type="button" data-tab="fontes" class="tab-btn flex flex-col items-center justify-center gap-1 text-slate-400 hover:text-white transition-colors">
+                <span class="text-base sm:text-lg">🗄️</span>
+                <span class="text-[11px] font-medium leading-tight">Fontes</span>
+            </button>
+            <button type="button" data-tab="sobre" class="tab-btn flex flex-col items-center justify-center gap-1 text-slate-400 hover:text-white transition-colors">
+                <span class="text-base sm:text-lg">👤</span>
+                <span class="text-[11px] font-medium leading-tight">Especialista</span>
+            </button>
+        </div>
+    </nav>
+
+    <script type="application/json" id="radar-fallback">{"edicao":"1 de Novembro de 2026","data_checagem":"2026-11-01","categorias":[{"id":"modelos","name":"Modelos","short":"Modelos","color":"#3b82f6"},{"id":"agentes","name":"Agentes e Assistentes","short":"Agentes","color":"#f97316"},{"id":"voz","name":"Voz e Áudio","short":"Voz","color":"#10b981"},{"id":"video","name":"Vídeo e Imagem","short":"Vídeo","color":"#eab308"}],"perfis":[{"id":"todos","name":"Todos os Perfis","icon":"🌐"},{"id":"dev","name":"Dev & Infra","icon":"👨‍💻"},{"id":"negocios","name":"Negócios & Gestão","icon":"💼"},{"id":"criativo","name":"Criadores & Mídia","icon":"🎨"}],"candidatos_semana":[{"id":"c1","name":"GPT-6.1 Terra","org":"OpenAI","badge":"Modelo para devs"},{"id":"c2","name":"Ideogram Vector 1.0","org":"Ideogram","badge":"Design e imagem"}],"diretorios_volume":[{"name":"RankmyAI","count":63000,"plus":true},{"name":"Toolify.ai","count":26000,"plus":true},{"name":"TopAI.tools","count":19000,"plus":true},{"name":"There's An AI For That","count":12000,"plus":true},{"name":"PoweredbyAI","count":10000,"plus":true},{"name":"Futurepedia","count":5000,"plus":true}],"fontes":[{"name":"Hugging Face Hub","type":"API documentada","desc":"Modelos, datasets e Spaces publicados, com filtro por tarefa e ordenação. Ainda não há coleta automática ligada a ela.","status":"Prevista","ok":false,"url":"https://huggingface.co/docs/huggingface_hub/en/guides/search"},{"name":"Product Hunt","type":"API GraphQL v2","desc":"Lançamentos diários de produtos, com votos e tópicos. Exige token gratuito de desenvolvedor. Ainda não há coleta automática ligada a ela.","status":"Prevista","ok":false,"url":"https://api.producthunt.com/v2/docs"},{"name":"OpenRouter","type":"API REST","desc":"Catálogo de modelos disponíveis por API, com preço e contexto. Ainda não há coleta automática ligada a ela.","status":"Prevista","ok":false,"url":"https://openrouter.ai/models"},{"name":"GitHub","type":"API de busca de repositórios","desc":"Repositórios novos por tópico (llm, agentes), filtrados por data de criação. Ainda não testada nem ligada ao Radar.","status":"Prevista","ok":false,"url":"https://docs.github.com/en/rest/search/search#search-repositories"}],"especialista":{"nome":"Rodrigo Brandelero","cargo":"Cientista da Computação, Mestre em TIC (UFSC) & Gestor de Negócios Digitais","linkedin":"https://www.linkedin.com/in/rodrigo-brandelero/","instagram":"https://www.instagram.com/rodrigobrandelero.ia/","email":"rbrandel@gmail.com","bio":["Há 30 anos vivo na linha de frente onde a educação encontra a tecnologia e a gestão de negócios.","Como cientista da computação e mestre em TIC (UFSC), dedico minha trajetória a traduzir inovações em competitividade real.","Atualmente desenvolvo o projeto autoral 'Bytes de Memória', conectando evolução tecnológica ao Futuro do Trabalho."]},"lancamentos":[{"d":"2026-10-27","n":"Agent Tree","o":"Não informada","c":"agentes","p":"dev","l":"aberto","s":"Monitor em terminal, de código aberto, que mostra ao vivo a árvore de tarefas e execução de agentes.","a":"Melhora observabilidade e debugging de workflows multiagente.","t":"Aplique em ambientes de agentes, testes e acompanhamento de execução em tempo real.","f":{"n":"AI Agent Store (semana)","u":"https://aiagentstore.ai/ai-agent-news/this-week"}},{"d":"2026-10-27","n":"Identidade e Controle para Agentes","o":"IBM","c":"agentes","p":"negocios","l":"nao-informada","s":"Soluções para autenticar, identificar e controlar agentes em ambientes corporativos.","a":"Garante governança e segurança para automações com múltiplos agentes.","t":"Use para auditar permissões, identidade e fluxos de decisão em operações corporativas.","f":{"n":"AI Agents Directory","u":"https://aiagentsdirectory.com/news/ai-agents-news-brief-october-27-2026"}},{"d":"2026-10-26","n":"GPT-6.1 Terra","o":"OpenAI","c":"modelos","p":"dev","l":"nao-informada","s":"Modelo da OpenAI pensado para ser mais rápido e econômico em visão, escrita e raciocínio multimodal.","a":"Reduz custo e latência mantendo bom nível de qualidade em uso prático.","t":"Ideal para copilots, análise de documentos e suporte operacional com visão.","f":{"n":"AI Agents Directory","u":"https://aiagentsdirectory.com/news/ai-agents-news-brief-october-27-2026"}},{"d":"2026-10-26","n":"Bubble Agent 2 e Bubble MCP","o":"Bubble","c":"agentes","p":"dev","l":"nao-informada","s":"Agente de IA da Bubble reconstruído com integração MCP em beta para fluxos de desenvolvimento.","a":"Simplifica integração com ferramentas e contextos externos em apps produtivos.","t":"Use para conectar IA a plataformas internas com automação contextual.","f":{"n":"AI Agent Store (semana)","u":"https://aiagentstore.ai/ai-agent-news/this-week"}},{"d":"2026-10-26","n":"Joule Work e Joule Studio","o":"SAP","c":"agentes","p":"negocios","l":"nao-informada","s":"Expansão do assistente Joule com agentes para execução de fluxos de trabalho e automação de processos.","a":"Ajuda empresas a transformar processos internos em automações com menor fricção.","t":"Aplicável em operações, vendas, compras e suporte interno com supervisão humana.","f":{"n":"AI Agents Directory","u":"https://aiagentsdirectory.com/news/ai-agents-news-brief-october-27-2026"}},{"d":"2026-10-26","n":"Siri com IA em novos idiomas","o":"Apple","c":"agentes","p":"negocios","l":"nao-informada","s":"Atualização de iOS/macOS que amplia suporte de linguagem para francês, japonês e coreano com IA assistida.","a":"Expande adoção de assistentes em uso cotidiano para mercados internacionais.","t":"Use para validar experiência de voz em contexto global e acessibilidade.","f":{"n":"AI News Today","u":"https://www.donvitocodes.com/ai-news"}},{"d":"2026-10-24","n":"Doubao-Seedance-1.0-pro-fast","o":"ByteDance","c":"video","p":"criativo","l":"nao-informada","s":"Modelo de vídeo no Volcano Ark, até 3x mais rápido que versões anteriores em geração de vídeo.","a":"Acelera criação de vídeos de alta qualidade para marketing e comunicação.","t":"Útil para campanhas, protótipos visuais e produção criativa de conteúdo.","f":{"n":"nocode.mba","u":"https://www.nocode.mba/ai-release-tracker/2026/10"}},{"d":"2026-10-24","n":"Agensh","o":"Microsoft Research","c":"agentes","p":"dev","l":"aberto","s":"Estrutura de código aberto para coordenar até 1.024 agentes em execução distribuída.","a":"Ajuda a escalar experimentos e sistemas multiagente com arquitetura mais previsível.","t":"Use para simulação, orquestração e testes de agentes colaborativos.","f":{"n":"AI News Today","u":"https://www.donvitocodes.com/ai-news"}},{"d":"2026-10-23","n":"Kimi K3.1 Pro","o":"Moonshot AI","c":"modelos","p":"dev","l":"nao-informada","s":"Modelo de 3 trilhões de parâmetros com janela de 1 milhão de tokens e foco em inferência robusta.","a":"Permite maior contexto e melhor qualidade em tarefas longas e complexas.","t":"Bom para conhecimento profundo, revisão extensa e raciocínio longo.","f":{"n":"AI News Today","u":"https://www.donvitocodes.com/ai-news"}},{"d":"2026-10-23","n":"Nemotron 3.5 Bolt E4B 4GB","o":"NVIDIA","c":"modelos","p":"dev","l":"aberto","s":"Modelo pequeno de ~4B parâmetros para agentes de conversa locais, com eficiência para execução em hardware moderado.","a":"Permite rodar IA localmente com melhor custo/benefício.","t":"Ótimo para infra local, agentes e aplicação interna sem depender de nuvem.","f":{"n":"nocode.mba","u":"https://www.nocode.mba/ai-release-tracker/2026/10"}},{"d":"2026-10-23","n":"Dessa","o":"Block","c":"voz","p":"negocios","l":"nao-informada","s":"Modelo de fala treinado diretamente em conversas humanas sem conversão para texto, melhorando naturalidade.","a":"Aumenta qualidade de voz e compreensão contextual de conversas reais.","t":"Útil para atendimento, call center e assistentes de voz com mais naturalidade.","f":{"n":"nocode.mba","u":"https://www.nocode.mba/ai-release-tracker/2026/10"}},{"d":"2026-10-23","n":"Experiência Unificada do Claude","o":"Anthropic","c":"agentes","p":"negocios","l":"nao-informada","s":"Unifica chat e execução de tarefas na nuvem em um mesmo ambiente de agente.","a":"Reduz atrito entre conversa, ação e ferramentas internas.","t":"Use para ambientes de produtividade e automação com supervisão humana.","f":{"n":"AI News Today","u":"https://www.donvitocodes.com/ai-news"}},{"d":"2026-10-23","n":"TanStack AI 1.0","o":"TanStack","c":"agentes","p":"dev","l":"nao-informada","s":"Versão estável do kit para criar agentes, subagentes e fluxos de programação e automação.","a":"Facilita construção de agentes em desenvolvimento de software e operação.","t":"Use para prototipar agentes de desenvolvimento e apoio de código.","f":{"n":"AI Agent Store (semana)","u":"https://aiagentstore.ai/ai-agent-news/this-week"}},{"d":"2026-10-22","n":"1Password for Agents","o":"1Password","c":"agentes","p":"negocios","l":"nao-informada","s":"Camada de login que permite a agentes de IA aprovados autenticar e acessar sistemas sensíveis com segurança.","a":"Melhora governança e segurança para IA em ambientes corporativos.","t":"Aplicável em automação com acesso a credenciais, integrações e ferramentas críticas.","f":{"n":"AI News Today","u":"https://www.donvitocodes.com/ai-news"}},{"d":"2026-10-22","n":"VideoGen Model 1","o":"VideoGen","c":"video","p":"criativo","l":"nao-informada","s":"Primeiro modelo proprietário capaz de gerar vídeos multi-cena em alta qualidade com duração estendida.","a":"Acelera criação de peças visuais com narrativa e contexto mais complexos.","t":"Útil para campanhas, vídeos promocionais e conteúdo criativo de marketing.","f":{"n":"You.com Media AI","u":"https://for.you.com/agents/media-ai"}},{"d":"2026-10-22","n":"Ideogram Vector 1.0","o":"Ideogram","c":"video","p":"criativo","l":"nao-informada","s":"Gera arquivos vetoriais SVG totalmente editáveis a partir de texto, com design gráfico refinado.","a":"Acelera produção de ilustrações, identidade visual e elementos criativos.","t":"Ótimo para design, branding e geração de ativos visuais editáveis.","f":{"n":"FutureTools","u":"https://futuretools.io/news"}},{"d":"2026-10-21","n":"Claude Duet","o":"Anthropic","c":"agentes","p":"negocios","l":"nao-informada","s":"Aplicativo de agente proativo construído sobre o Claude Opus 5.5 para tarefas de escritório e execução.","a":"Eleva produtividade em tarefas do dia a dia com automação inteligente.","t":"Use para suporte executivo, organização e operações de rotina.","f":{"n":"OrcaRouter","u":"https://www.orcarouter.ai/blog/anthropic-launch-week-october-2026-what-shipped"}},{"d":"2026-10-21","n":"ElevenLabs Chimera","o":"ElevenLabs","c":"voz","p":"criativo","l":"nao-informada","s":"Nova plataforma unificada para fluxos de trabalho combinados de voz e IA em múltiplos formatos.","a":"Permite criar experiências de voz mais ricas e personalizadas.","t":"Aplicável em locuções, narração, assistentes e educação digital.","f":{"n":"FutureTools","u":"https://futuretools.io/news"}},{"d":"2026-10-17","n":"DeepSeek V4.1 Flash","o":"DeepSeek","c":"modelos","p":"dev","l":"aberto","s":"Versão otimizada de alta velocidade do DeepSeek V4.1 com licença aberta e foco em desempenho.","a":"Reduz custo operacional e aumenta velocidade de inferência.","t":"Bom para implantação em ambientes de desenvolvimento, suporte e automação.","f":{"n":"llm-stats","u":"https://llm-stats.com/llm-updates"}}],"janela_dias":21,"diretorios_nota":"Números informados pelos próprios diretórios, reunidos em levantamento do fast.io (consulta de 27/10/2026). O sinal de + significa \"mais de\"."}</script>
+    <script src="config.js" defer></script>
+    <script src="db.js" defer></script>
+    <script src="app.js" defer></script>
+</body>
+</html>
