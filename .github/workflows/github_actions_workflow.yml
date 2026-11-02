@@ -1,57 +1,58 @@
 name: Atualização Semanal do Radar de IA
 
+# Como funciona: você (ou o Claude) coloca na raiz do repositório um arquivo novos-AAAA-MM-DD.json
+# com os lançamentos da semana. Todo domingo, 08:00 em Brasília, este fluxo junta o arquivo ao data.json,
+# apaga o novos-*.json já usado e publica o resultado. Sem arquivo novos-*.json, nada muda.
 on:
   schedule:
-    # Executa todo domingo às 11:00 UTC (08:00 Horário de Brasília)
-    - cron: '0 11 * * 0'
-  workflow_dispatch:
-    # Permite disparar manualmente pela aba Actions do GitHub a qualquer momento
+    - cron: '0 11 * * 0'   # domingo, 11:00 UTC = 08:00 em Brasília
+  workflow_dispatch:       # também dá para rodar à mão, na aba Actions
 
 permissions:
   contents: write
+
+concurrency:
+  group: radar-atualizacao
+  cancel-in-progress: false
 
 jobs:
   update-radar:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout do Repositório
+      - name: Baixar o repositório
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Configurar Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.x'
 
-      - name: Executar Mesclagem Semanal
+      - name: Juntar os lançamentos da semana
         run: |
-          # Localizar o arquivo novos-*.json mais recente
-          NEW_FILE=$(ls -t novos-*.json 2>/dev/null | head -n 1)
-
-          if [ -z "$NEW_FILE" ]; then
-            echo "⚠️ Nenhum arquivo 'novos-*.json' encontrado para processar."
+          shopt -s nullglob
+          arquivos=(novos-*.json)
+          if [ ${#arquivos[@]} -eq 0 ]; then
+            echo "Nenhum arquivo novos-*.json encontrado. Nada a fazer."
             exit 0
           fi
+          # Em ordem de nome (a data vai no nome), do mais antigo ao mais novo.
+          # Se algum arquivo tiver erro, o mesclar.py não grava nada e este passo falha.
+          while IFS= read -r arquivo; do
+            echo "Processando $arquivo"
+            python3 mesclar.py "$arquivo"
+            rm -f "$arquivo"
+          done < <(printf '%s\n' "${arquivos[@]}" | sort)
 
-          echo "🚀 Processando arquivo da semana: $NEW_FILE"
-          python3 mesclar.py "$NEW_FILE"
-
-          # Remover o arquivo temporário de novos lançamentos após mesclar
-          rm -f "$NEW_FILE"
-
-      - name: Salvar e Publicar Alterações no Git
+      - name: Publicar as alterações
         run: |
-          git config --global user.name "Radar AI Bot"
-          git config --global user.email "bot@radardeia.local"
-
-          git add data.json arquivo_historico.json
-          
+          git config user.name "Radar de IA (automático)"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
           if git diff --staged --quiet; then
-            echo "ℹ️ Nenhuma alteração detectada no data.json."
+            echo "Nenhuma alteração para publicar."
           else
-            git commit -m "chore(auto): atualização semanal do Radar de IA [skip ci]"
-            git push origin main
-            echo "✨ Dados do Radar de IA atualizados e publicados com sucesso!"
+            git commit -m "chore(auto): atualização semanal do Radar de IA"
+            git pull --rebase origin "${GITHUB_REF_NAME}"
+            git push origin "HEAD:${GITHUB_REF_NAME}"
           fi
