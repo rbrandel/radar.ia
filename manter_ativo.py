@@ -10,6 +10,7 @@ import sys
 import urllib.error
 import urllib.request
 from pathlib import Path
+from urllib.parse import urlparse
 
 AQUI = Path(__file__).resolve().parent
 
@@ -21,15 +22,44 @@ def ler_config():
     def campo(nome):
         m = re.search(nome + r"""\s*:\s*(["'])(.*?)\1""", texto)
         return m.group(2).strip() if m else ""
-    return campo("supabaseUrl").rstrip("/"), campo("supabaseKey")
+    return campo("supabaseUrl"), campo("supabaseKey")
+
+
+def normalizar_url(bruto):
+    """Mesma tolerância do db.js: aceita sem https://, com / ou /rest/v1/ no fim, ou o endereço do painel."""
+    s = (bruto or "").strip()
+    if not s:
+        return ""
+    if re.fullmatch(r"[a-z0-9]{20}", s, re.I):           # só o "Project ID"
+        return "https://%s.supabase.co" % s.lower()
+    if not re.match(r"^[a-z][a-z0-9+.-]*://", s, re.I):
+        s = "https://" + s
+    try:
+        u = urlparse(s)
+        host = (u.hostname or "").lower()
+    except ValueError:
+        return ""
+    if u.scheme.lower() != "https":
+        return ""
+    if re.fullmatch(r"[a-z0-9-]+\.supabase\.co", host):
+        return "https://" + host
+    if host in ("supabase.com", "www.supabase.com"):
+        m = re.search(r"/project/([a-z0-9]{6,40})(/|$)", u.path, re.I)
+        if m:
+            return "https://%s.supabase.co" % m.group(1).lower()
+    return ""
 
 
 def main():
-    url, chave = ler_config()
-    if not url and not chave:
+    url_bruta, chave = ler_config()
+    if not url_bruta and not chave:
         print("config.js sem Supabase configurado: nada a fazer.")
         return 0
-    if not re.fullmatch(r"https://[a-z0-9-]+\.supabase\.co", url) or not chave:
+    url = normalizar_url(url_bruta)
+    if re.fullmatch(r"https://(seu-?projeto|meu-?projeto|codigo(-do-projeto)?|projeto|abcdefghijklmnopqrst|x{4,})\.supabase\.co", url):
+        print("::warning::config.js ainda tem um endereço de EXEMPLO em supabaseUrl; não consultei o Supabase.")
+        return 0
+    if not url or not chave:
         print("::warning::config.js com supabaseUrl/supabaseKey inválidos; não consultei o Supabase.")
         return 0
     if chave.startswith("sb_secret_"):

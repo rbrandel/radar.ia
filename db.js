@@ -4,8 +4,30 @@
  * Não usa bibliotecas externas, só fetch, para a política de segurança da página continuar fechada. */
 (function () {
     const cfg = window.RADAR_CONFIG && typeof window.RADAR_CONFIG === 'object' ? window.RADAR_CONFIG : {};
-    const url = String(cfg.supabaseUrl || '').trim().replace(/\/+$/, '');
+    const rawUrl = String(cfg.supabaseUrl || '').trim();
     const key = String(cfg.supabaseKey || '').trim();
+
+    /* Aceita os erros de colagem mais comuns: sem "https://", com "/" ou "/rest/v1/" no fim, letras maiúsculas,
+     * ou o endereço do painel (supabase.com/dashboard/project/CODIGO). Devolve https://CODIGO.supabase.co ou ''. */
+    function normalizeUrl(raw) {
+        let s = String(raw || '').trim().replace(/^["'`]+|["'`]+$/g, '').trim(); /* tira aspas coladas junto */
+        if (!s) return '';
+        if (/^[a-z0-9]{20}$/i.test(s)) return 'https://' + s.toLowerCase() + '.supabase.co'; /* só o "Project ID" */
+        if (!/^[a-z][a-z0-9+.-]*:\/\//i.test(s)) s = 'https://' + s;
+        try {
+            const u = new URL(s);
+            if (u.protocol !== 'https:') return '';
+            if (/^[a-z0-9-]+\.supabase\.co$/.test(u.hostname)) return 'https://' + u.hostname;
+            if (/^(www\.)?supabase\.com$/.test(u.hostname)) {
+                const m = /\/project\/([a-z0-9]{6,40})(\/|$)/i.exec(u.pathname);
+                if (m) return 'https://' + m[1].toLowerCase() + '.supabase.co';
+            }
+        } catch (e) { /* endereço mal formado */ }
+        return '';
+    }
+    const url = normalizeUrl(rawUrl);
+    /* Endereços de exemplo (de guias e mensagens) que alguém pode colar sem trocar pelo do seu projeto. */
+    const isExampleUrl = (u) => /^https:\/\/(seu-?projeto|meu-?projeto|codigo(-do-projeto)?|projeto|abcdefghijklmnopqrst|x{4,})\.supabase\.co$/.test(u);
     const SESSION_KEY = 'radar_ai_sessao_v1';
     const TIMEOUT_MS = 10000;
 
@@ -24,9 +46,12 @@
     }
 
     let problem = '';
-    if (url || key) {
-        if (!/^https:\/\/[a-z0-9-]+\.supabase\.co$/.test(url)) problem = 'supabaseUrl inválida (o formato é https://SEU-PROJETO.supabase.co).';
-        else if (!/^[A-Za-z0-9._-]{20,}$/.test(key)) problem = 'supabaseKey inválida (copie a chave publishable inteira).';
+    if (rawUrl || key) {
+        if (!rawUrl) problem = 'supabaseUrl está vazia (cole o "Project URL" do painel do Supabase).';
+        else if (!url) problem = 'supabaseUrl inválida. O valor recebido foi ' + JSON.stringify(rawUrl.slice(0, 90)) + '. O certo é só o endereço, como https://abcdefghijklmnopqrst.supabase.co (copie o "Project URL" do painel).';
+        else if (isExampleUrl(url)) problem = 'supabaseUrl é um endereço de EXEMPLO (' + JSON.stringify(rawUrl.slice(0, 90)) + '). Troque pelo "Project URL" do seu projeto (painel do Supabase, botão Connect).';
+        else if (!key) problem = 'supabaseKey está vazia (cole a chave "publishable" do painel).';
+        else if (!/^[A-Za-z0-9._-]{20,}$/.test(key)) problem = 'supabaseKey inválida: confira se copiou a chave publishable inteira, sem espaços nem aspas dentro.';
         else if (keyIsSecret(key)) problem = 'essa é uma chave SECRETA. Use só a chave publishable (sb_publishable_...) e gere outra chave secreta no Supabase, porque esta ficou exposta.';
     }
     if (problem) console.error('[Radar] Supabase desligado: ' + problem);
