@@ -8,6 +8,6 @@
  * NUNCA coloque a chave secreta (sb_secret_...) nem a "service_role": este arquivo é público.
  */
 window.RADAR_CONFIG = {
-    supabaseUrl: "sb_publishable_njSKVgKcCpEMfdCA09wxhg_givufUKn",   // exemplo: "https://abcdefghijklmnopqrst.supabase.co"
+    supabaseUrl: "https://kmzfynvrzyqgrguqdwxm.supabase.co",   // exemplo: "https://abcdefghijklmnopqrst.supabase.co"
     supabaseKey: "sb_publishable_njSKVgKcCpEMfdCA09wxhg_givufUKn"    // exemplo: "sb_publishable_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 };
