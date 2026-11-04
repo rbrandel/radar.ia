@@ -10,7 +10,41 @@ Não precisa de servidor nem de banco de dados. Os dados ficam no `data.json`.
    `action="https://formspree.io/f/xyzabcde"`
 3. Enquanto o `SEU_ID` estiver lá, o formulário avisa "ainda não está configurado" e não envia nada.
 
-## 2. Rotina semanal (todo domingo, 08:00 em Brasília)
+## 2. Rotina semanal (sábado você gera, domingo 08:00 em Brasília publica)
+
+### 2.1 Lembrete de sábado (automático)
+
+Todo sábado, 08:00 em Brasília, o GitHub abre uma **issue** neste repositório chamada
+"Radar de IA: gerar a atualização de sábado (data)" e atribui a você, então chega e-mail e aviso no app do GitHub.
+A issue já traz:
+
+- o **pedido pronto** para colar no Claude (janela de 7 dias, regras do texto, o que devolver);
+- uma **lista de candidatos** coletada de OpenRouter (modelos novos no catálogo), Hugging Face (modelos em alta criados na semana) e GitHub (repositórios novos de IA com mais estrelas).
+
+A lista é ponto de partida: pode ter ruído e pode faltar coisa. O Claude cruza com as páginas oficiais antes de escolher.
+Se uma fonte estiver fora do ar, a issue sai mesmo assim e avisa qual não respondeu. Lembretes antigos que ficaram abertos são fechados sozinhos.
+
+Fluxo de sábado (cerca de 15 minutos):
+
+1. Abra a issue e copie o bloco "Pedido" (botão de copiar no canto do bloco).
+2. Cole no Claude e anexe o `data.json` e o `novos.modelo.json` (se tiver, o `a-verificar.json` também).
+3. Confira as fontes que o Claude indicar. Salve o resultado como `novos-AAAA-MM-DD.json`, com a data do **domingo** seguinte.
+4. Envie o arquivo para a raiz do repositório antes de domingo 08:00 e feche a issue.
+
+Para ligar (uma vez): copie para o repositório `coletar_candidatos.py`, `rotina/PEDIDO-SABADO.md` e
+`.github/workflows/lembrete-sabado.yml`; em **Settings → General → Features**, confirme que **Issues** está marcado; e teste em
+**Actions → "Lembrete de sábado do Radar de IA" → Run workflow**. Se quiser ver só o texto, rode no computador
+`python3 coletar_candidatos.py --sem-rede`.
+
+Cuidados:
+
+- O horário do GitHub pode atrasar alguns minutos. Repositório sem nenhuma atividade por 60 dias tem os agendamentos pausados; o envio semanal já conta como atividade.
+- Para o aviso chegar, deixe ligadas as notificações do GitHub (**Settings → Notifications**) para issues atribuídas a você.
+- A lista é só candidatos. Nada dela vai para o site sem passar pelo `novos-*.json` e pela sua conferência.
+- Para mudar o que o Claude recebe, edite `rotina/PEDIDO-SABADO.md`. As marcas `{{INICIO}}`, `{{FIM}}`, `{{DATA_ARQUIVO}}` e `{{CANDIDATOS}}` são trocadas pelo script.
+- Para mudar as fontes ou os tópicos do GitHub, edite `coletar_candidatos.py` (a lista `GITHUB_TOPICOS` e as funções `coletar_*`).
+
+### 2.2 Publicação (domingo)
 
 1. Copie `novos.modelo.json` para `novos-AAAA-MM-DD.json` (a data do dia, por exemplo `novos-2026-11-08.json`).
 2. Apague o item de exemplo e preencha os lançamentos reais. Cada item precisa de fonte (`f`) com link http(s).
@@ -74,6 +108,14 @@ Arquivos desta parte:
 | `supabase/01-enquete.sql` | Cria a tabela de votos e as regras de segurança. Você cola no SQL Editor do Supabase. |
 | `supabase/02-assinantes-opcional.sql` | Opcional e ainda sem uso no site: lista de e-mails para um resumo semanal. |
 | `manter_ativo.py` e `.github/workflows/manter-supabase-ativo.yml` | Consulta leve toda quinta para o Supabase grátis não pausar. Sem Supabase configurado, não faz nada. |
+
+Arquivos do lembrete de sábado (seção 2.1):
+
+| Arquivo | Para que serve |
+|---|---|
+| `.github/workflows/lembrete-sabado.yml` | Todo sábado, 08:00 em Brasília, abre a issue de lembrete atribuída a você. Também roda à mão. |
+| `coletar_candidatos.py` | Busca candidatos da semana (OpenRouter, Hugging Face, GitHub) e monta o texto da issue. Só usa a biblioteca padrão do Python. |
+| `rotina/PEDIDO-SABADO.md` | Modelo da issue: os passos de sábado e o pedido pronto para o Claude. |
 
 Cada candidato da enquete (`candidatos_semana` no `data.json`) precisa de um `id` curto em minúsculas, como `c1`. A enquete recomeça a cada semana.
 
