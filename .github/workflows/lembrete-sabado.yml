@@ -1,0 +1,58 @@
+name: Lembrete de sábado do Radar de IA
+
+# Todo sábado, 08:00 em Brasília, abre uma issue neste repositório (o GitHub avisa por e-mail e no app)
+# com o pedido pronto para colar no Claude e a lista de candidatos da semana.
+# Veja rotina/PEDIDO-SABADO.md e o LEIA-ME. O GitHub pode atrasar o horário em alguns minutos.
+on:
+  schedule:
+    - cron: '0 11 * * 6'   # sábado, 11:00 UTC = 08:00 em Brasília
+  workflow_dispatch:       # também dá para rodar à mão, na aba Actions
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: radar-lembrete
+  cancel-in-progress: false
+
+jobs:
+  lembrete:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Baixar o repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Montar o pedido e a lista de candidatos
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python3 coletar_candidatos.py --saida corpo-lembrete.md
+
+      - name: Abrir o lembrete
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          DONO: ${{ github.repository_owner }}
+        run: |
+          set -u
+          [ -s corpo-lembrete.md ] || cp rotina/PEDIDO-SABADO.md corpo-lembrete.md
+          titulo="Radar de IA: gerar a atualização de sábado ($(TZ=America/Sao_Paulo date +%d/%m/%Y))"
+          gh label create lembrete-sabado --color D95926 --description "Lembrete semanal do Radar de IA" 2>/dev/null || true
+          # Atribui ao dono do repositório para garantir o aviso. Se não der (conta de organização), abre sem atribuir.
+          if ! url=$(gh issue create --title "$titulo" --body-file corpo-lembrete.md --label lembrete-sabado --assignee "$DONO"); then
+            url=$(gh issue create --title "$titulo" --body-file corpo-lembrete.md --label lembrete-sabado)
+          fi
+          echo "Lembrete criado: $url"
+          novo="${url##*/}"
+          # Fecha lembretes de semanas anteriores que ficaram abertos.
+          for n in $(gh issue list --label lembrete-sabado --state open --json number --jq '.[].number'); do
+            if [ "$n" != "$novo" ]; then
+              gh issue close "$n" --comment "Substituído pelo lembrete desta semana."
+            fi
+          done
