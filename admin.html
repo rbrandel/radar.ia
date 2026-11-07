@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com data:; connect-src 'self' https://*.supabase.co; form-action 'none'; base-uri 'self'; object-src 'none'">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="theme-color" content="#020617">
+    <meta name="color-scheme" content="dark">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%93%A1%3C/text%3E%3C/svg%3E">
+    <title>Área de publicação | Radar de IA</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+        body { font-family: 'Instrument Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
+        h1, h2, h3, .font-display { font-family: 'Bricolage Grotesque', sans-serif; }
+        .font-mono-code { font-family: 'JetBrains Mono', monospace; }
+        :focus-visible { outline: 2px solid #a5b4fc; outline-offset: 2px; }
+        h2[tabindex="-1"]:focus { outline: none; } /* foco colocado por script ao trocar de tela, sem moldura */
+        .campo { width: 100%; background: #0f172a; border: 1px solid #475569; border-radius: 0.75rem; padding: 0.75rem; color: #fff; font-size: 1rem; }
+        .campo:focus { outline: none; border-color: #6366f1; }
+        .campo:disabled { opacity: 0.6; cursor: not-allowed; }
+        .rotulo { display: block; margin-bottom: 0.25rem; font-size: 0.75rem; color: #cbd5e1; font-family: 'JetBrains Mono', monospace; }
+        .dica { margin-top: 0.25rem; font-size: 0.75rem; color: #94a3b8; }
+        .btn { min-height: 44px; padding: 0 1rem; border-radius: 0.75rem; font-size: 0.75rem; font-weight: 600; }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-indigo-500 selection:text-white">
+    <header class="border-b border-slate-800 bg-slate-950/90 backdrop-blur-md">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between gap-3">
+            <div class="flex items-center gap-3 min-w-0">
+                <a href="index.html" class="h-11 w-11 shrink-0 rounded-xl bg-gradient-to-br from-indigo-500 via-purple-500 to-emerald-500 flex items-center justify-center text-white font-bold" aria-label="Voltar ao site">📡</a>
+                <div class="min-w-0">
+                    <h1 class="text-lg sm:text-xl font-extrabold tracking-tight text-white font-display">Área de publicação</h1>
+                    <p id="quemSou" class="text-xs text-slate-400 font-mono-code truncate">Radar de IA</p>
+                </div>
+            </div>
+            <button type="button" id="btnSair" class="btn hidden bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-200">Sair</button>
+        </div>
+    </header>
+
+    <main id="conteudo" tabindex="-1" class="max-w-5xl mx-auto w-full px-4 sm:px-6 py-6 flex-1 focus:outline-none">
+        <noscript><p class="p-4 text-center text-slate-300">Esta área precisa de JavaScript.</p></noscript>
+        <p id="aviso" role="status" aria-live="polite" class="hidden mb-4 rounded-xl border px-4 py-3 text-sm"></p>
+        <p id="carregando" role="status" class="py-16 text-center text-sm text-slate-400 font-mono-code">Carregando...</p>
+
+        <!-- 1. Supabase não configurado -->
+        <section id="vSemConfig" class="hidden rounded-2xl border border-amber-500/40 bg-amber-950/40 p-5 space-y-2">
+            <h2 class="text-lg font-bold text-amber-200">Supabase ainda não está ligado</h2>
+            <p class="text-sm text-slate-200">Esta área grava no banco do Supabase. Preencha o <code class="font-mono-code">config.js</code> com o endereço e a chave pública do projeto e rode os arquivos <code class="font-mono-code">03-materias.sql</code> e <code class="font-mono-code">04-materias-iniciais.sql</code>. O passo a passo está em <code class="font-mono-code">supabase/GUIA-MATERIAS.md</code>.</p>
+            <p class="text-sm text-slate-300">Enquanto isso, o site mostra as matérias do arquivo <code class="font-mono-code">noticias.json</code>.</p>
+        </section>
+
+        <!-- 2. Entrar -->
+        <section id="vLogin" class="hidden max-w-md mx-auto rounded-2xl border border-slate-800 bg-slate-900 p-5 sm:p-6 space-y-4">
+            <div>
+                <h2 class="text-lg font-bold text-white">Entrar</h2>
+                <p class="text-sm text-slate-400 mt-1">Digite o e-mail do administrador. Você recebe um link de acesso, sem senha.</p>
+            </div>
+            <form id="formLogin" class="space-y-3" novalidate>
+                <div>
+                    <label for="loginEmail" class="rotulo">E-mail</label>
+                    <input id="loginEmail" type="email" inputmode="email" autocomplete="email" required maxlength="160" class="campo" placeholder="voce@exemplo.com">
+                </div>
+                <button type="submit" id="btnEnviarLink" class="btn w-full bg-indigo-600 hover:bg-indigo-500 text-white disabled:opacity-60">Enviar link de acesso</button>
+            </form>
+            <div id="loginPasso2" class="hidden space-y-3 border-t border-slate-800 pt-4">
+                <p class="text-sm text-slate-300">Se o e-mail estiver autorizado, o link chega em instantes (olhe também o spam). Abra o link neste mesmo aparelho.</p>
+                <form id="formCodigo" class="space-y-2" novalidate>
+                    <label for="loginCodigo" class="rotulo">Ou digite o código de 6 dígitos, se o e-mail trouxer um</label>
+                    <div class="flex gap-2">
+                        <input id="loginCodigo" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="10" class="campo" placeholder="000000">
+                        <button type="submit" class="btn shrink-0 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-100">Entrar</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- 3. Logado, mas sem permissão -->
+        <section id="vNegado" class="hidden max-w-xl mx-auto rounded-2xl border border-red-500/40 bg-red-950/40 p-5 space-y-2">
+            <h2 class="text-lg font-bold text-red-200">Este e-mail não é administrador</h2>
+            <p class="text-sm text-slate-200">O login funcionou, mas esta conta não está na lista de administradores do Radar. Rode o passo 4 do <code class="font-mono-code">supabase/GUIA-MATERIAS.md</code> no SQL Editor, com o seu e-mail, e entre de novo.</p>
+        </section>
+
+        <!-- 4. Lista -->
+        <section id="vLista" class="hidden space-y-4">
+            <div class="flex flex-wrap items-center justify-between gap-3">
+                <div>
+                    <h2 class="text-xl font-bold text-white">Matérias</h2>
+                    <p id="listaResumo" class="text-xs text-slate-400 font-mono-code" role="status"></p>
+                </div>
+                <button type="button" id="btnNova" class="btn bg-indigo-600 hover:bg-indigo-500 text-white">Nova matéria</button>
+            </div>
+            <div id="listaFiltros" class="flex items-center gap-2 overflow-x-auto py-0.5"></div>
+            <ul id="listaMaterias" class="space-y-3"></ul>
+            <p id="listaVazia" class="hidden py-12 text-center text-sm text-slate-400">Nenhuma matéria aqui ainda.</p>
+        </section>
+
+        <!-- 5. Editor -->
+        <section id="vEditor" class="hidden space-y-4">
+            <div class="flex flex-wrap items-center justify-between gap-3">
+                <div class="min-w-0">
+                    <button type="button" id="btnVoltar" class="min-h-[44px] text-xs font-semibold text-indigo-300 hover:text-white"><span aria-hidden="true">←&nbsp;</span> Voltar à lista</button>
+                    <h2 id="editorTitulo" class="text-xl font-bold text-white">Nova matéria</h2>
+                    <p id="editorStatus" class="text-xs text-slate-400 font-mono-code" role="status"></p>
+                    <a id="linkVer" href="#" target="_blank" rel="noopener noreferrer" class="hidden mt-1 min-h-[44px] items-center text-xs font-semibold text-indigo-300 hover:text-white">Ver no site<span class="sr-only"> (abre em nova aba)</span></a>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <button type="button" id="btnSalvar" class="btn bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-100 disabled:opacity-60">Salvar</button>
+                    <button type="button" id="btnPublicar" class="btn bg-emerald-600 hover:bg-emerald-500 text-white disabled:opacity-60">Publicar agora</button>
+                </div>
+            </div>
+
+            <div role="tablist" aria-label="Seções do editor" class="flex gap-2 border-b border-slate-800">
+                <button type="button" role="tab" id="abaEditar" data-aba="editar" aria-selected="true" class="min-h-[44px] px-4 text-sm font-semibold border-b-2 border-indigo-400 text-white">Editar</button>
+                <button type="button" role="tab" id="abaPrevia" data-aba="previa" aria-selected="false" class="min-h-[44px] px-4 text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-white">Pré-visualizar</button>
+                <button type="button" role="tab" id="abaHistorico" data-aba="historico" aria-selected="false" class="min-h-[44px] px-4 text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-white">Histórico</button>
+            </div>
+
+            <form id="formEditor" novalidate class="space-y-5">
+                <div id="painelEditar" class="space-y-5">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="fTitulo" class="rotulo">Título *</label>
+                            <input id="fTitulo" class="campo" maxlength="140" autocomplete="off">
+                            <p class="dica"><span id="cTitulo">0</span>/140</p>
+                        </div>
+                        <div>
+                            <label for="fSlug" class="rotulo">Endereço da matéria *</label>
+                            <input id="fSlug" class="campo font-mono-code" maxlength="80" autocomplete="off" spellcheck="false" aria-describedby="dSlug">
+                            <p id="dSlug" class="dica">Só letras minúsculas, números e hífen. Depois que a matéria for ao ar, não muda mais.</p>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="fChamada" class="rotulo">Chamada (aparece na capa e nos cartões) *</label>
+                        <textarea id="fChamada" rows="2" maxlength="240" class="campo resize-none"></textarea>
+                        <p class="dica"><span id="cChamada">0</span>/240. Para publicar, precisa de pelo menos 10 caracteres.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label for="fCategoria" class="rotulo">Categoria</label>
+                            <select id="fCategoria" class="campo"></select>
+                        </div>
+                        <div class="md:col-span-2">
+                            <label for="fTags" class="rotulo">Tags (separadas por vírgula, até 8)</label>
+                            <input id="fTags" class="campo" autocomplete="off" placeholder="claude, excel, gestores">
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="flex flex-wrap items-center justify-between gap-2 mb-1">
+                            <label for="fCorpo" class="rotulo !mb-0">Texto da matéria *</label>
+                            <div class="flex flex-wrap gap-1" role="toolbar" aria-label="Formatação">
+                                <button type="button" data-fmt="negrito" class="min-h-[44px] px-3 rounded-lg bg-slate-800 border border-slate-700 text-xs font-bold">Negrito</button>
+                                <button type="button" data-fmt="italico" class="min-h-[44px] px-3 rounded-lg bg-slate-800 border border-slate-700 text-xs italic">Itálico</button>
+                                <button type="button" data-fmt="titulo" class="min-h-[44px] px-3 rounded-lg bg-slate-800 border border-slate-700 text-xs">Título</button>
+                                <button type="button" data-fmt="lista" class="min-h-[44px] px-3 rounded-lg bg-slate-800 border border-slate-700 text-xs">Lista</button>
+                                <button type="button" data-fmt="link" class="min-h-[44px] px-3 rounded-lg bg-slate-800 border border-slate-700 text-xs">Link</button>
+                                <button type="button" data-fmt="codigo" class="min-h-[44px] px-3 rounded-lg bg-slate-800 border border-slate-700 text-xs">Bloco para copiar</button>
+                            </div>
+                        </div>
+                        <textarea id="fCorpo" rows="20" class="campo font-mono-code text-sm leading-relaxed" spellcheck="true" maxlength="40000"></textarea>
+                        <details class="mt-2 text-xs text-slate-300">
+                            <summary class="cursor-pointer min-h-[44px] flex items-center text-indigo-300">Guia rápido de formatação</summary>
+                            <div class="mt-1 space-y-1 font-mono-code text-slate-300">
+                                <p>## Título de seção &nbsp;·&nbsp; ### Subtítulo</p>
+                                <p>**negrito** &nbsp;·&nbsp; *itálico* &nbsp;·&nbsp; `código curto`</p>
+                                <p>- item de lista &nbsp;·&nbsp; 1. item numerado &nbsp;·&nbsp; &gt; citação</p>
+                                <p>[texto do link](https://endereco.com)</p>
+                                <p>Bloco para copiar: uma linha só com três crases, o texto, e outra linha com três crases.</p>
+                                <p>Para ligar a outra matéria: [texto](materia.html?m=endereco-da-outra)</p>
+                                <p class="text-slate-400">Tabelas e HTML não são aceitos: HTML escrito aparece como texto.</p>
+                            </div>
+                        </details>
+                    </div>
+
+                    <fieldset class="space-y-2">
+                        <legend class="rotulo">Fontes (links que comprovam o texto, até 12)</legend>
+                        <div id="fontesEditor" class="space-y-2"></div>
+                        <button type="button" id="btnAddFonte" class="btn bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-100">Adicionar fonte</button>
+                    </fieldset>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label for="fStatus" class="rotulo">Situação</label>
+                            <select id="fStatus" class="campo">
+                                <option value="rascunho">Rascunho (só você vê)</option>
+                                <option value="publicado">Publicada (agendada se a data for futura)</option>
+                                <option value="arquivado">Arquivada (fora do ar)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="fPublicada" class="rotulo">Data e hora de publicação</label>
+                            <input id="fPublicada" type="datetime-local" class="campo">
+                            <p class="dica">Vazio = vai ao ar na hora de publicar. Data futura = agendada. Horário do seu aparelho.</p>
+                        </div>
+                        <div>
+                            <label for="fConferido" class="rotulo">Conferido em</label>
+                            <input id="fConferido" type="date" class="campo">
+                            <p class="dica">Dia em que você conferiu as fontes.</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="fAutor" class="rotulo">Autor</label>
+                            <input id="fAutor" class="campo" maxlength="80" value="Rodrigo Brandelero">
+                        </div>
+                        <div>
+                            <label for="fCapa" class="rotulo">Imagem de capa (opcional, endereço https)</label>
+                            <input id="fCapa" type="url" class="campo" placeholder="https://..." maxlength="500">
+                            <p class="dica">Sem imagem, o site usa uma faixa colorida da categoria.</p>
+                        </div>
+                    </div>
+
+                    <label class="flex items-start gap-3 text-sm text-slate-200 cursor-pointer py-1">
+                        <input id="fDestaque" type="checkbox" class="mt-0.5 h-5 w-5 flex-shrink-0 rounded border-slate-600 bg-slate-900 accent-indigo-500">
+                        <span>Destaque na capa (aparece em primeiro e em tamanho maior)</span>
+                    </label>
+                </div>
+
+                <div id="painelPrevia" class="hidden">
+                    <div id="previaArea" class="rounded-2xl border border-slate-800 bg-slate-950 p-4 sm:p-6 max-w-3xl mx-auto"></div>
+                </div>
+
+                <div id="painelHistorico" class="hidden space-y-3">
+                    <p class="text-sm text-slate-300">Cada vez que você salva, o banco guarda uma versão completa. Para voltar a uma versão antiga, use "Restaurar no editor" e depois clique em "Salvar": isso cria uma versão nova, sem apagar nenhuma.</p>
+                    <p id="historicoEstado" role="status" class="text-xs text-slate-400 font-mono-code"></p>
+                    <ol id="historicoLista" class="space-y-3"></ol>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <footer class="border-t border-slate-800 py-6 text-center text-xs text-slate-500 font-mono-code">Radar de IA · área restrita</footer>
+
+    <script src="config.js" defer></script>
+    <script src="db.js" defer></script>
+    <script src="materias.js" defer></script>
+    <script src="admin.js" defer></script>
+</body>
+</html>

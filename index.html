@@ -7,7 +7,7 @@
     <meta name="theme-color" content="#020617">
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%93%A1%3C/text%3E%3C/svg%3E">
     <meta name="color-scheme" content="dark">
-    <meta name="description" content="Radar de IA: painel semanal com os lançamentos de inteligência artificial por categoria, com resumo, vantagem, dica de uso e fonte em cada cartão.">
+    <meta name="description" content="Radar de IA: painel semanal com os lançamentos de inteligência artificial por categoria, mais matérias e guias práticos para usar essas ferramentas no trabalho, com fontes.">
     <title>Radar de IA | Plataforma de Inteligência e Lançamentos</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -58,6 +58,10 @@
                 </div>
 
                 <div class="flex items-center gap-2">
+                    <button type="button" data-go="materias" class="hidden sm:flex items-center gap-1.5 text-xs font-medium bg-slate-900 hover:bg-slate-800 border border-slate-800 px-3 py-1.5 min-h-[44px] rounded-xl text-slate-200">
+                        <span aria-hidden="true">📰</span>
+                        <span>Matérias</span>
+                    </button>
                     <button type="button" data-go="metodologia" class="hidden sm:flex items-center gap-1.5 text-xs font-medium bg-slate-900 hover:bg-slate-800 border border-slate-800 px-3 py-1.5 min-h-[44px] rounded-xl text-slate-200">
                         <span>📐</span>
                         <span>Metodologia</span>
@@ -89,6 +93,20 @@
 
         <main id="conteudo" tabindex="-1" class="max-w-6xl mx-auto px-4 sm:px-6 pt-6 focus:outline-none">
             <section id="view-panorama" class="space-y-6">
+                <section id="novidadesCapa" aria-labelledby="novidadesTitulo" class="space-y-3 hidden">
+                    <div class="flex items-end justify-between gap-3">
+                        <div>
+                            <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-300 text-xs font-mono-code font-semibold border border-amber-500/20">
+                                <span aria-hidden="true">📰</span> Novidades
+                            </div>
+                            <h2 id="novidadesTitulo" class="mt-1 text-lg sm:text-xl font-bold text-white">Matérias e guias do Radar</h2>
+                        </div>
+                        <button type="button" data-go="materias" class="shrink-0 min-h-[44px] px-3 text-xs font-semibold text-indigo-300 hover:text-white">Ver todas <span aria-hidden="true">→</span></button>
+                    </div>
+                    <div id="novidadesLista" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+                    <p id="novidadesAviso" role="status" class="text-xs text-amber-300 font-mono-code empty:hidden"></p>
+                </section>
+
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
                     <div class="lg:col-span-7 bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-6 space-y-4 shadow-xl">
                         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
@@ -192,6 +210,34 @@
                 </div>
             </section>
 
+            <section id="view-materias" class="space-y-5 hidden">
+                <div>
+                    <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-500/10 text-amber-300 text-xs font-mono-code font-semibold border border-amber-500/20">
+                        <span aria-hidden="true">📰</span> Matérias e novidades
+                    </div>
+                    <h2 class="mt-1 text-xl sm:text-2xl font-bold text-white">Guias práticos, plataformas da semana e análises</h2>
+                    <p class="text-xs sm:text-sm text-slate-400 mt-0.5">Textos com fontes e data de conferência, separados dos lançamentos semanais do Radar.</p>
+                </div>
+
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400 text-sm" aria-hidden="true">🔍</span>
+                    <input type="search" id="materiasBusca" aria-label="Buscar matérias" placeholder="Buscar por título, assunto ou tag..." class="w-full pl-9 pr-4 py-3 bg-slate-900 border border-slate-700 rounded-xl text-base sm:text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition-colors">
+                </div>
+
+                <div id="materiasChips" class="flex items-center gap-2 overflow-x-auto no-scrollbar py-0.5"></div>
+
+                <div id="materiasContagem" role="status" class="text-xs text-slate-400 px-1 font-mono-code">Carregando matérias...</div>
+
+                <div id="materiasLista" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+
+                <div id="materiasVazio" class="hidden text-center py-16 bg-slate-900 border border-slate-800 rounded-2xl">
+                    <div class="text-3xl mb-2" aria-hidden="true">📭</div>
+                    <h3 class="text-base font-bold text-white">Nenhuma matéria encontrada</h3>
+                    <p class="text-xs text-slate-400 mt-1">Tente outra busca ou escolha outra categoria.</p>
+                </div>
+                <p id="materiasAviso" role="status" class="text-xs text-amber-300 font-mono-code empty:hidden"></p>
+            </section>
+
             <section id="view-metodologia" class="space-y-6 hidden">
                 <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-8 space-y-6">
                     <div>
@@ -251,7 +297,8 @@
                 </div>
             </section>
 
-            <section id="view-volume" class="space-y-6 hidden">
+            <section id="view-dados" class="space-y-10 hidden">
+                <div class="space-y-6">
                 <div>
                     <h2 class="text-xl font-bold text-white">Volume Global do Ecossistema de IA</h2>
                     <p class="text-xs sm:text-sm text-slate-400">Estimativas de ferramentas catalogadas nos principais diretórios do mundo.</p>
@@ -275,9 +322,8 @@
                     <div id="directoriesList" class="space-y-3"></div>
                     <p id="volumeNote" class="text-xs text-slate-400 leading-relaxed"></p>
                 </div>
-            </section>
-
-            <section id="view-fontes" class="space-y-6 hidden">
+                </div>
+                <div class="space-y-6 border-t border-slate-800 pt-8">
                 <div>
                     <h2 class="text-xl font-bold text-white">Fontes e Agregadores Monitorados</h2>
                     <p class="text-xs sm:text-sm text-slate-400">De onde vêm os lançamentos desta edição e quais APIs estão previstas.</p>
@@ -292,6 +338,7 @@
                     <h3 class="text-sm font-bold text-white">APIs previstas</h3>
                     <p class="text-xs text-slate-400">Documentadas, mas ainda sem coleta automática ligada ao Radar.</p>
                     <div id="sourcesPlanned" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+                </div>
                 </div>
             </section>
 
@@ -351,7 +398,7 @@
                                     <span class="text-xs text-emerald-400 font-mono-code bg-emerald-950/80 border border-emerald-800 px-2.5 py-1 rounded-lg hidden sm:block">⚡ Resposta Rápida</span>
                                 </div>
 
-                                <form id="contactForm" action="https://formspree.io/f/moeeppgk" method="POST" class="space-y-3" novalidate>
+                                <form id="contactForm" action="https://formspree.io/f/SEU_ID" method="POST" class="space-y-3" novalidate>
                                     <!-- TROQUE SEU_ID pelo código do seu formulário no Formspree (formspree.io > New Form). -->
                                     <input type="hidden" name="_subject" value="Contato pelo Radar de IA">
                                     <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true">
@@ -438,27 +485,27 @@
         <div class="grid grid-cols-6 h-16">
             <button type="button" data-tab="panorama" class="tab-btn active flex flex-col items-center justify-center gap-1 text-indigo-400 hover:text-white transition-colors">
                 <span class="text-base sm:text-lg">📡</span>
-                <span class="text-[11px] font-medium leading-tight">Panorama</span>
+                <span class="text-[10px] sm:text-[11px] tracking-tight font-medium leading-tight">Panorama</span>
             </button>
             <button type="button" data-tab="lancamentos" class="tab-btn flex flex-col items-center justify-center gap-1 text-slate-400 hover:text-white transition-colors">
                 <span class="text-base sm:text-lg">🚀</span>
-                <span class="text-[11px] font-medium leading-tight">Novidades</span>
+                <span class="text-[10px] sm:text-[11px] tracking-tight font-medium leading-tight">Lançamentos</span>
+            </button>
+            <button type="button" data-tab="materias" class="tab-btn flex flex-col items-center justify-center gap-1 text-slate-400 hover:text-white transition-colors">
+                <span class="text-base sm:text-lg">📰</span>
+                <span class="text-[10px] sm:text-[11px] tracking-tight font-medium leading-tight">Matérias</span>
             </button>
             <button type="button" data-tab="metodologia" class="tab-btn flex flex-col items-center justify-center gap-1 text-slate-400 hover:text-white transition-colors">
                 <span class="text-base sm:text-lg">📐</span>
-                <span class="text-[11px] font-medium leading-tight">Método</span>
+                <span class="text-[10px] sm:text-[11px] tracking-tight font-medium leading-tight">Método</span>
             </button>
-            <button type="button" data-tab="volume" class="tab-btn flex flex-col items-center justify-center gap-1 text-slate-400 hover:text-white transition-colors">
+            <button type="button" data-tab="dados" class="tab-btn flex flex-col items-center justify-center gap-1 text-slate-400 hover:text-white transition-colors">
                 <span class="text-base sm:text-lg">📊</span>
-                <span class="text-[11px] font-medium leading-tight">Volume</span>
-            </button>
-            <button type="button" data-tab="fontes" class="tab-btn flex flex-col items-center justify-center gap-1 text-slate-400 hover:text-white transition-colors">
-                <span class="text-base sm:text-lg">🗄️</span>
-                <span class="text-[11px] font-medium leading-tight">Fontes</span>
+                <span class="text-[10px] sm:text-[11px] tracking-tight font-medium leading-tight">Dados</span>
             </button>
             <button type="button" data-tab="sobre" class="tab-btn flex flex-col items-center justify-center gap-1 text-slate-400 hover:text-white transition-colors">
                 <span class="text-base sm:text-lg">👤</span>
-                <span class="text-[11px] font-medium leading-tight">Especialista</span>
+                <span class="text-[10px] sm:text-[11px] tracking-tight font-medium leading-tight">Especialista</span>
             </button>
         </div>
     </nav>
@@ -466,6 +513,8 @@
     <script type="application/json" id="radar-fallback">{"edicao":"1 de Novembro de 2026","data_checagem":"2026-11-01","categorias":[{"id":"modelos","name":"Modelos","short":"Modelos","color":"#3b82f6"},{"id":"agentes","name":"Agentes e Assistentes","short":"Agentes","color":"#f97316"},{"id":"voz","name":"Voz e Áudio","short":"Voz","color":"#10b981"},{"id":"video","name":"Vídeo e Imagem","short":"Vídeo","color":"#eab308"}],"perfis":[{"id":"todos","name":"Todos os Perfis","icon":"🌐"},{"id":"dev","name":"Dev & Infra","icon":"👨‍💻"},{"id":"negocios","name":"Negócios & Gestão","icon":"💼"},{"id":"criativo","name":"Criadores & Mídia","icon":"🎨"}],"candidatos_semana":[{"id":"c1","name":"GPT-6.1 Terra","org":"OpenAI","badge":"Modelo para devs"},{"id":"c2","name":"Ideogram Vector 1.0","org":"Ideogram","badge":"Design e imagem"}],"diretorios_volume":[{"name":"RankmyAI","count":63000,"plus":true},{"name":"Toolify.ai","count":26000,"plus":true},{"name":"TopAI.tools","count":19000,"plus":true},{"name":"There's An AI For That","count":12000,"plus":true},{"name":"PoweredbyAI","count":10000,"plus":true},{"name":"Futurepedia","count":5000,"plus":true}],"fontes":[{"name":"Hugging Face Hub","type":"API documentada","desc":"Modelos, datasets e Spaces publicados, com filtro por tarefa e ordenação. Ainda não há coleta automática ligada a ela.","status":"Prevista","ok":false,"url":"https://huggingface.co/docs/huggingface_hub/en/guides/search"},{"name":"Product Hunt","type":"API GraphQL v2","desc":"Lançamentos diários de produtos, com votos e tópicos. Exige token gratuito de desenvolvedor. Ainda não há coleta automática ligada a ela.","status":"Prevista","ok":false,"url":"https://api.producthunt.com/v2/docs"},{"name":"OpenRouter","type":"API REST","desc":"Catálogo de modelos disponíveis por API, com preço e contexto. Ainda não há coleta automática ligada a ela.","status":"Prevista","ok":false,"url":"https://openrouter.ai/models"},{"name":"GitHub","type":"API de busca de repositórios","desc":"Repositórios novos por tópico (llm, agentes), filtrados por data de criação. Ainda não testada nem ligada ao Radar.","status":"Prevista","ok":false,"url":"https://docs.github.com/en/rest/search/search#search-repositories"}],"especialista":{"nome":"Rodrigo Brandelero","cargo":"Cientista da Computação, Mestre em TIC (UFSC) & Gestor de Negócios Digitais","linkedin":"https://www.linkedin.com/in/rodrigo-brandelero/","instagram":"https://www.instagram.com/rodrigobrandelero.ia/","email":"rbrandel@gmail.com","bio":["Há 30 anos vivo na linha de frente onde a educação encontra a tecnologia e a gestão de negócios.","Como cientista da computação e mestre em TIC (UFSC), dedico minha trajetória a traduzir inovações em competitividade real.","Atualmente desenvolvo o projeto autoral 'Bytes de Memória', conectando evolução tecnológica ao Futuro do Trabalho."]},"lancamentos":[{"d":"2026-10-27","n":"Agent Tree","o":"Não informada","c":"agentes","p":"dev","l":"aberto","s":"Monitor em terminal, de código aberto, que mostra ao vivo a árvore de tarefas e execução de agentes.","a":"Melhora observabilidade e debugging de workflows multiagente.","t":"Aplique em ambientes de agentes, testes e acompanhamento de execução em tempo real.","f":{"n":"AI Agent Store (semana)","u":"https://aiagentstore.ai/ai-agent-news/this-week"}},{"d":"2026-10-27","n":"Identidade e Controle para Agentes","o":"IBM","c":"agentes","p":"negocios","l":"nao-informada","s":"Soluções para autenticar, identificar e controlar agentes em ambientes corporativos.","a":"Garante governança e segurança para automações com múltiplos agentes.","t":"Use para auditar permissões, identidade e fluxos de decisão em operações corporativas.","f":{"n":"AI Agents Directory","u":"https://aiagentsdirectory.com/news/ai-agents-news-brief-october-27-2026"}},{"d":"2026-10-26","n":"GPT-6.1 Terra","o":"OpenAI","c":"modelos","p":"dev","l":"nao-informada","s":"Modelo da OpenAI pensado para ser mais rápido e econômico em visão, escrita e raciocínio multimodal.","a":"Reduz custo e latência mantendo bom nível de qualidade em uso prático.","t":"Ideal para copilots, análise de documentos e suporte operacional com visão.","f":{"n":"AI Agents Directory","u":"https://aiagentsdirectory.com/news/ai-agents-news-brief-october-27-2026"}},{"d":"2026-10-26","n":"Bubble Agent 2 e Bubble MCP","o":"Bubble","c":"agentes","p":"dev","l":"nao-informada","s":"Agente de IA da Bubble reconstruído com integração MCP em beta para fluxos de desenvolvimento.","a":"Simplifica integração com ferramentas e contextos externos em apps produtivos.","t":"Use para conectar IA a plataformas internas com automação contextual.","f":{"n":"AI Agent Store (semana)","u":"https://aiagentstore.ai/ai-agent-news/this-week"}},{"d":"2026-10-26","n":"Joule Work e Joule Studio","o":"SAP","c":"agentes","p":"negocios","l":"nao-informada","s":"Expansão do assistente Joule com agentes para execução de fluxos de trabalho e automação de processos.","a":"Ajuda empresas a transformar processos internos em automações com menor fricção.","t":"Aplicável em operações, vendas, compras e suporte interno com supervisão humana.","f":{"n":"AI Agents Directory","u":"https://aiagentsdirectory.com/news/ai-agents-news-brief-october-27-2026"}},{"d":"2026-10-26","n":"Siri com IA em novos idiomas","o":"Apple","c":"agentes","p":"negocios","l":"nao-informada","s":"Atualização de iOS/macOS que amplia suporte de linguagem para francês, japonês e coreano com IA assistida.","a":"Expande adoção de assistentes em uso cotidiano para mercados internacionais.","t":"Use para validar experiência de voz em contexto global e acessibilidade.","f":{"n":"AI News Today","u":"https://www.donvitocodes.com/ai-news"}},{"d":"2026-10-24","n":"Doubao-Seedance-1.0-pro-fast","o":"ByteDance","c":"video","p":"criativo","l":"nao-informada","s":"Modelo de vídeo no Volcano Ark, até 3x mais rápido que versões anteriores em geração de vídeo.","a":"Acelera criação de vídeos de alta qualidade para marketing e comunicação.","t":"Útil para campanhas, protótipos visuais e produção criativa de conteúdo.","f":{"n":"nocode.mba","u":"https://www.nocode.mba/ai-release-tracker/2026/10"}},{"d":"2026-10-24","n":"Agensh","o":"Microsoft Research","c":"agentes","p":"dev","l":"aberto","s":"Estrutura de código aberto para coordenar até 1.024 agentes em execução distribuída.","a":"Ajuda a escalar experimentos e sistemas multiagente com arquitetura mais previsível.","t":"Use para simulação, orquestração e testes de agentes colaborativos.","f":{"n":"AI News Today","u":"https://www.donvitocodes.com/ai-news"}},{"d":"2026-10-23","n":"Kimi K3.1 Pro","o":"Moonshot AI","c":"modelos","p":"dev","l":"nao-informada","s":"Modelo de 3 trilhões de parâmetros com janela de 1 milhão de tokens e foco em inferência robusta.","a":"Permite maior contexto e melhor qualidade em tarefas longas e complexas.","t":"Bom para conhecimento profundo, revisão extensa e raciocínio longo.","f":{"n":"AI News Today","u":"https://www.donvitocodes.com/ai-news"}},{"d":"2026-10-23","n":"Nemotron 3.5 Bolt E4B 4GB","o":"NVIDIA","c":"modelos","p":"dev","l":"aberto","s":"Modelo pequeno de ~4B parâmetros para agentes de conversa locais, com eficiência para execução em hardware moderado.","a":"Permite rodar IA localmente com melhor custo/benefício.","t":"Ótimo para infra local, agentes e aplicação interna sem depender de nuvem.","f":{"n":"nocode.mba","u":"https://www.nocode.mba/ai-release-tracker/2026/10"}},{"d":"2026-10-23","n":"Dessa","o":"Block","c":"voz","p":"negocios","l":"nao-informada","s":"Modelo de fala treinado diretamente em conversas humanas sem conversão para texto, melhorando naturalidade.","a":"Aumenta qualidade de voz e compreensão contextual de conversas reais.","t":"Útil para atendimento, call center e assistentes de voz com mais naturalidade.","f":{"n":"nocode.mba","u":"https://www.nocode.mba/ai-release-tracker/2026/10"}},{"d":"2026-10-23","n":"Experiência Unificada do Claude","o":"Anthropic","c":"agentes","p":"negocios","l":"nao-informada","s":"Unifica chat e execução de tarefas na nuvem em um mesmo ambiente de agente.","a":"Reduz atrito entre conversa, ação e ferramentas internas.","t":"Use para ambientes de produtividade e automação com supervisão humana.","f":{"n":"AI News Today","u":"https://www.donvitocodes.com/ai-news"}},{"d":"2026-10-23","n":"TanStack AI 1.0","o":"TanStack","c":"agentes","p":"dev","l":"nao-informada","s":"Versão estável do kit para criar agentes, subagentes e fluxos de programação e automação.","a":"Facilita construção de agentes em desenvolvimento de software e operação.","t":"Use para prototipar agentes de desenvolvimento e apoio de código.","f":{"n":"AI Agent Store (semana)","u":"https://aiagentstore.ai/ai-agent-news/this-week"}},{"d":"2026-10-22","n":"1Password for Agents","o":"1Password","c":"agentes","p":"negocios","l":"nao-informada","s":"Camada de login que permite a agentes de IA aprovados autenticar e acessar sistemas sensíveis com segurança.","a":"Melhora governança e segurança para IA em ambientes corporativos.","t":"Aplicável em automação com acesso a credenciais, integrações e ferramentas críticas.","f":{"n":"AI News Today","u":"https://www.donvitocodes.com/ai-news"}},{"d":"2026-10-22","n":"VideoGen Model 1","o":"VideoGen","c":"video","p":"criativo","l":"nao-informada","s":"Primeiro modelo proprietário capaz de gerar vídeos multi-cena em alta qualidade com duração estendida.","a":"Acelera criação de peças visuais com narrativa e contexto mais complexos.","t":"Útil para campanhas, vídeos promocionais e conteúdo criativo de marketing.","f":{"n":"You.com Media AI","u":"https://for.you.com/agents/media-ai"}},{"d":"2026-10-22","n":"Ideogram Vector 1.0","o":"Ideogram","c":"video","p":"criativo","l":"nao-informada","s":"Gera arquivos vetoriais SVG totalmente editáveis a partir de texto, com design gráfico refinado.","a":"Acelera produção de ilustrações, identidade visual e elementos criativos.","t":"Ótimo para design, branding e geração de ativos visuais editáveis.","f":{"n":"FutureTools","u":"https://futuretools.io/news"}},{"d":"2026-10-21","n":"Claude Duet","o":"Anthropic","c":"agentes","p":"negocios","l":"nao-informada","s":"Aplicativo de agente proativo construído sobre o Claude Opus 5.5 para tarefas de escritório e execução.","a":"Eleva produtividade em tarefas do dia a dia com automação inteligente.","t":"Use para suporte executivo, organização e operações de rotina.","f":{"n":"OrcaRouter","u":"https://www.orcarouter.ai/blog/anthropic-launch-week-october-2026-what-shipped"}},{"d":"2026-10-21","n":"ElevenLabs Chimera","o":"ElevenLabs","c":"voz","p":"criativo","l":"nao-informada","s":"Nova plataforma unificada para fluxos de trabalho combinados de voz e IA em múltiplos formatos.","a":"Permite criar experiências de voz mais ricas e personalizadas.","t":"Aplicável em locuções, narração, assistentes e educação digital.","f":{"n":"FutureTools","u":"https://futuretools.io/news"}},{"d":"2026-10-17","n":"DeepSeek V4.1 Flash","o":"DeepSeek","c":"modelos","p":"dev","l":"aberto","s":"Versão otimizada de alta velocidade do DeepSeek V4.1 com licença aberta e foco em desempenho.","a":"Reduz custo operacional e aumenta velocidade de inferência.","t":"Bom para implantação em ambientes de desenvolvimento, suporte e automação.","f":{"n":"llm-stats","u":"https://llm-stats.com/llm-updates"}}],"janela_dias":21,"diretorios_nota":"Números informados pelos próprios diretórios, reunidos em levantamento do fast.io (consulta de 27/10/2026). O sinal de + significa \"mais de\"."}</script>
     <script src="config.js" defer></script>
     <script src="db.js" defer></script>
+    <script src="materias.js" defer></script>
+    <script src="novidades.js" defer></script>
     <script src="app.js" defer></script>
 </body>
 </html>

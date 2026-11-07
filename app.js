@@ -675,6 +675,8 @@
         const bar = $('filterBar');
         if (bar) bar.classList.toggle('hidden', FILTER_TABS.indexOf(tab) === -1);
         window.scrollTo(0, 0);
+        /* Guarda a aba no endereço (index.html#materias), para links diretos e para o botão Voltar das matérias. */
+        try { history.replaceState(null, '', tab === 'panorama' ? location.pathname + location.search : '#' + tab); } catch (e) { /* sem histórico: segue sem endereço */ }
         if (appData && tab === 'panorama') {
             const filtered = getFilteredData();
             drawRadar(filtered);
@@ -804,7 +806,8 @@
 
         initContact();
         syncStickyOffset();
-        switchTab('panorama');
+        const abaInicial = (location.hash || '').slice(1);
+        switchTab(/^[a-z]+$/.test(abaInicial) && $('view-' + abaInicial) ? abaInicial : 'panorama');
 
         let timer = null;
         const onResize = () => {

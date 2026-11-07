@@ -166,6 +166,8 @@
 
     window.RadarDB = Object.freeze({
         enabled: enabled,
+        /* Endereço e chave PÚBLICA já validados, para as matérias (materias.js) e a área de publicação (admin.js). */
+        config: enabled ? Object.freeze({ url: url, key: key }) : null,
         estado: estado,
         votar: (rodada, candidato) => comSessao('votar', { p_rodada: rodada, p_candidato: candidato }),
         remover: (rodada) => comSessao('remover_voto', { p_rodada: rodada })

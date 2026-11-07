@@ -1,0 +1,102 @@
+{
+  "gerado_em": "2026-11-04T17:00:00-03:00",
+  "materias": [
+    {
+      "slug": "do-excel-ao-dashboard-com-o-claude",
+      "titulo": "Do Excel ao dashboard com o Claude: 3 passos para gestores, com pedidos prontos",
+      "chamada": "Limpar a planilha no Excel, pedir conclusões com as células citadas e montar um dashboard no app do Claude, com uma planilha de exemplo para conferir cada número.",
+      "corpo": "Este guia leva uma planilha de vendas bagunçada a um dashboard em três passos: **limpar** os dados no Excel, **perguntar** ao Claude e **visualizar** no app do Claude. Os pedidos estão prontos para copiar e, na planilha de exemplo, cada resultado vem com o número certo para você conferir.\n\n[Baixar a planilha de exemplo (vendas fictícias de jan a out/2026)](https://rodrigobrandelero.ia.br/materiais/vendas-ficticias-2026.xlsx)\n\nA planilha é fictícia e tem uma aba **Gabarito** com os totais certos. Ela traz problemas plantados de propósito: 5 linhas duplicadas, 8 regiões escritas fora do padrão e 4 vendedores em branco. A coluna de receita líquida não existe, e você a cria no passo 2. Para testar, use essa planilha: não envie dados de clientes nem da sua empresa sem autorização.\n\n## Antes de começar\n\n- **Plano pago.** O Claude for Excel está disponível nos planos Pro, Max, Team e Enterprise.\n- **Instalação.** Abra a página do Claude for Microsoft 365 no Microsoft AppSource, escolha \"Get it now\", abra o Excel, ative o suplemento e entre com a sua conta do Claude.\n- **Versão do Excel.** Funciona no Excel na web, no Windows com Microsoft 365 e no Mac. Não funciona no iPad, no Android nem no Excel 2016 e 2019 de licença perpétua.\n- **Cópia.** Trabalhe sempre numa cópia da planilha e guarde o original intacto.\n- **App do Claude.** Para o passo 3, confirme nas configurações que a opção de execução de código e criação de arquivos (\"Code execution and file creation\") está ligada. O nome em português pode variar.\n\n## Passo 1: limpar os dados, no Excel\n\nAbra o painel do Claude no Excel e cole o pedido 1.\n\n**Pedido 1**\n\n```text\nNa aba Vendas, padronize a coluna Região para Sul, Sudeste, Nordeste, Centro-Oeste e Norte, sem espaços extras. Depois remova as linhas duplicadas exatas e diga quantas removeu. Não altere mais nada.\n```\n\n**Confira:** 8 regiões corrigidas, 5 duplicatas removidas e 280 linhas restantes.\n\n**Pedido 2 (opcional)**\n\n```text\nExistem linhas com Vendedor em branco? Liste-as sem alterar a planilha e sugira o que fazer.\n```\n\n**Confira:** 4 linhas.\n\nQuando o Claude propõe uma operação de risco, o suplemento pede a sua confirmação antes de executar. Leia essa confirmação com atenção antes de aprovar.\n\n## Passo 2: perguntar, no Excel\n\n**Pedido 3: crie a receita líquida**\n\n```text\nCrie a coluna Receita líquida = Quantidade x Preço unitário x (1 - Desconto), com fórmulas, e mostre o total.\n```\n\n**Confira:** total de R$ 83.629,17. Diferença de 1 centavo é arredondamento.\n\n**Pedido 4 (opcional): resumo por região e por mês**\n\n```text\nCrie uma aba Resumo com a receita líquida por região e por mês, com fórmulas ou tabela dinâmica, e destaque a maior e a menor região com formatação condicional.\n```\n\n**Confira:** maior região, Sudeste, R$ 29.925,73; menor, Norte, R$ 5.392,05; mês de maior receita, setembro, R$ 11.288,15; de menor, fevereiro, R$ 4.830,56.\n\n**Pedido 5: peça as conclusões**\n\n```text\nQuais são as três principais conclusões desta base para um gestor? Cite as células usadas.\n```\n\n**Confira:** Sudeste com 35,8% da receita, canal Online com 48,2% e Plano Pro como produto líder, com 38,1%. Clique numa citação de célula para o Excel levar você até ela e confira o número na fonte.\n\n## Passo 3: visualizar, no app do Claude\n\nSalve a planilha limpa, depois dos pedidos 1 a 3, anexe no app do Claude e cole o pedido 6.\n\n**Pedido 6**\n\n```text\nAnexei uma planilha de vendas de jan a out/2026. Crie um dashboard interativo para gestores com receita líquida total, receita por mês (linha), por região (barras), por produto e por canal, e um filtro por região. Receita líquida = quantidade x preço unitário x (1 - desconto). Valores em reais.\n```\n\n**Confira:** R$ 83.629,17 no topo do painel e o Sudeste como a maior barra por região. Se o painel vier sem filtro, peça: \"adicione um filtro por região\".\n\n**Pedido 7 (opcional)**\n\n```text\nMostre também os três melhores vendedores e explique em três frases, para a diretoria, o que o painel mostra.\n```\n\n**Confira:** Gabi Torres, R$ 13.848,40; Elisa Prado, R$ 12.676,64; Fábio Nunes, R$ 12.242,86.\n\nPor que o dashboard sai no app e não no Excel? A documentação do Claude for Excel não cita a criação de gráficos. Se quiser gráficos dentro da planilha, teste antes com dados fictícios e só confie se funcionar.\n\nSe algum pedido falhar, divida-o: primeiro a coluna, depois a aba.\n\n## Limites e cuidados\n\n- **Revisão humana.** A documentação não recomenda o Claude for Excel para entregas finais a clientes sem revisão, para cálculos de auditoria sem verificação, nem para dados sensíveis ou regulados sem controles. O Claude pode errar: compare o total do painel com o seu.\n- **Planilhas de fora.** Arquivos de origem externa podem conter instruções ocultas que manipulem o suplemento. Use só planilhas de confiança.\n- **O que não faz.** Não há suporte a tabelas de dados do Excel nem a macros e VBA.\n- **Dados na conversa.** Ao entrar com a conta do Claude, o conteúdo lido da planilha e os anexos vão para a Anthropic. O histórico de chat fica no navegador, e apagá-lo não apaga a cópia da Anthropic.\n- **Dashboard no app.** Nos planos individuais, conversas com arquivos criados não podem ser compartilhadas por link público. Criar arquivos também consome mais do limite do plano do que uma conversa comum.\n- **Outras opções.** Também existem assistentes de IA integrados ao Excel (o Copilot, da Microsoft) e ao Google Sheets (o Gemini, do Google). Este guia não os compara: confira o que cada um faz hoje antes de decidir.\n\nConferido em 04/11/2026. Texto feito com ajuda do Claude.\n",
+      "categoria": "guia",
+      "tags": [
+        "claude",
+        "excel",
+        "gestores",
+        "dashboard"
+      ],
+      "capa_url": null,
+      "fontes": [
+        {
+          "n": "Use Claude for Excel (documentação do Claude)",
+          "u": "https://claude.com/docs/office-agents/excel"
+        },
+        {
+          "n": "Claude for Microsoft 365",
+          "u": "https://claude.com/claude-for-excel"
+        },
+        {
+          "n": "Create and edit files with Claude (Central de Ajuda)",
+          "u": "https://support.claude.com/en/articles/12111783"
+        }
+      ],
+      "autor": "Rodrigo Brandelero",
+      "publicada_em": "2026-11-04T13:00:00-03:00",
+      "conferido_em": "2026-11-04",
+      "destaque": true
+    },
+    {
+      "slug": "claude-conectado-ao-seu-trabalho",
+      "titulo": "Claude conectado ao seu trabalho: o que testar se você dá aula, programa, gerencia ou faz games",
+      "chamada": "Quatro perfis, quatro integrações para testar com calma: modo de aprendizado, Claude Code, Microsoft 365 e servidores MCP para engines de jogos.",
+      "corpo": "Este especial acompanha a série \"Plataforma da semana\" do Radar de IA. A ideia não é dizer que o Claude é a melhor opção para todo mundo: é mostrar, por perfil, as integrações que valem um teste e o que conferir antes de usar no trabalho. Tudo abaixo foi conferido em 04/11/2026 nas fontes listadas no fim. Recursos, planos e nomes mudam, então confirme na fonte antes de decidir.\n\n## Para professores: ensinar a pensar, não só a responder\n\nO **modo de aprendizado** faz o Claude conduzir o estudante com perguntas, em vez de entregar a resposta pronta. Ele foi lançado em abril de 2025 dentro do Claude for Education. Em agosto de 2025, segundo o Engadget, passou a aparecer para qualquer usuário do Claude.ai como a opção \"Learning\" no menu de estilos. O nome e o lugar do botão podem ter mudado desde então.\n\nPara instituições, o Claude for Education ganhou integrações com **Canvas**, **Panopto** e **Wiley**. Panopto e Wiley usam servidores MCP, e o Canvas entra pela interface LTI (Learning Tools Interoperability). Isso depende de a sua instituição aderir ao Claude for Education: não é algo que um professor liga sozinho.\n\nFora da instituição, o diretório de conectores do Claude traz, entre outros, **Google Drive**, **Canva** e **Notion**, para levar arquivos e materiais para dentro da conversa.\n\n**Para testar hoje:**\n\n- Escolha um tema da sua próxima aula.\n- Ative o estilo de aprendizado e peça que o Claude conduza você pelo tema, uma pergunta por vez.\n- Avalie: as perguntas fazem pensar ou só reformulam a resposta? Só depois decida se vale usar com a turma.\n\n## Para devs: do terminal ao pull request\n\nO **Claude Code** roda no terminal, em extensões para VS Code e JetBrains, no app desktop e no navegador (claude.ai/code). Todas essas superfícies usam o mesmo motor, então as instruções do projeto (o arquivo CLAUDE.md), as configurações e os servidores MCP valem em todas.\n\nDuas automações para conhecer:\n\n- **GitHub Actions e GitLab CI/CD:** revisão automática de pull requests e triagem de issues.\n- **Slack:** ao mencionar @Claude em um canal com o relato de um bug, o Claude abre uma sessão do Claude Code na web e devolve um pull request. Exige plano Pro, Max, Team ou Enterprise com acesso ao Claude Code, o Claude Code na web habilitado e ao menos um repositório do GitHub conectado. Em workspaces Team e Enterprise, a Anthropic está trocando essa versão pelo Claude Tag, então fale com o administrador do seu Slack. A documentação também avisa que o Claude pode seguir instruções de outras mensagens do contexto: use só em conversas de confiança.\n\nPelo **MCP**, o Claude Code conversa com ferramentas externas. A documentação cita exemplos como ler documentos no Google Drive, atualizar tickets no Jira e buscar dados no Slack. O cuidado vem da própria documentação: confie em cada servidor antes de conectá-lo, porque servidores que buscam conteúdo externo expõem você a injeção de instruções (prompt injection).\n\n**Para testar hoje:** abra o Claude Code em um projeto pequeno seu, de preferência em uma branch separada, e peça algo que dê para verificar, como \"escreva testes para o módulo de autenticação, rode e corrija as falhas\". Revise as mudanças antes de aceitar.\n\nPara aprender do zero, a Anthropic mantém cursos gratuitos, incluindo o \"Claude Code 101\", em [academy.claude.com](https://academy.claude.com/).\n\n## Para gestores: do Excel ao Slack, sem trocar de aba\n\nO Claude tem suplementos para o **Microsoft 365**: Excel, PowerPoint e Word estão disponíveis em todos os planos pagos, e o Outlook está em beta. O Excel não funciona no iPad nem no Android. Para um passo a passo com pedidos prontos, veja [Do Excel ao dashboard com o Claude](materia.html?m=do-excel-ao-dashboard-com-o-claude).\n\nPara ligar o Claude ao resto do dia, o diretório de conectores traz opções verificadas pela Anthropic para **Slack**, **Gmail**, **Google Calendar**, **Asana**, **Notion**, **HubSpot** e **Atlassian**, entre outras. Elas dão acesso a conversas, e-mails, agenda, projetos e contas de clientes.\n\n**Para testar hoje:** com um plano pago, instale o suplemento no Excel e peça uma análise de uma planilha fictícia ou de uma cópia dos seus dados. Antes de conectar e-mail, agenda ou CRM, confira o que o conector poderá ler e se a sua empresa autoriza esse uso.\n\n## Para quem faz games: promissor, mas ainda em teste\n\nDuas engines já têm servidor MCP próprio, e as duas ainda estão em fase de teste:\n\n- **Unity AI (beta aberto):** o servidor MCP vem junto do pacote do assistente de IA no editor. Um agente compatível consegue ler a hierarquia da cena, os objetos, os valores de componentes, as mensagens do console e as configurações de build, e também editar scripts. A Unity cita Claude Code, Cursor, Windsurf e Claude Desktop como clientes, conforme a versão do servidor. Exige Unity 6 ou superior, um projeto conectado ao Unity Cloud e teste ou assinatura do beta. A empresa avisa que os recursos podem mudar, ser limitados ou ser descontinuados sem aviso.\n- **Unreal Engine 5.8 (experimental):** segundo o Cryptobriefing, a versão 5.8, lançada em 17 de junho, traz um plugin experimental que transforma o editor em servidor MCP. Clientes compatíveis, como o Claude Desktop, podem trabalhar com Blueprints, assets, níveis, materiais e malhas. A reportagem lembra que recurso experimental pode estar longe de produção e que estúdios precisam de um processo forte de revisão para pegar erros de IA.\n- **Godot e outros, pela comunidade:** existem servidores MCP feitos pela comunidade, como um para o Godot 4 que inspeciona cenas e scripts e que o próprio diretório descreve como projeto não oficial. Não são da Anthropic nem das engines: leia o repositório, confira as permissões e teste num projeto sem valor antes de usar no seu.\n\n**Para testar hoje:** comece em um projeto de estudo, nunca no jogo em produção, e com controle de versão ligado. Peça tarefas pequenas e fáceis de revisar, como organizar a hierarquia de uma cena ou escrever um script simples, e confira cada mudança.\n\n## Por onde começar\n\nTeste um vínculo por vez:\n\n- **Professores:** o modo de aprendizado, com um tema da sua aula.\n- **Devs:** o Claude Code, em um projeto seu.\n- **Gestores:** uma análise direto no Excel ou no PowerPoint, em uma cópia dos dados.\n- **Games:** um projeto de estudo e um servidor MCP de fonte confiável.\n\n## Limites e cuidados\n\n- Os recursos citados dependem de plano, de instituição, de versão e, em alguns casos, de beta. Podem mudar.\n- Conectar o Claude a e-mail, agenda, código ou arquivos dá a ele acesso a esse conteúdo. Conecte só o necessário.\n- O Claude pode errar: revise o resultado antes de usar no trabalho.\n- O Radar de IA compara várias IAs. Este especial trata do Claude, mas as perguntas valem para qualquer assistente: o que ele acessa, quanto custa e quem confere o resultado.\n\nTexto feito com ajuda do Claude.\n",
+      "categoria": "plataforma",
+      "tags": [
+        "claude",
+        "professores",
+        "devs",
+        "gestores",
+        "games"
+      ],
+      "capa_url": null,
+      "fontes": [
+        {
+          "n": "Claude Code: visão geral",
+          "u": "https://code.claude.com/docs/en/overview"
+        },
+        {
+          "n": "Claude Code no Slack",
+          "u": "https://code.claude.com/docs/en/slack"
+        },
+        {
+          "n": "Claude Code: MCP",
+          "u": "https://code.claude.com/docs/en/mcp"
+        },
+        {
+          "n": "Engadget (jul/2025): Claude conecta com Canvas, Panopto e Wiley",
+          "u": "https://engadget.com/ai/claude-can-now-connect-to-learning-apps-like-canvas-panopto-and-wiley-150038075.html"
+        },
+        {
+          "n": "VentureBeat (abr/2025): modo de aprendizado do Claude",
+          "u": "https://venturebeat.com/ai/anthropic-flips-the-script-on-ai-in-education-claude-learning-mode-makes-students-do-the-thinking"
+        },
+        {
+          "n": "Engadget (ago/2025): modo de aprendizado para todos os usuários",
+          "u": "https://www.engadget.com/ai/anthropic-brings-claudes-learning-mode-to-regular-users-and-devs-170018471/"
+        },
+        {
+          "n": "Claude for Microsoft 365",
+          "u": "https://claude.com/claude-for-excel"
+        },
+        {
+          "n": "Diretório de conectores do Claude",
+          "u": "https://claude.com/marketplace/connectors-plugins"
+        },
+        {
+          "n": "Unity: Unity AI em beta aberto e MCP",
+          "u": "https://unity.com/blog/unity-ai-mcp-how-to-get-started"
+        },
+        {
+          "n": "Cryptobriefing: Unreal Engine 5.8 e o suporte experimental a MCP",
+          "u": "https://cryptobriefing.com/unreal-engine-5-8-mcp-server-support/"
+        },
+        {
+          "n": "Godot MCP, projeto da comunidade (Glama)",
+          "u": "https://glama.ai/mcp/servers/raising-heart/godot-mcp"
+        }
+      ],
+      "autor": "Rodrigo Brandelero",
+      "publicada_em": "2026-11-04T12:00:00-03:00",
+      "conferido_em": "2026-11-04",
+      "destaque": false
+    }
+  ]
+}

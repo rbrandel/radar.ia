@@ -1,7 +1,8 @@
 # Radar de IA — como manter
 
 Site estático (GitHub Pages): `index.html`, `app.js`, `styles.css` e `data.json`.
-Não precisa de servidor nem de banco de dados. Os dados ficam no `data.json`.
+Não precisa de servidor. Os dados do radar (lançamentos, enquete da semana) ficam no `data.json`.
+As **matérias** (aba Matérias e bloco Novidades da capa) ficam no Supabase, com cópia de segurança em `noticias.json` (seção 5.1).
 
 ## 1. Antes de publicar (só uma vez): ligar o formulário de contato ao Formspree
 
@@ -84,7 +85,7 @@ Outras opções: `--hoje AAAA-MM-DD` (simula outro dia) e `--so-copia-embutida` 
 
 ## 4. Se você mudar o visual (classes Tailwind)
 
-O `styles.css` é gerado e já vem pronto. Se você adicionar classes novas no `index.html` ou no `app.js`, gere de novo:
+O `styles.css` é gerado e já vem pronto. Se você adicionar classes novas no `index.html`, no `app.js` ou nos arquivos das matérias (`materia.html`, `materia.js`, `materias.js`, `novidades.js`, `admin.html`, `admin.js`), gere de novo:
 
 ```
 npm run build:css
@@ -119,6 +120,26 @@ Arquivos do lembrete de sábado (seção 2.1):
 
 Cada candidato da enquete (`candidatos_semana` no `data.json`) precisa de um `id` curto em minúsculas, como `c1`. A enquete recomeça a cada semana.
 
+## 5.1 Matérias e novidades (Supabase, com histórico)
+
+A capa tem o bloco **Novidades** (chamadas das matérias mais recentes), a aba **Matérias** tem busca e filtro, e cada matéria tem a sua página (`materia.html?m=endereco`).
+Quem publica é você, pela área `admin.html` (login por link no e-mail, só para administradores). Cada gravação guarda uma versão no histórico, e nada é apagado: matéria que sai do ar vai para "Arquivada".
+Passo a passo para ligar e usar: **`supabase/GUIA-MATERIAS.md`**.
+
+| Arquivo | Para que serve |
+|---|---|
+| `supabase/03-materias.sql` | Cria as tabelas de matérias, o histórico de versões, a lista de administradores e as regras de segurança. Você cola no SQL Editor. |
+| `supabase/04-materias-iniciais.sql` | Coloca no banco as duas primeiras matérias. |
+| `materias.js` | Busca as matérias (Supabase, com reserva no `noticias.json`) e transforma o texto em página, com proteção contra HTML malicioso. |
+| `novidades.js` | Desenha o bloco Novidades da capa e a aba Matérias. |
+| `materia.html` e `materia.js` | Página de uma matéria, com fontes, "conferido em" e botões de compartilhar. |
+| `admin.html` e `admin.js` | Área de publicação: lista, editor com pré-visualização, agendamento, histórico e restauração de versões. Não aparece em buscas (`noindex`). |
+| `noticias.json` | Cópia das matérias publicadas. O site usa se o Supabase não responder. |
+| `exportar_materias.py` e `.github/workflows/exportar-materias.yml` | Todo dia, 09:00 em Brasília, atualizam o `noticias.json` com o que está no ar no Supabase (só faz commit se algo mudou). Não apagam a cópia se o Supabase vier vazio por engano. |
+| `materiais/` | Arquivos para download citados nas matérias (por exemplo a planilha de exemplo do guia do Excel). |
+
+Sem Supabase configurado (`config.js` vazio), o site mostra só as matérias do `noticias.json`, e a área de publicação avisa que falta ligar o Supabase.
+
 ## 6. Observações
 
 - A janela do radar é de 21 dias. O que sai dela vai para `arquivo_historico.json`.
@@ -126,4 +147,5 @@ Cada candidato da enquete (`candidatos_semana` no `data.json`) precisa de um `id
   e coloque o item num `novos-*.json`.
 - Sem o Supabase ligado, a enquete "Vote na melhor IA" guarda o voto só no aparelho de quem votou e não tem total de votos.
   Com ele ligado (seção 5), é uma enquete informal: não verifica identidade.
+- Se o aviso "Mostrando a cópia salva" aparecer nas matérias, o Supabase não respondeu. Veja se o projeto está pausado no painel dele.
 - A página tem uma cópia dos dados dentro do `index.html`, usada se o `data.json` não carregar (abrir o arquivo direto no navegador ou sem conexão).

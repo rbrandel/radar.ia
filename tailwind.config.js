@@ -1,6 +1,6 @@
 /** Mesma configuração que a página usava no CDN, agora para gerar o styles.css fixo. */
 module.exports = {
-  content: ['./index.html', './app.js'],
+  content: ['./index.html', './app.js', './materia.html', './materia.js', './materias.js', './novidades.js', './admin.html', './admin.js'],
   darkMode: 'class',
   theme: {
     extend: {
