@@ -50,17 +50,17 @@
     }
   ],
   "candidatos_semana": [
-    {
-      "id": "c1",
-      "name": "GPT-6.1 Terra",
-      "org": "OpenAI",
-      "badge": "Modelo para devs"
-    },
-    {
-      "id": "c2",
-      "name": "Ideogram Vector 1.0",
-      "org": "Ideogram",
-      "badge": "Design e imagem"
+     { 
+       "id": "c1", 
+       "name": "Build Live Apps", 
+       "org": "Cursor", 
+       "badge": "Agente para devs" 
+     },
+    { 
+      "id": "c2", 
+      "name": "Gemini Omni 1.2 Flash", 
+      "org": "Google", 
+      "badge": "Vídeo para criadores" 
     }
   ],
   "diretorios_volume": [
