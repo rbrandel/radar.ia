@@ -1,1 +1,17 @@
-[]
+[
+  {
+    "d": "2026-10-17",
+    "n": "DeepSeek V4.1 Flash",
+    "o": "DeepSeek",
+    "c": "modelos",
+    "p": "dev",
+    "l": "aberto",
+    "s": "Versão otimizada de alta velocidade do DeepSeek V4.1 com licença aberta e foco em desempenho.",
+    "a": "Reduz custo operacional e aumenta velocidade de inferência.",
+    "t": "Bom para implantação em ambientes de desenvolvimento, suporte e automação.",
+    "f": {
+      "n": "llm-stats",
+      "u": "https://llm-stats.com/llm-updates"
+    }
+  }
+]

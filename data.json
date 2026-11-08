@@ -1,6 +1,6 @@
 {
-  "edicao": "1 de Novembro de 2026",
-  "data_checagem": "2026-11-01",
+  "edicao": "8 de Novembro de 2026",
+  "data_checagem": "2026-11-08",
   "categorias": [
     {
       "id": "modelos",
@@ -142,6 +142,126 @@
     ]
   },
   "lancamentos": [
+    {
+      "d": "2026-11-06",
+      "n": "ElevenMusic com publicação no SoundCloud",
+      "o": "ElevenLabs",
+      "c": "voz",
+      "p": "criativo",
+      "l": "nao-informada",
+      "s": "Integração que permite publicar no SoundCloud as faixas originais criadas no ElevenMusic, da ElevenLabs. Depois de conectar a conta do SoundCloud em Linked Accounts, a pessoa abre a faixa, adiciona descrição, gênero e tags e clica em Save to SoundCloud para enviá-la ao perfil.",
+      "a": "Permite criar a faixa no ElevenMusic e publicá-la no SoundCloud em poucos passos. Membros do SoundCloud Artist Pro recebem três meses gratuitos do ElevenMusic, em oferta para quem tem 18 anos ou mais, válida até 31/10/2027.",
+      "t": "Crie uma faixa original no ElevenMusic, conecte sua conta em Profile settings > Linked Accounts e use Save to SoundCloud para publicar. Antes de divulgar, confira nos termos das duas plataformas as regras de direitos e monetização, que o anúncio não detalha.",
+      "f": {
+        "n": "ElevenLabs (blog)",
+        "u": "https://elevenlabs.io/blog/soundcloud"
+      }
+    },
+    {
+      "d": "2026-11-05",
+      "n": "Build Live Apps",
+      "o": "Cursor",
+      "c": "agentes",
+      "p": "dev",
+      "l": "nao-informada",
+      "s": "Recurso do Cursor para criar apps web e compartilhá-los por link: o Cursor cuida da construção, do banco de dados, da autenticação e da implantação, a partir de repositórios novos ou existentes no Cursor Origin e no GitHub. Ao publicar, roda verificações de segurança, e nada vai ao ar sem publicação explícita. Vale para planos pagos com cloud agents; o GitLab ainda não é suportado.",
+      "a": "Leva ferramentas internas do localhost para um link compartilhável. Administradores do time veem todos os apps e segredos, podem adicionar regras à revisão de segurança, aprovar publicações bloqueadas e despublicar qualquer app.",
+      "t": "Atualize o Cursor, abra um cloud agent em um repositório seu e peça um app pequeno, como um painel com tabela filtrável. Corrija o que as verificações de segurança apontarem e só então publique.",
+      "f": {
+        "n": "Cursor (changelog)",
+        "u": "https://cursor.com/changelog/build-live-apps"
+      }
+    },
+    {
+      "d": "2026-11-05",
+      "n": "Gemini Omni 1.2 Flash",
+      "o": "Google",
+      "c": "video",
+      "p": "criativo",
+      "l": "nao-informada",
+      "s": "Modelo de geração e edição de vídeo do Google, em disponibilidade geral na API Gemini e no Google Cloud. Gera clipes de 3 a 15 segundos (o Omni 1.1 chegava a 10) e aceita edição por conversa em várias etapas, como trocar produto, fundo, iluminação ou proporção de tela. Também está no Google Vids.",
+      "a": "Permite ajustar um clipe pronto sem gerar tudo de novo. O vídeo em 720p custa US$ 0,07 por segundo, 30% abaixo do Omni 1.1, segundo a cobertura do lançamento.",
+      "t": "Na API Gemini, gere um rascunho em 360p ou 720p com o Gemini Omni 1.2 Flash e, na mesma conversa, peça uma mudança pontual, como trocar o fundo ou a iluminação, para ver se o restante da cena se mantém. Só depois aumente a resolução.",
+      "f": {
+        "n": "Google (blog)",
+        "u": "https://blog.google/innovation-and-ai/technology/developers-tools/introducing-gemini-omni-1-2-flash/"
+      }
+    },
+    {
+      "d": "2026-11-04",
+      "n": "Ripple-65B Preview",
+      "o": "Ricursive Intelligence",
+      "c": "modelos",
+      "p": "dev",
+      "l": "aberto",
+      "s": "Modelo denso de 65 bilhões de parâmetros, em versão preview sob licença Apache 2.0, com contexto de até 1 milhão de tokens e chamada nativa de ferramentas. A Ricursive o descreve como voltado a tarefas agênticas. Os pesos estão no Hugging Face e há acesso por API no OpenRouter.",
+      "a": "Oferece um modelo aberto de porte médio, com pesos para baixar e acesso por API. No OpenRouter, custa US$ 0,20 por milhão de tokens de entrada e US$ 0,60 de saída. Os resultados em benchmarks são divulgados pela própria Ricursive.",
+      "t": "Chame ricursiveai/ripple-65b-preview pelo OpenRouter com uma tarefa real do seu repositório, como corrigir um teste que falha, e compare o resultado com o modelo que você usa hoje. Por ser preview, use o teste como avaliação, não como troca em produção.",
+      "f": {
+        "n": "Hugging Face (Ricursive)",
+        "u": "https://huggingface.co/ricursiveAI/Ripple-65B-Preview"
+      }
+    },
+    {
+      "d": "2026-11-04",
+      "n": "Perplexity Teammates",
+      "o": "Perplexity",
+      "c": "agentes",
+      "p": "negocios",
+      "l": "nao-informada",
+      "s": "Agentes pessoais da Perplexity para trabalho de longa duração, construídos sobre o Perplexity Computer. Cada Teammate planeja e coordena projetos, monitora o andamento sem esperar nova pergunta e traz os resultados para revisão. Pode ser adicionado a um canal do Slack. Começa na web para assinantes do plano Max; o iOS vem em seguida.",
+      "a": "Permite delegar frentes recorrentes de marketing, vendas, suporte e operações. Cada agente roda em ambiente isolado, e a pessoa pode revisar o trabalho, assumir a área de trabalho ou redirecioná-lo.",
+      "t": "Com o plano Max, abra Teammates na web, dê uma função ao agente (por exemplo, acompanhar as métricas semanais de vendas), conecte só as ferramentas de que ele precisa, como o Slack, e descreva o que deve entregar e quando agir. Revise a primeira entrega antes de ampliar o escopo.",
+      "f": {
+        "n": "Perplexity",
+        "u": "https://www.perplexity.ai/hub/blog/teammates-are-agents-for-complex-ongoing-work"
+      }
+    },
+    {
+      "d": "2026-11-04",
+      "n": "GPT-Image-2.6 Flare e Sunburst",
+      "o": "OpenAI",
+      "c": "video",
+      "p": "criativo",
+      "l": "nao-informada",
+      "s": "Nova geração de imagem da OpenAI, com dois modelos na API: Flare, voltado a velocidade (em qualidade baixa, pode gerar uma imagem em cerca de seis segundos), e Sunburst, voltado a detalhe e à consistência entre edições em qualidade média ou alta. A OpenAI informa geração 50% mais rápida que antes. No ChatGPT e no Codex, o Images 2.6 cria GIFs animados.",
+      "a": "Permite fazer o rascunho rápido com o Flare e o acabamento com o Sunburst. A API tem marcação de imagem para indicar as áreas a alterar, e há exportação de designs em SVG para sites, apps e impressão.",
+      "t": "No ChatGPT, peça um GIF animado a partir de um personagem ou da foto de um produto. Na API, gere um pôster com gpt-image-2.6-flare em qualidade baixa para fechar a composição e refaça a versão final com gpt-image-2.6-sunburst, pedindo mudanças pontuais para ver se o restante se mantém.",
+      "f": {
+        "n": "TestingCatalog",
+        "u": "https://testingcatalog.com/openai-launches-images-2-6-with-gifs-and-image-reference"
+      }
+    },
+    {
+      "d": "2026-11-04",
+      "n": "Hy4",
+      "o": "Tencent",
+      "c": "modelos",
+      "p": "dev",
+      "l": "nao-informada",
+      "s": "Versão oficial do modelo de 770 bilhões de parâmetros da Tencent, agora com visão e uso de computador: interpreta gráficos e documentos, raciocina sobre várias imagens e opera ferramentas de linha de comando e interfaces gráficas. A Tencent diz que pretende liberar os pesos e um system card em breve.",
+      "a": "Entrega visão e controle de computador por API. O preço padrão é de US$ 0,834 por milhão de tokens de entrada e US$ 2,501 por milhão de saída; o OpenRouter lista os dois valores com 50% de desconto (US$ 0,417 e US$ 1,251).",
+      "t": "No OpenRouter, escolha o modelo tencent/hy4, envie a imagem de um gráfico ou de uma página de relatório que você já usa e peça os números principais em uma tabela. Compare custo e resultado com o modelo que você usa hoje. Como os pesos ainda não saíram, trate o teste como avaliação por API.",
+      "f": {
+        "n": "TechNode",
+        "u": "https://technode.com/2026/11/04/tencent-launches-hy4-with-vision-and-computer-use-capabilities/"
+      }
+    },
+    {
+      "d": "2026-11-03",
+      "n": "AI Kill Switch (Falcon Guardian)",
+      "o": "CrowdStrike",
+      "c": "agentes",
+      "p": "negocios",
+      "l": "nao-informada",
+      "s": "Recurso do Falcon Guardian que permite a um administrador autorizado encerrar um agente de IA fora de controle, impedir que ele rode de novo e cortar seu acesso à rede corporativa. Cada ação fica na trilha de auditoria. A CrowdStrike diz que já está disponível, começando pelo gateway de IA, com o encerramento no endpoint em seguida.",
+      "a": "Dá à área de segurança um controle de parada para agentes, acionado por uma pessoa autorizada e com registro de cada ação.",
+      "t": "Liste hoje os agentes de IA que rodam na sua empresa: quem os criou, a que sistemas têm acesso e quem pode desligá-los. Use a lista para checar com o time de segurança se um controle de parada como este cobriria os casos críticos.",
+      "f": {
+        "n": "CrowdStrike (comunicado)",
+        "u": "https://www.crowdstrike.com/en-us/press-releases/crowdstrike-introduces-ai-kill-switch-for-ai-safety/"
+      }
+    },
     {
       "d": "2026-10-27",
       "n": "Agent Tree",
@@ -410,21 +530,6 @@
       "f": {
         "n": "FutureTools",
         "u": "https://futuretools.io/news"
-      }
-    },
-    {
-      "d": "2026-10-17",
-      "n": "DeepSeek V4.1 Flash",
-      "o": "DeepSeek",
-      "c": "modelos",
-      "p": "dev",
-      "l": "aberto",
-      "s": "Versão otimizada de alta velocidade do DeepSeek V4.1 com licença aberta e foco em desempenho.",
-      "a": "Reduz custo operacional e aumenta velocidade de inferência.",
-      "t": "Bom para implantação em ambientes de desenvolvimento, suporte e automação.",
-      "f": {
-        "n": "llm-stats",
-        "u": "https://llm-stats.com/llm-updates"
       }
     }
   ],
