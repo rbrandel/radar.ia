@@ -1,0 +1,139 @@
+{
+  "lancamentos": [
+    {
+      "d": "2026-11-12",
+      "n": "Gemini 4 Hydrogen",
+      "o": "Google",
+      "c": "modelos",
+      "p": "dev",
+      "l": "nao-informada",
+      "s": "Modelo do Google para o trabalho diário de programação e de agentes. Os modelos Gemini 4 Carbon e Gemini 4 Argon ficam com o raciocínio mais longo. Tem contexto de 1 milhão de tokens de entrada e quatro níveis de raciocínio (baixo, médio, alto, que é o padrão, e xhigh). Está no app Gemini, na Busca, no Google AI Studio e na API Gemini.",
+      "a": "Custa US$ 1,50 por milhão de tokens de entrada e US$ 7,50 por milhão de saída, valor igual em todo o contexto. No app Gemini, quem usa o plano grátis o recebe pela seleção automática de modelo, quando ele serve ao pedido.",
+      "t": "No Google AI Studio ou na API Gemini, rode uma tarefa real do seu repositório, como corrigir um teste que falha, nos níveis de raciocínio baixo e alto. Compare tempo, tokens gastos e acerto, e use o resultado para decidir quando o Hydrogen basta e quando vale um modelo maior.",
+      "f": {
+        "n": "Google (blog)",
+        "u": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-hydrogen/"
+      }
+    },
+    {
+      "d": "2026-11-09",
+      "n": "Claude Fable 5.2 e Mythos 5.2",
+      "o": "Anthropic",
+      "c": "modelos",
+      "p": "dev",
+      "l": "nao-informada",
+      "s": "Nova versão dos modelos Claude. O Fable 5.2 já está disponível, e o Mythos 5.2 fica restrito a organizações verificadas pelos programas de Ciências da Vida e de Cibersegurança. Segundo a Anthropic, gera respostas até 30% mais rápido que as versões 5.1 e melhora em programação, raciocínio e visão.",
+      "a": "O Fable 5.2 custa US$ 8 por milhão de tokens de entrada e US$ 40 por milhão de saída. Segundo a cobertura do lançamento, a Anthropic segue recomendando o Claude Opus 5.5 para o uso diário na maioria das tarefas de código e de conhecimento.",
+      "t": "Se você já usa o Fable 5.1, escolha de 5 a 10 pedidos reais seus e rode os mesmos no 5.1 e no 5.2. Compare qualidade, tempo de resposta e custo por tarefa antes de trocar o modelo em produção.",
+      "f": {
+        "n": "SD Times",
+        "u": "https://sdtimes.com/ai/anthropic-introduces-claude-fable-5-2-mythos-5-2/"
+      }
+    },
+    {
+      "d": "2026-11-10",
+      "n": "Scribe v3 e Scribe v3 Live",
+      "o": "ElevenLabs",
+      "c": "voz",
+      "p": "dev",
+      "l": "nao-informada",
+      "s": "Dois modelos de transcrição de fala para texto: o Scribe v3, para áudio gravado, e o Scribe v3 Live, de baixa latência, para áudio em tempo real. O v3 Live está no ElevenAgents e os dois estão na API, onde basta trocar o identificador do modelo para scribe_v3 ou scribe_v3_live.",
+      "a": "Em testes da própria ElevenLabs, o Scribe v3 erra 27% menos palavras que o Scribe v2, e o v3 Live erra 43% menos que o Scribe v2 Realtime. Os testes multilíngues cobrem 102 idiomas e usam fala curta, limpa e lida.",
+      "t": "Separe três gravações suas, uma limpa e duas com ruído ou sotaque, e transcreva no Scribe v3 e no serviço que você usa hoje. Compare os erros e a identificação de quem fala em cada trecho. Para tempo real, repita o teste com o scribe_v3_live.",
+      "f": {
+        "n": "ElevenLabs (blog)",
+        "u": "https://elevenlabs.io/blog/scribe-v3"
+      }
+    },
+    {
+      "d": "2026-11-10",
+      "n": "Live 3",
+      "o": "Fish Audio",
+      "c": "voz",
+      "p": "negocios",
+      "l": "nao-informada",
+      "s": "Modelo de voz full-duplex da Fish Audio, que continua ouvindo enquanto fala, de modo que pausas, confirmações e mudanças de ideia podem alterar a resposta. A empresa diz que ele pode decidir responder em apenas 186 milissegundos. Fala inglês por enquanto. Está na plataforma Fish Agent e na API, e empresas podem instalá-lo em servidor próprio.",
+      "a": "Permite montar um agente de voz com instruções, ferramentas e fluxos próprios e testá-lo em fish.audio/agents. A página do lançamento não informa o preço do Live 3 nem se há uso grátis.",
+      "t": "Em fish.audio/agents, crie um agente de atendimento com um roteiro curto em inglês e teste as interrupções: fale por cima da resposta e mude de ideia no meio da frase. Veja se ele acompanha e anote o tempo de resposta antes de considerar uso real.",
+      "f": {
+        "n": "Fish Audio (blog)",
+        "u": "https://fish.audio/blog/introducing-live-3/"
+      }
+    },
+    {
+      "d": "2026-11-10",
+      "n": "Businesses in ChatGPT (Business Hub)",
+      "o": "OpenAI",
+      "c": "agentes",
+      "p": "negocios",
+      "l": "nao-informada",
+      "s": "Beta em que empresas reivindicam um perfil verificado no ChatGPT, gerenciado no Business Hub, e lançam um agente que conversa com clientes usando as informações dos produtos. Quando a empresa aparece numa resposta, o usuário pode abrir o perfil e falar com o agente. Por ora, o agente é limitado a empresas dos EUA de comércio eletrônico e de serviços online.",
+      "a": "O Business Hub mostra menções à empresa no ChatGPT, cliques para o site e assuntos comuns nas conversas. Segundo a cobertura, a OpenAI diz que não compartilha as conversas com as empresas, e o agente pode ser patrocinado como destino de anúncios do ChatGPT.",
+      "t": "Se a sua empresa vende ou atende online, pergunte ao ChatGPT sobre a sua marca e anote o que ele diz dos seus produtos, para ter uma base antes de pedir um perfil. Confira as regras da OpenAI para agentes: devem se identificar como IA, manter preços corretos e pedir aprovação antes de compras.",
+      "f": {
+        "n": "The Next Web",
+        "u": "https://thenextweb.com/news/openai-businesses-in-chatgpt-business-agents"
+      }
+    }
+  ],
+  "candidatos_semana": [
+    {
+      "id": "c1",
+      "name": "Gemini 4 Hydrogen",
+      "org": "Google",
+      "badge": "Modelo para devs",
+      "url": "https://aistudio.google.com",
+      "teste": "Rode uma tarefa real do seu repositório nos níveis de raciocínio baixo e alto e compare tempo e acerto."
+    },
+    {
+      "id": "c2",
+      "name": "Scribe v3 Live",
+      "org": "ElevenLabs",
+      "badge": "Voz em tempo real",
+      "url": "https://elevenlabs.io/blog/scribe-v3",
+      "teste": "Transcreva três gravações suas, uma limpa e duas com ruído, e compare com o serviço que você usa hoje."
+    },
+    {
+      "id": "u1",
+      "grupo": "uso",
+      "name": "ChatGPT",
+      "org": "OpenAI",
+      "badge": "OpenAI",
+      "url": "https://chatgpt.com"
+    },
+    {
+      "id": "u2",
+      "grupo": "uso",
+      "name": "Gemini",
+      "org": "Google",
+      "badge": "Google",
+      "url": "https://gemini.google.com"
+    },
+    {
+      "id": "u3",
+      "grupo": "uso",
+      "name": "Microsoft Copilot",
+      "org": "Microsoft",
+      "badge": "Microsoft",
+      "url": "https://copilot.microsoft.com"
+    },
+    {
+      "id": "u4",
+      "grupo": "uso",
+      "name": "Perplexity",
+      "org": "Perplexity",
+      "badge": "Perplexity",
+      "url": "https://www.perplexity.ai"
+    }
+  ],
+  "destaque_uso": {
+    "titulo": "Mais usadas no Brasil",
+    "nota": "A Comscore cita estas plataformas entre as de IA mais acessadas no Brasil no relatório Retrospectiva Digital 2025, com dados de 2025. A ordem aqui é alfabética, sem ranking. O Canva, também citado, fica fora desta votação.",
+    "teste": "Mesmo teste para todas: cole um texto ou uma tabela sua e peça 3 conclusões, cada uma com uma ação. Confira os números no original antes de votar.",
+    "fonte": {
+      "n": "ABC da Comunicação, sobre o relatório da Comscore",
+      "u": "https://www.abcdacomunicacao.com.br/chatgpt-e-gemini-impulsionam-alta-de-176-e-501-nas-visitas-a-ias-no-pais-aponta-relatorio-da-comscore/"
+    },
+    "conferido": "2026-11-13"
+  }
+}

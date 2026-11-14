@@ -10,5 +10,65 @@
     "a": "Aumenta velocidade de execução e automação direta no ambiente de desenvolvimento.",
     "t": "Use para orquestrar tarefas em terminal, validação de código e automação de fluxos dev.",
     "_aviso": "Removido do data.json em 01/11/2026: não encontrei fonte para \"Claude Code 2.5 CLI\". Confirme em uma fonte oficial, preencha \"f\" com {\"n\": nome, \"u\": endereço} e mova para um novos-AAAA-MM-DD.json."
+  },
+  {
+    "d": "2026-11-10",
+    "n": "MiniMax H3 Image",
+    "o": "MiniMax",
+    "c": "video",
+    "p": "criativo",
+    "l": "nao-informada",
+    "s": "Modelo de imagem da MiniMax que gera imagens a partir de texto e edita com até 16 imagens de referência, em até 20 megapixels, com saída em 1K, 2K ou 4K, segundo a Runware, que o hospeda.",
+    "_aviso": "Data conflitante: o llmreference diz 10/11/2026 e o OrcaRouter diz 03/11/2026 para o modelo (10/11 seria só o expansor de prompt). Não achei o comunicado da MiniMax. O OrcaRouter e o llmreference citam pesos abertos no Hugging Face com licença comunitária própria, que exclui UE, Reino Unido, Coreia do Sul e EUA; leia o texto da licença antes de afirmar \"aberto\". Preço na Runware (conferir): US$ 0,016 por imagem em 1K ou 2K no modo padrão. Fonte para completar o campo f: https://runware.ai/minimax-h3-image"
+  },
+  {
+    "d": "2026-11-05",
+    "n": "Inkling 2 Small",
+    "o": "Thinking Machines",
+    "c": "modelos",
+    "p": "dev",
+    "l": "nao-informada",
+    "s": "Modelo de mistura de especialistas com 594 bilhões de parâmetros no total e 17 bilhões ativos por token, que aceita texto e imagem. Na Tinker, plataforma de ajuste fino da empresa, custa US$ 0,30 por milhão de tokens de entrada e US$ 1,00 de saída, segundo o letsdatascience.",
+    "_aviso": "Lançado em 05/11, fora da janela desta edição. Em 09/11 os pesos ainda não podiam ser baixados (licença Apache 2.0 planejada, sem data). O resumo do The Neuron de 13/11 diz que os pesos já estão no Hugging Face sob Apache 2.0, citando um post no X que não consegui abrir. Se a página do modelo no Hugging Face confirmar, o item vale como liberação dos pesos, com a data do dia. Fonte para completar f: https://letsdatascience.com/blog/inkling-2-small-30-cents-per-million-tokens-weights-still-locked"
+  },
+  {
+    "d": "2026-11-13",
+    "n": "Atlas aberto a todos",
+    "o": "World Labs",
+    "c": "video",
+    "p": "criativo",
+    "l": "nao-informada",
+    "s": "O The Neuron de 13/11 diz que o Atlas, da World Labs, está aberto a todos, com apps e interfaces para desenvolvedores que reconstroem cenas 3D a partir de imagens e geram vídeos ou ativos de cena 3D.",
+    "_aviso": "Só achei essa menção, que cita um post no X. O Atlas já existia em acesso antecipado desde 01/09/2026. A data acima é a da notícia, não a do anúncio. Confirme no site ou no blog da World Labs a data, o preço e o que mudou antes de usar."
+  },
+  {
+    "d": "2026-11-13",
+    "n": "Krea Bots",
+    "o": "Krea",
+    "c": "agentes",
+    "p": "criativo",
+    "l": "nao-informada",
+    "s": "O The Neuron de 13/11 descreve os Krea Bots como colaboradores de IA para levar projetos criativos adiante e se adaptar às preferências de uma equipe, em beta.",
+    "_aviso": "Fonte primária não localizada. A página do Krea Agent que abri não tem data, não cita \"Bots\" e não cita créditos (o resumo fala em US$ 1.000 em créditos). Confirme o nome, a data e o acesso no blog do Krea."
+  },
+  {
+    "d": "2026-11-10",
+    "n": "Muse Ember 1.0 e modelos especializados do Muse",
+    "o": "Meta",
+    "c": "modelos",
+    "p": "negocios",
+    "l": "nao-informada",
+    "s": "O The Neuron de 13/11 descreve versões especializadas dos modelos da Meta, com Active Memory e Active Focus, em liberação no Muse e no Meta AI. Os números de desempenho citados são da própria Meta.",
+    "_aviso": "Não consegui abrir a página da Meta (research.meta.ai). Os rastreadores listam o Muse Ember 1.0 em 09 ou 10/11, sem fonte. Confirme data, nome do modelo e disponibilidade na fonte da Meta."
+  },
+  {
+    "d": "2026-11-12",
+    "n": "Granite 4.1 com LLMON (prévia)",
+    "o": "IBM",
+    "c": "modelos",
+    "p": "dev",
+    "l": "nao-informada",
+    "s": "O The Neuron de 13/11 descreve variantes de prévia do Granite 4.1, de 3B e 8B, treinadas para separar instruções de dados externos por meio de uma marcação própria (LLMON). A própria descrição as chama de experimentais.",
+    "_aviso": "Fonte primária (blog da IBM no Hugging Face) não localizada por mim. Falta confirmar data, licença e como testar."
   }
 ]

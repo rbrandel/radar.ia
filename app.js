@@ -313,7 +313,8 @@
             if (scores) scores.innerHTML = '';
             return;
         }
-        const winner = candidates[0];
+        /* A IA da Semana é o primeiro candidato que não é do grupo "uso" (mais usadas). */
+        const winner = candidates.find((c) => c.grupo !== 'uso') || candidates[0];
         topCard.innerHTML =
             '<h3 class="text-lg font-extrabold text-white leading-snug">' + esc(winner.name) + '</h3>' +
             '<span class="text-xs text-indigo-300 font-mono-code block">Desenvolvido por ' + esc(winner.org) + '</span>' +
@@ -341,19 +342,60 @@
         }
         if (status) status.textContent = online ? (remote.busy ? 'Registrando seu voto...' : remote.error) : '';
 
-        list.innerHTML = candidates.map((c) => {
+        /* Cada candidato pode trazer: grupo ("uso" = bloco "mais usadas"), url (https, para testar) e teste (sugestão curta). */
+        const linhaCandidato = (c) => {
             const voted = online ? remote.myVote === c.id : !!state.votes[c.id];
             const total = online && remote.totals ? Number(remote.totals[c.id]) || 0 : null;
             const sub = esc(c.badge || c.org) + (total == null ? '' : ' · ' + fmtNumber(total) + (total === 1 ? ' voto' : ' votos'));
             const wait = online && remote.busy;
-            return '<div class="bg-slate-950/80 border border-slate-800/80 rounded-xl p-2.5 pl-3 flex items-center justify-between gap-2">' +
-                '<div class="space-y-0.5 min-w-0"><span class="text-sm font-bold text-white block">' + esc(c.name) + '</span>' +
+            const href = typeof c.url === 'string' && c.url.indexOf('https://') === 0 ? safeUrl(c.url) : '';
+            const teste = typeof c.teste === 'string' ? c.teste.trim().slice(0, 200) : '';
+            const testar = href
+                ? '<a href="' + esc(href) + '" target="_blank" rel="noopener noreferrer" class="px-3 min-h-[44px] rounded-lg text-xs font-bold transition-all inline-flex items-center gap-1 flex-shrink-0 border border-slate-700 bg-slate-900 text-indigo-300 hover:text-indigo-200">' +
+                    'Testar <span aria-hidden="true">↗</span><span class="sr-only"> ' + esc(c.name) + ' (abre em nova aba)</span></a>'
+                : '';
+            return '<div class="bg-slate-950/80 border border-slate-800/80 rounded-xl p-2.5 pl-3 space-y-1.5">' +
+                '<div class="flex flex-wrap items-center justify-between gap-2">' +
+                '<div class="space-y-0.5 min-w-0 flex-1" style="flex-basis:9rem"><span class="text-sm font-bold text-white block">' + esc(c.name) + '</span>' +
                 '<span class="text-xs text-slate-400 font-mono-code block">' + sub + '</span></div>' +
+                '<div class="flex items-center gap-2 flex-shrink-0">' + testar +
                 '<button type="button" data-vote="' + esc(c.id) + '" aria-pressed="' + voted + '"' + (wait ? ' disabled aria-busy="true"' : '') +
                 ' class="px-3 min-h-[44px] rounded-lg text-xs font-bold transition-all flex items-center gap-1 flex-shrink-0 disabled:opacity-60 ' +
                 (voted ? 'bg-emerald-600 text-white' : 'bg-slate-800 hover:bg-indigo-600 text-slate-100') + '">' +
-                (voted ? '✓ Meu voto' : '⚡ Votar') + '</button></div>';
-        }).join('');
+                (voted ? '✓ Meu voto' : '⚡ Votar') + '</button></div></div>' +
+                (teste ? '<p class="text-xs text-slate-300 leading-relaxed"><span class="font-semibold text-white">Teste:</span> ' + esc(teste) + '</p>' : '') +
+                '</div>';
+        };
+
+        /* Cabeçalho do bloco "mais usadas": título, nota, teste comum, fonte e data de conferência (tudo vem do data.json). */
+        const cabecalhoUso = () => {
+            const dest = appData.destaque_uso && typeof appData.destaque_uso === 'object' ? appData.destaque_uso : {};
+            const fonte = dest.fonte && typeof dest.fonte === 'object' ? dest.fonte : {};
+            const fonteHref = typeof fonte.u === 'string' && fonte.u.indexOf('https://') === 0 ? safeUrl(fonte.u) : '';
+            const conf = parseISO(dest.conferido);
+            const confTxt = conf ? String(conf.getDate()).padStart(2, '0') + '/' + String(conf.getMonth() + 1).padStart(2, '0') + '/' + conf.getFullYear() : '';
+            const origem = [
+                fonteHref ? 'Fonte: <a href="' + esc(fonteHref) + '" target="_blank" rel="noopener noreferrer" class="font-semibold text-indigo-300 hover:text-indigo-200 underline underline-offset-2">' +
+                    esc(fonte.n || 'fonte') + ' <span aria-hidden="true">↗</span><span class="sr-only">(abre em nova aba)</span></a>.' : '',
+                confTxt ? 'Conferido em ' + esc(confTxt) + '.' : ''
+            ].filter(Boolean).join(' ');
+            return '<div class="space-y-1.5 pt-3 border-t border-slate-800" style="margin-top:1rem">' +
+                '<p class="text-xs font-bold text-amber-300 uppercase tracking-wider font-mono-code">⭐ Destaque: ' + esc(dest.titulo || 'Mais usadas') + '</p>' +
+                (dest.nota ? '<p class="text-xs text-slate-400 leading-relaxed">' + esc(dest.nota) + '</p>' : '') +
+                (dest.teste ? '<p class="text-xs text-slate-300 leading-relaxed">' + esc(dest.teste) + '</p>' : '') +
+                (origem ? '<p class="text-xs text-slate-400 leading-relaxed">' + origem + '</p>' : '') +
+                '</div>';
+        };
+
+        const novas = candidates.filter((c) => c.grupo !== 'uso');
+        const usadas = candidates.filter((c) => c.grupo === 'uso');
+        let html = '';
+        if (novas.length && usadas.length) {
+            html += '<p class="text-xs font-bold text-indigo-300 uppercase tracking-wider font-mono-code pt-1">Novidades da semana</p>';
+        }
+        html += novas.map(linhaCandidato).join('');
+        if (usadas.length) html += cabecalhoUso() + usadas.map(linhaCandidato).join('');
+        list.innerHTML = html;
     }
 
     /* ---------- indicadores ---------- */

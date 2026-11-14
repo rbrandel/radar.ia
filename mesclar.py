@@ -12,6 +12,12 @@ Uso:
 O arquivo de novos é uma lista JSON (veja novos.modelo.json). Uma lista vazia ([]) registra
 "checei e não houve novidade": só a data da checagem muda.
 
+O arquivo também pode ser um objeto { "lancamentos": [ ... ] } e, junto, trazer a enquete da semana:
+  "candidatos_semana": [ {id, name, org, badge, grupo, url, teste}, ... ]   (de 1 a 20; troca a lista inteira)
+  "destaque_uso": {titulo, nota, teste, fonte: {n, u}, conferido}            (bloco "mais usadas")
+Candidatos com "grupo": "uso" exigem o destaque_uso, com fonte e data de conferência.
+Endereços (url e fonte.u) precisam começar com https://. Sem essas duas chaves, a enquete não muda.
+
 Regras (se algo falhar, NADA é gravado):
   - todos os campos são obrigatórios: d, n, o, c, p, l, s, a, t e f (fonte: {"n": nome, "u": endereço});
   - a data (d) precisa existir e não pode ser depois de hoje;
@@ -43,6 +49,14 @@ MESES = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
 RE_DATA = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 RE_URL = re.compile(r"^https?://[^\s<>\"']+$", re.I)
 RE_COPIA = re.compile(r'(<script type="application/json" id="radar-fallback">)(.*?)(</script>)', re.S)
+RE_ID = re.compile(r"^[a-z0-9][a-z0-9_-]{0,39}$")
+RE_HTTPS = re.compile(r"^https://[^\s<>\"']+$", re.I)
+CAMPOS_CANDIDATO = ["id", "name", "org", "badge", "grupo", "url", "teste", "notas"]
+LIMITES_CANDIDATO = {"name": 120, "org": 120, "badge": 60, "teste": 200}
+CAMPOS_DESTAQUE = ["titulo", "nota", "teste", "fonte", "conferido"]
+LIMITES_DESTAQUE = {"titulo": 60, "nota": 320, "teste": 240}
+GRUPOS = ["uso"]
+NOTAS = ["inovacao", "usabilidade", "impacto_dev", "custo_beneficio"]
 
 
 def hoje_brasilia():
@@ -142,6 +156,91 @@ def validar_item(bruto, rotulo, hoje, janela):
     return item, erros, avisos
 
 
+def validar_destaque(bruto, rotulo, hoje):
+    """Valida o bloco "mais usadas". Devolve (destaque_limpo, erros)."""
+    erros = []
+    if not isinstance(bruto, dict):
+        return None, ["%s: destaque_uso precisa ser um objeto { ... }." % rotulo]
+    dest = {}
+    for k, v in bruto.items():
+        if str(k).startswith("_"):
+            continue
+        if k not in CAMPOS_DESTAQUE:
+            print("AVISO: %s: campo desconhecido \"%s\" em destaque_uso foi ignorado." % (rotulo, k))
+            continue
+        dest[k] = limpar_texto(v) if k != "fonte" else v
+    for k in ("titulo", "fonte", "conferido"):
+        if k not in dest or dest[k] in ("", None, {}):
+            erros.append("%s: destaque_uso precisa do campo \"%s\"." % (rotulo, k))
+    for k, maximo in LIMITES_DESTAQUE.items():
+        if k in dest:
+            if not isinstance(dest[k], str):
+                erros.append("%s: destaque_uso.%s precisa ser texto." % (rotulo, k))
+            elif len(dest[k]) > maximo:
+                erros.append("%s: destaque_uso.%s tem %d caracteres; o máximo é %d." % (rotulo, k, len(dest[k]), maximo))
+    if "conferido" in dest and dest["conferido"] not in ("", None):
+        d = data_valida(dest["conferido"])
+        if d is None:
+            erros.append("%s: destaque_uso.conferido \"%s\" não existe ou não está no formato AAAA-MM-DD." % (rotulo, dest["conferido"]))
+        elif d > hoje:
+            erros.append("%s: destaque_uso.conferido (%s) é depois de hoje (%s)." % (rotulo, dest["conferido"], hoje.isoformat()))
+    f = dest.get("fonte")
+    if f not in (None, "", {}):
+        if not isinstance(f, dict) or not str(f.get("n", "")).strip() or not str(f.get("u", "")).strip():
+            erros.append("%s: destaque_uso.fonte precisa ter {\"n\": nome da fonte, \"u\": endereço}." % rotulo)
+        else:
+            dest["fonte"] = {"n": limpar_texto(str(f["n"])), "u": str(f["u"]).strip()}
+            if not RE_HTTPS.match(dest["fonte"]["u"]):
+                erros.append("%s: o endereço de destaque_uso.fonte precisa começar com https://." % rotulo)
+    return dest, erros
+
+
+def validar_candidatos(bruto, rotulo):
+    """Valida a lista da enquete. Devolve (lista_limpa, erros)."""
+    if not isinstance(bruto, list) or not 1 <= len(bruto) <= 20:
+        return None, ["%s: candidatos_semana precisa ser uma lista de 1 a 20 candidatos." % rotulo]
+    erros, limpos, ids = [], [], set()
+    for i, c in enumerate(bruto):
+        r = "%s, candidato %d" % (rotulo, i + 1)
+        if not isinstance(c, dict):
+            erros.append("%s: precisa ser um objeto { ... }." % r)
+            continue
+        cand = {}
+        for k, v in c.items():
+            if str(k).startswith("_"):
+                continue
+            if k not in CAMPOS_CANDIDATO:
+                print("AVISO: %s: campo desconhecido \"%s\" foi ignorado." % (r, k))
+                continue
+            cand[k] = limpar_texto(v) if k != "notas" else v
+        r = "%s (%s)" % (r, cand.get("name") if isinstance(cand.get("name"), str) and cand.get("name") else "sem nome")
+        for k in ("id", "name", "org"):
+            if not isinstance(cand.get(k), str) or not cand.get(k):
+                erros.append("%s: o campo \"%s\" está ausente ou não é texto." % (r, k))
+        if isinstance(cand.get("id"), str) and cand["id"]:
+            if not RE_ID.match(cand["id"]):
+                erros.append("%s: id \"%s\" inválido. Use letras minúsculas, números, - ou _ (até 40), como c1 ou u1." % (r, cand["id"]))
+            elif cand["id"] in ids:
+                erros.append("%s: o id \"%s\" está repetido." % (r, cand["id"]))
+            ids.add(cand["id"])
+        for k, maximo in LIMITES_CANDIDATO.items():
+            if k in cand:
+                if not isinstance(cand[k], str):
+                    erros.append("%s: \"%s\" precisa ser texto." % (r, k))
+                elif len(cand[k]) > maximo:
+                    erros.append("%s: \"%s\" tem %d caracteres; o máximo é %d." % (r, k, len(cand[k]), maximo))
+        if "grupo" in cand and cand["grupo"] not in GRUPOS:
+            erros.append("%s: grupo \"%s\" inválido. Use: %s (ou deixe sem grupo)." % (r, cand["grupo"], ", ".join(GRUPOS)))
+        if "url" in cand and (not isinstance(cand["url"], str) or not RE_HTTPS.match(cand["url"])):
+            erros.append("%s: a url precisa começar com https://." % r)
+        if "notas" in cand:
+            n = cand["notas"]
+            if not isinstance(n, dict) or any(k not in NOTAS or isinstance(v, bool) or not isinstance(v, (int, float)) or not 0 <= v <= 10 for k, v in n.items()):
+                erros.append("%s: notas precisa ser um objeto com números de 0 a 10 (%s)." % (r, ", ".join(NOTAS)))
+        limpos.append(cand)
+    return limpos, erros
+
+
 def embutir_copia(dados):
     """Grava no index.html a cópia dos dados usada quando o data.json não carrega."""
     if not os.path.exists(INDEX_FILE):
@@ -206,9 +305,24 @@ def main(argv):
 
     # 1) lê e valida tudo antes de mexer em qualquer coisa
     novos, erros, avisos, ignorados = [], [], [], 0
+    votacao = {}  # candidatos_semana e destaque_uso vindos dos arquivos (o último arquivo vence)
+    destaque_com_erro = False
     for arq in arquivos:
         lista = ler_json(arq)
         if isinstance(lista, dict) and isinstance(lista.get("lancamentos"), list):
+            nome_arq = os.path.basename(arq)
+            if "candidatos_semana" in lista:
+                cands, e = validar_candidatos(lista["candidatos_semana"], nome_arq)
+                erros += e
+                if not e:
+                    votacao["candidatos_semana"] = cands
+            if "destaque_uso" in lista:
+                dest, e = validar_destaque(lista["destaque_uso"], nome_arq, hoje)
+                erros += e
+                if e:
+                    destaque_com_erro = True
+                else:
+                    votacao["destaque_uso"] = dest
             lista = lista["lancamentos"]
         if not isinstance(lista, list):
             erros.append("%s: precisa conter uma lista JSON de lançamentos ([ ... ])." % os.path.basename(arq))
@@ -222,6 +336,13 @@ def main(argv):
             avisos += a
             if not e:
                 novos.append(item)
+    # regra: candidatos do grupo "uso" só valem com o bloco destaque_uso (fonte e data de conferência)
+    cands_final = votacao.get("candidatos_semana", dados.get("candidatos_semana") or [])
+    dest_final = votacao.get("destaque_uso", dados.get("destaque_uso"))
+    if "candidatos_semana" in votacao or "destaque_uso" in votacao:
+        tem_uso = any(isinstance(c, dict) and c.get("grupo") == "uso" for c in cands_final)
+        if tem_uso and not destaque_com_erro and not (isinstance(dest_final, dict) and dest_final.get("fonte") and dest_final.get("conferido")):
+            erros.append("candidatos com \"grupo\": \"uso\" exigem destaque_uso com fonte e conferido (data da conferência).")
     for a in avisos:
         print("AVISO: " + a)
     if erros:
@@ -246,6 +367,15 @@ def main(argv):
             existentes = {chave(it): i for i, it in enumerate(base["lancamentos"])}
             adicionados += 1
     base["lancamentos"].sort(key=lambda x: x["d"], reverse=True)
+
+    # 2b) enquete da semana (só muda se o arquivo trouxe candidatos_semana ou destaque_uso)
+    if "candidatos_semana" in votacao:
+        base["candidatos_semana"] = votacao["candidatos_semana"]
+    if "destaque_uso" in votacao:
+        base["destaque_uso"] = votacao["destaque_uso"]
+    if "candidatos_semana" in votacao or "destaque_uso" in votacao:
+        if not any(isinstance(c, dict) and c.get("grupo") == "uso" for c in base.get("candidatos_semana") or []):
+            base.pop("destaque_uso", None)  # sem candidatos "uso", o bloco ficaria sem uso
 
     # 3) edição e checagem = dia da execução
     base["data_checagem"] = hoje.isoformat()
@@ -282,6 +412,9 @@ def main(argv):
     print("\n%sEdição: %s (checagem em %s)" % ("[SIMULAÇÃO] " if simular else "", base["edicao"], base["data_checagem"]))
     print("  novos: %d | atualizados: %d | enviados ao arquivo: %d" % (adicionados, atualizados, len(saem)))
     print("  ativos no radar: %d | arquivados no total: %d" % (len(ativos), len(arquivo)))
+    if "candidatos_semana" in votacao or "destaque_uso" in votacao:
+        cs = base.get("candidatos_semana") or []
+        print("  enquete: %d candidato(s), %d em \"mais usadas\"" % (len(cs), sum(1 for c in cs if c.get("grupo") == "uso")))
     print("\n--------------------------------------------------")
     print("MÉTRICAS PARA LEGENDA / REDES SOCIAIS:")
     print("• Lançamentos na janela de %d dias: %d (últimos 7 dias: %d)" % (janela, len(ativos), ult7))

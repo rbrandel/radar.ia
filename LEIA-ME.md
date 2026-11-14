@@ -120,6 +120,41 @@ Arquivos do lembrete de sábado (seção 2.1):
 
 Cada candidato da enquete (`candidatos_semana` no `data.json`) precisa de um `id` curto em minúsculas, como `c1`. A enquete recomeça a cada semana.
 
+## 5.2 Teste e vote: destaque das mais usadas
+
+A enquete agora se chama **Teste e vote na melhor IA** e tem dois blocos: **Novidades da semana** (os candidatos de sempre) e **Destaque: mais usadas** (ferramentas de uso amplo, com a fonte e a data de conferência). Cada linha pode ter o botão **Testar** (abre o site da ferramenta em outra aba) e uma linha **Teste:** com uma sugestão curta. O voto continua sendo um por pessoa e por semana, valendo para qualquer linha.
+
+Tudo vem do `data.json`, pelo mesmo arquivo `novos-AAAA-MM-DD.json` da semana, que pode ser um objeto em vez de uma lista:
+
+```json
+{
+  "lancamentos": [ ... os itens da semana, como sempre ... ],
+  "candidatos_semana": [
+    {"id": "c1", "name": "Nome", "org": "Empresa", "badge": "Texto curto", "url": "https://...", "teste": "Uma sugestão de teste."},
+    {"id": "u1", "grupo": "uso", "name": "Nome", "org": "Empresa", "badge": "Empresa", "url": "https://..."}
+  ],
+  "destaque_uso": {
+    "titulo": "Mais usadas no Brasil",
+    "nota": "De onde vem a lista e como ler.",
+    "teste": "Mesmo teste para todas: ...",
+    "fonte": {"n": "Nome da fonte", "u": "https://..."},
+    "conferido": "AAAA-MM-DD"
+  }
+}
+```
+
+| Campo | Regra |
+|---|---|
+| `candidatos_semana` | De 1 a 20 candidatos. A lista inteira é trocada a cada envio. Sem essa chave, a enquete não muda. |
+| `id` | Minúsculas, números, `-` ou `_`; único. Sugestão: `c1`, `c2` para novidades e `u1`, `u2` para mais usadas. |
+| `grupo` | `"uso"` coloca a linha no bloco "mais usadas". Sem `grupo`, vai para "novidades". |
+| `url` | Opcional. Precisa começar com `https://`. Aparece como botão Testar. |
+| `teste` | Opcional, até 200 caracteres. |
+| `destaque_uso` | Obrigatório se houver candidato com `grupo: "uso"`: título, fonte (`n` e `u` com `https://`) e `conferido` (data da conferência, não no futuro). `nota` e `teste` são opcionais. |
+
+A IA da Semana (cartão do topo) é o primeiro candidato que não é do grupo `uso`. O `mesclar.py` valida tudo antes de gravar; se algo estiver errado, nada é alterado e ele diz o que corrigir.
+O bloco "mais usadas" fica no `data.json` e continua nas semanas seguintes. Reconfira a fonte e atualize `conferido` quando sair um relatório novo, ou a cada trimestre. Para tirar o bloco, envie `candidatos_semana` sem nenhum `grupo: "uso"`.
+
 ## 5.1 Matérias e novidades (Supabase, com histórico)
 
 A capa tem o bloco **Novidades** (chamadas das matérias mais recentes), a aba **Matérias** tem busca e filtro, e cada matéria tem a sua página (`materia.html?m=endereco`).
