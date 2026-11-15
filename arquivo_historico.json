@@ -1,5 +1,185 @@
 [
   {
+    "d": "2026-10-24",
+    "n": "Doubao-Seedance-1.0-pro-fast",
+    "o": "ByteDance",
+    "c": "video",
+    "p": "criativo",
+    "l": "nao-informada",
+    "s": "Modelo de vídeo no Volcano Ark, até 3x mais rápido que versões anteriores em geração de vídeo.",
+    "a": "Acelera criação de vídeos de alta qualidade para marketing e comunicação.",
+    "t": "Útil para campanhas, protótipos visuais e produção criativa de conteúdo.",
+    "f": {
+      "n": "nocode.mba",
+      "u": "https://www.nocode.mba/ai-release-tracker/2026/10"
+    }
+  },
+  {
+    "d": "2026-10-24",
+    "n": "Agensh",
+    "o": "Microsoft Research",
+    "c": "agentes",
+    "p": "dev",
+    "l": "aberto",
+    "s": "Estrutura de código aberto para coordenar até 1.024 agentes em execução distribuída.",
+    "a": "Ajuda a escalar experimentos e sistemas multiagente com arquitetura mais previsível.",
+    "t": "Use para simulação, orquestração e testes de agentes colaborativos.",
+    "f": {
+      "n": "AI News Today",
+      "u": "https://www.donvitocodes.com/ai-news"
+    }
+  },
+  {
+    "d": "2026-10-23",
+    "n": "Kimi K3.1 Pro",
+    "o": "Moonshot AI",
+    "c": "modelos",
+    "p": "dev",
+    "l": "nao-informada",
+    "s": "Modelo de 3 trilhões de parâmetros com janela de 1 milhão de tokens e foco em inferência robusta.",
+    "a": "Permite maior contexto e melhor qualidade em tarefas longas e complexas.",
+    "t": "Bom para conhecimento profundo, revisão extensa e raciocínio longo.",
+    "f": {
+      "n": "AI News Today",
+      "u": "https://www.donvitocodes.com/ai-news"
+    }
+  },
+  {
+    "d": "2026-10-23",
+    "n": "Nemotron 3.5 Bolt E4B 4GB",
+    "o": "NVIDIA",
+    "c": "modelos",
+    "p": "dev",
+    "l": "aberto",
+    "s": "Modelo pequeno de ~4B parâmetros para agentes de conversa locais, com eficiência para execução em hardware moderado.",
+    "a": "Permite rodar IA localmente com melhor custo/benefício.",
+    "t": "Ótimo para infra local, agentes e aplicação interna sem depender de nuvem.",
+    "f": {
+      "n": "nocode.mba",
+      "u": "https://www.nocode.mba/ai-release-tracker/2026/10"
+    }
+  },
+  {
+    "d": "2026-10-23",
+    "n": "Dessa",
+    "o": "Block",
+    "c": "voz",
+    "p": "negocios",
+    "l": "nao-informada",
+    "s": "Modelo de fala treinado diretamente em conversas humanas sem conversão para texto, melhorando naturalidade.",
+    "a": "Aumenta qualidade de voz e compreensão contextual de conversas reais.",
+    "t": "Útil para atendimento, call center e assistentes de voz com mais naturalidade.",
+    "f": {
+      "n": "nocode.mba",
+      "u": "https://www.nocode.mba/ai-release-tracker/2026/10"
+    }
+  },
+  {
+    "d": "2026-10-23",
+    "n": "Experiência Unificada do Claude",
+    "o": "Anthropic",
+    "c": "agentes",
+    "p": "negocios",
+    "l": "nao-informada",
+    "s": "Unifica chat e execução de tarefas na nuvem em um mesmo ambiente de agente.",
+    "a": "Reduz atrito entre conversa, ação e ferramentas internas.",
+    "t": "Use para ambientes de produtividade e automação com supervisão humana.",
+    "f": {
+      "n": "AI News Today",
+      "u": "https://www.donvitocodes.com/ai-news"
+    }
+  },
+  {
+    "d": "2026-10-23",
+    "n": "TanStack AI 1.0",
+    "o": "TanStack",
+    "c": "agentes",
+    "p": "dev",
+    "l": "nao-informada",
+    "s": "Versão estável do kit para criar agentes, subagentes e fluxos de programação e automação.",
+    "a": "Facilita construção de agentes em desenvolvimento de software e operação.",
+    "t": "Use para prototipar agentes de desenvolvimento e apoio de código.",
+    "f": {
+      "n": "AI Agent Store (semana)",
+      "u": "https://aiagentstore.ai/ai-agent-news/this-week"
+    }
+  },
+  {
+    "d": "2026-10-22",
+    "n": "1Password for Agents",
+    "o": "1Password",
+    "c": "agentes",
+    "p": "negocios",
+    "l": "nao-informada",
+    "s": "Camada de login que permite a agentes de IA aprovados autenticar e acessar sistemas sensíveis com segurança.",
+    "a": "Melhora governança e segurança para IA em ambientes corporativos.",
+    "t": "Aplicável em automação com acesso a credenciais, integrações e ferramentas críticas.",
+    "f": {
+      "n": "AI News Today",
+      "u": "https://www.donvitocodes.com/ai-news"
+    }
+  },
+  {
+    "d": "2026-10-22",
+    "n": "VideoGen Model 1",
+    "o": "VideoGen",
+    "c": "video",
+    "p": "criativo",
+    "l": "nao-informada",
+    "s": "Primeiro modelo proprietário capaz de gerar vídeos multi-cena em alta qualidade com duração estendida.",
+    "a": "Acelera criação de peças visuais com narrativa e contexto mais complexos.",
+    "t": "Útil para campanhas, vídeos promocionais e conteúdo criativo de marketing.",
+    "f": {
+      "n": "You.com Media AI",
+      "u": "https://for.you.com/agents/media-ai"
+    }
+  },
+  {
+    "d": "2026-10-22",
+    "n": "Ideogram Vector 1.0",
+    "o": "Ideogram",
+    "c": "video",
+    "p": "criativo",
+    "l": "nao-informada",
+    "s": "Gera arquivos vetoriais SVG totalmente editáveis a partir de texto, com design gráfico refinado.",
+    "a": "Acelera produção de ilustrações, identidade visual e elementos criativos.",
+    "t": "Ótimo para design, branding e geração de ativos visuais editáveis.",
+    "f": {
+      "n": "FutureTools",
+      "u": "https://futuretools.io/news"
+    }
+  },
+  {
+    "d": "2026-10-21",
+    "n": "Claude Duet",
+    "o": "Anthropic",
+    "c": "agentes",
+    "p": "negocios",
+    "l": "nao-informada",
+    "s": "Aplicativo de agente proativo construído sobre o Claude Opus 5.5 para tarefas de escritório e execução.",
+    "a": "Eleva produtividade em tarefas do dia a dia com automação inteligente.",
+    "t": "Use para suporte executivo, organização e operações de rotina.",
+    "f": {
+      "n": "OrcaRouter",
+      "u": "https://www.orcarouter.ai/blog/anthropic-launch-week-october-2026-what-shipped"
+    }
+  },
+  {
+    "d": "2026-10-21",
+    "n": "ElevenLabs Chimera",
+    "o": "ElevenLabs",
+    "c": "voz",
+    "p": "criativo",
+    "l": "nao-informada",
+    "s": "Nova plataforma unificada para fluxos de trabalho combinados de voz e IA em múltiplos formatos.",
+    "a": "Permite criar experiências de voz mais ricas e personalizadas.",
+    "t": "Aplicável em locuções, narração, assistentes e educação digital.",
+    "f": {
+      "n": "FutureTools",
+      "u": "https://futuretools.io/news"
+    }
+  },
+  {
     "d": "2026-10-17",
     "n": "DeepSeek V4.1 Flash",
     "o": "DeepSeek",
