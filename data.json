@@ -195,6 +195,21 @@
     },
     {
       "d": "2026-11-10",
+      "n": "Gemini 4 Carbon (disponibilidade geral)",
+      "o": "Google",
+      "c": "modelos",
+      "p": "dev",
+      "l": "nao-informada",
+      "s": "Modelo do Google com foco em cibersegurança e em tarefas longas de agentes, que passou a estar disponível para desenvolvedores, empresas e consumidores. Na API, está no Google AI Studio e no Gemini for business, e também no Android Studio. Assinantes do Google AI Ultra o recebem aos poucos no Antigravity, no app Gemini e no Modo IA da Pesquisa.",
+      "a": "Na API, o preço introdutório é de US$ 2 por milhão de tokens de entrada e US$ 10 por milhão de saída, igual ao do Gemini 4 Argon, até 30/11/2026. Depois, passa a US$ 4 e US$ 20. A Google também liberou em prévia o recurso /swarm no Antigravity.",
+      "t": "No Google AI Studio, escolha uma tarefa longa que você já faz, como revisar um módulo inteiro ou cruzar vários documentos, e rode o mesmo pedido no Carbon e no Hydrogen. Compare qualidade, tempo e tokens gastos, e estime o custo com o preço que vale depois de 30/11.",
+      "f": {
+        "n": "Google (blog)",
+        "u": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-4-carbon-now-available/"
+      }
+    },
+    {
+      "d": "2026-11-10",
       "n": "Businesses in ChatGPT (Business Hub)",
       "o": "OpenAI",
       "c": "agentes",
@@ -236,6 +251,36 @@
       "f": {
         "n": "ElevenLabs (blog)",
         "u": "https://elevenlabs.io/blog/scribe-v3"
+      }
+    },
+    {
+      "d": "2026-11-09",
+      "n": "ZONOS3-Mini",
+      "o": "Zyphra",
+      "c": "voz",
+      "p": "criativo",
+      "l": "aberto",
+      "s": "Modelo aberto de texto para fala da Zyphra, com 43 idiomas e clonagem de voz a partir de uma amostra de áudio. Permite ajustar idade, sotaque e textura da voz e controlar emoção, ritmo e entrega, até no nível da palavra. Tem cerca de 100 milhões de parâmetros ativos e roda em celulares e laptops, inclusive no navegador.",
+      "a": "Os pesos saem sob a licença Apache 2.0. Dá para testar no navegador, com WebGPU, pelo Zonos Voice Studio, em Spaces no Hugging Face, na nuvem da Zyphra ou em servidor próprio. A página do modelo não traz data de lançamento.",
+      "t": "Abra a página do modelo no Hugging Face e confirme se o português está entre os 43 idiomas listados. Use o Zonos Voice Studio no navegador com uma amostra curta da sua voz (ou de alguém que autorizou), gere a mesma frase em português e em inglês e compare naturalidade e sotaque.",
+      "f": {
+        "n": "Hugging Face (Zyphra)",
+        "u": "https://huggingface.co/Zyphra/ZONOS3-Mini"
+      }
+    },
+    {
+      "d": "2026-11-09",
+      "n": "Muse Ember",
+      "o": "Meta",
+      "c": "modelos",
+      "p": "negocios",
+      "l": "nao-informada",
+      "s": "Modelo compacto da Meta, pensado para o trabalho repetitivo de agentes: chamadas de ferramentas, pequenas correções de código, triagem de pedidos, extração de dados de arquivos e leitura de documentos longos. Aceita texto, imagem, áudio e vídeo e tem contexto de 1 milhão de tokens. Está na API de modelos da Meta, no Muse Code, no Google Cloud e na Oracle Cloud.",
+      "a": "O preço divulgado é de US$ 0,10 por milhão de tokens de entrada e US$ 0,50 por milhão de saída. A Meta o descreve como o menor e mais eficiente modelo da empresa. A licença não foi informada nas fontes que conferi.",
+      "t": "Pegue uma tarefa repetitiva sua, como classificar 20 e-mails de suporte ou extrair campos de 10 PDFs, e rode o mesmo pedido no Muse Ember e no modelo que você usa hoje. Compare acertos e custo por tarefa para ver se vale trocar.",
+      "f": {
+        "n": "Digital Trends",
+        "u": "https://digitaltrends.com/computing/meta-launches-muse-ember-a-cheaper-ai-model-built-for-repetitive-tasks"
       }
     },
     {
