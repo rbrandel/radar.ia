@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Encurtador de URL Pro — Links Curtos & QR Code</title>
+  
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Configuração do Tailwind para suporte a Dark Mode via classe e fonte Inter -->
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+              900: '#312e81',
+            }
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Biblioteca leve para geração de QR Code dos links encurtados -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 font-sans antialiased min-h-screen flex flex-col transition-colors duration-200 selection:bg-brand-500 selection:text-white">
+
+  <!-- =====================================================================
+       CABEÇALHO (HEADER)
+       ===================================================================== -->
+  <header class="sticky top-0 z-30 backdrop-blur-md bg-white/80 dark:bg-slate-900/80 border-b border-slate-200/80 dark:border-slate-800">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <!-- Logo e Título -->
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-500 to-purple-600 flex items-center justify-center text-white shadow-md shadow-brand-500/20">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-lg font-bold tracking-tight text-slate-900 dark:text-white leading-none">
+            Encurta<span class="text-brand-600 dark:text-brand-500">Pro</span>
+          </h1>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Encurtador de URL & QR Code</p>
+        </div>
+      </div>
+
+      <!-- Controles do Cabeçalho: Estatística Rápida e Alternador de Tema -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <span id="headerCounterBadge" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-brand-50 text-brand-700 dark:bg-brand-900/40 dark:text-brand-100 border border-brand-100 dark:border-brand-800/50">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span id="totalLinksCount">0</span> links criados
+        </span>
+
+        <button
+          id="themeToggleBtn"
+          type="button"
+          aria-label="Alternar tema claro ou escuro"
+          class="p-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors"
+          title="Alternar tema"
+        >
+          <!-- Ícone Sol (visível no dark mode) -->
+          <svg id="sunIcon" class="w-5 h-5 hidden dark:block" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+          </svg>
+          <!-- Ícone Lua (visível no light mode) -->
+          <svg id="moonIcon" class="w-5 h-5 block dark:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- =====================================================================
+       CONTEÚDO PRINCIPAL (MAIN)
+       ===================================================================== -->
+  <main class="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-8">
+    
+    <!-- Seção Hero / Introdução -->
+    <section class="text-center max-w-2xl mx-auto space-y-3">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-100 dark:border-indigo-800/60 text-brand-600 dark:text-brand-100 text-xs font-semibold">
+        <span>100% Gratuito • Sem Cadastro • Links Reais</span>
+      </div>
+      <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+        Transforme links longos em URLs curtas e elegantes
+      </h2>
+      <p class="text-sm sm:text-base text-slate-600 dark:text-slate-400">
+        Cole seu endereço abaixo, personalize o apelido se desejar e gere links prontos para compartilhar nas redes sociais, WhatsApp ou via QR Code.
+      </p>
+    </section>
+
+    <!-- =====================================================================
+         CARTÃO PRINCIPAL DO ENCURTADOR
+         ===================================================================== -->
+    <section class="bg-white dark:bg-slate-900 rounded-3xl shadow-xl shadow-slate-200/60 dark:shadow-none border border-slate-200/80 dark:border-slate-800 p-5 sm:p-8 transition-all">
+      <form id="shortenForm" class="space-y-5" novalidate>
+        
+        <!-- Campo da URL Original -->
+        <div>
+          <label for="longUrlInput" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
+            Cole a URL longa que deseja encurtar
+          </label>
+          <div class="relative flex flex-col sm:flex-row gap-3">
+            <div class="relative flex-1">
+              <!-- Ícone de Globo/Link à esquerda -->
+              <div class="pointer-events-none absolute inset-y-0 left-0 pl-4 flex items-center text-slate-400">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+                </svg>
+              </div>
+
+              <input
+                type="url"
+                id="longUrlInput"
+                name="longUrl"
+                placeholder="https://exemplo.com.br/artigos/como-criar-links-curtos-profissionais"
+                autocomplete="off"
+                required
+                class="w-full pl-11 pr-20 py-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 text-sm sm:text-base transition-all"
+              />
+
+              <!-- Botão Limpar dentro do input -->
+              <button
+                type="button"
+                id="clearInputBtn"
+                title="Limpar campo"
+                class="hidden absolute inset-y-0 right-3 my-auto h-8 px-2.5 rounded-lg text-xs font-medium text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white bg-slate-200/70 dark:bg-slate-700/70 transition-colors"
+              >
+                Limpar
+              </button>
+            </div>
+
+            <!-- Botão Principal: Encurtar -->
+            <button
+              type="submit"
+              id="shortenSubmitBtn"
+              class="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-2xl bg-brand-600 hover:bg-brand-700 active:scale-[0.99] text-white font-semibold text-sm sm:text-base shadow-lg shadow-brand-600/25 disabled:opacity-60 disabled:cursor-not-allowed transition-all whitespace-nowrap"
+            >
+              <svg id="btnIconDefault" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+              <svg id="btnIconSpinner" class="w-5 h-5 animate-spin hidden" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              <span id="btnLabel">Encurtar URL</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Opções Avançadas (Apelido Personalizado e Domínio) -->
+        <div class="pt-1">
+          <button
+            type="button"
+            id="toggleOptionsBtn"
+            class="inline-flex items-center gap-1.5 text-xs sm:text-sm font-medium text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 transition-colors"
+          >
+            <svg id="optionsChevron" class="w-4 h-4 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+            <span>Opções personalizadas (apelido e provedor)</span>
+          </button>
+
+          <div id="advancedOptionsPanel" class="hidden mt-4 pt-4 border-t border-slate-100 dark:border-slate-800 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <!-- Seletor de Provedor -->
+            <div>
+              <label for="providerSelect" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">
+                Serviço / Domínio Curto
+              </label>
+              <select
+                id="providerSelect"
+                class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-sm text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-brand-500"
+              >
+                <option value="isgd">is.gd (Recomendado • Ultra rápido)</option>
+                <option value="vgd">v.gd (Alternativo • Direto)</option>
+                <option value="spoome">spoo.me (Moderno • Apelidos curtos)</option>
+              </select>
+            </div>
+
+            <!-- Campo de Apelido Personalizado (Alias) -->
+            <div>
+              <label for="customAliasInput" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1.5">
+                Apelido Personalizado <span class="font-normal lowercase">(opcional)</span>
+              </label>
+              <div class="flex items-center rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 overflow-hidden focus-within:ring-2 focus-within:ring-brand-500">
+                <span id="aliasDomainPrefix" class="px-3 py-2.5 text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800/90 border-r border-slate-200 dark:border-slate-700 select-none">
+                  is.gd/
+                </span>
+                <input
+                  type="text"
+                  id="customAliasInput"
+                  placeholder="minha_oferta_2026"
+                  maxlength="30"
+                  class="w-full px-3 py-2.5 bg-transparent text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none"
+                />
+              </div>
+              <p id="aliasHintText" class="text-[11px] text-slate-500 dark:text-slate-400 mt-1">
+                Use de 5 a 30 caracteres (letras, números ou underline _).
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Caixa de Mensagem de Erro Inline -->
+        <div id="errorAlertBox" role="alert" class="hidden rounded-2xl bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-800/70 p-4 flex items-start gap-3 text-rose-700 dark:text-rose-200 text-sm">
+          <svg class="w-5 h-5 text-rose-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <div class="flex-1">
+            <p class="font-semibold">Não foi possível encurtar o link</p>
+            <p id="errorAlertMessage" class="text-xs sm:text-sm mt-0.5 opacity-90"></p>
+          </div>
+        </div>
+      </form>
+
+      <!-- =====================================================================
+           CARTÃO DE RESULTADO RECENTE (EXIBIDO APÓS ENCURTAR)
+           ===================================================================== -->
+      <div id="latestResultCard" class="hidden mt-7 pt-7 border-t border-slate-200/80 dark:border-slate-800 animate-fade-in">
+        <div class="rounded-2xl bg-gradient-to-br from-emerald-50/90 via-teal-50/60 to-indigo-50/70 dark:from-emerald-950/30 dark:via-slate-800/80 dark:to-indigo-950/30 border border-emerald-200/80 dark:border-emerald-800/50 p-5 sm:p-6">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+            <span class="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+              Link encurtado com sucesso!
+            </span>
+
+            <span id="savingsBadge" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 dark:bg-emerald-900/60 dark:text-emerald-300">
+              -0% caracteres
+            </span>
+          </div>
+
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div class="min-w-0 flex-1">
+              <a
+                id="shortUrlDisplay"
+                href="#"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-xl sm:text-2xl font-extrabold text-brand-600 dark:text-brand-400 hover:underline break-all"
+              >
+                https://is.gd/exemplo
+              </a>
+              <p id="originalUrlDisplay" class="text-xs text-slate-500 dark:text-slate-400 truncate mt-1">
+                Destino: https://...
+              </p>
+            </div>
+
+            <!-- Botões de Ação do Resultado -->
+            <div class="flex flex-wrap items-center gap-2 shrink-0">
+              <button
+                type="button"
+                id="copyMainBtn"
+                class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold shadow-sm transition-all"
+              >
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                </svg>
+                <span id="copyMainBtnText">Copiar Link</span>
+              </button>
+
+              <button
+                type="button"
+                id="openQrMainBtn"
+                class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 text-sm font-semibold transition-all"
+                title="Gerar QR Code deste link"
+              >
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
+                </svg>
+                <span>QR Code</span>
+              </button>
+
+              <a
+                id="visitMainLinkBtn"
+                href="#"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center justify-center p-2.5 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 transition-all"
+                title="Abrir link em nova aba"
+              >
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         SEÇÃO DE HISTÓRICO DE LINKS ENCURTADOS
+         ===================================================================== -->
+    <section class="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-200/80 dark:border-slate-800 p-5 sm:p-8">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+        <div>
+          <h3 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <span>Histórico Recente</span>
+            <span id="historyBadgeCount" class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+              0
+            </span>
+          </h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+            Seus links ficam salvos localmente neste navegador.
+          </p>
+        </div>
+
+        <!-- Barra de Busca e Limpar Histórico -->
+        <div id="historyControls" class="hidden flex flex-wrap items-center gap-2">
+          <div class="relative flex-1 sm:w-56">
+            <input
+              type="text"
+              id="historySearchInput"
+              placeholder="Filtrar links..."
+              class="w-full pl-9 pr-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs sm:text-sm text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500"
+            />
+            <svg class="w-4 h-4 text-slate-400 absolute left-3 top-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+
+          <button
+            type="button"
+            id="clearHistoryBtn"
+            data-confirm="false"
+            class="px-3.5 py-2 rounded-xl text-xs font-semibold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-900/50 border border-rose-200/70 dark:border-rose-800/50 transition-colors"
+          >
+            Limpar tudo
+          </button>
+        </div>
+      </div>
+
+      <!-- Lista de Itens do Histórico -->
+      <div id="historyListContainer" class="space-y-3">
+        <!-- Estado Vazio -->
+        <div id="emptyHistoryState" class="text-center py-10 px-4 rounded-2xl border-2 border-dashed border-slate-200 dark:border-slate-800">
+          <div class="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-400 mx-auto flex items-center justify-center mb-3">
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+            </svg>
+          </div>
+          <p class="text-sm font-semibold text-slate-700 dark:text-slate-300">Nenhum link encurtado ainda</p>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 max-w-sm mx-auto">
+            Cole uma URL no campo acima e clique em "Encurtar URL" para começar a gerar seus links curtos.
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- =====================================================================
+       RODAPÉ (FOOTER)
+       ===================================================================== -->
+  <footer class="border-t border-slate-200/80 dark:border-slate-800 py-6 text-center text-xs text-slate-500 dark:text-slate-400">
+    <div class="max-w-5xl mx-auto px-4">
+      EncurtaPro — Ferramenta gratuita para encurtamento de URLs e geração de QR Codes.
+    </div>
+  </footer>
+
+  <!-- =====================================================================
+       MODAL DE QR CODE DO LINK ENCURTADO
+       ===================================================================== -->
+  <div id="qrModalOverlay" class="fixed inset-0 z-50 hidden bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-900 rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-slate-200 dark:border-slate-800 transform transition-all">
+      <div class="flex items-center justify-between mb-4">
+        <h4 class="text-base font-bold text-slate-900 dark:text-white">QR Code do Link Curto</h4>
+        <button
+          type="button"
+          id="closeQrModalBtn"
+          aria-label="Fechar modal"
+          class="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+        >
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Container onde o QR Code será renderizado -->
+      <div class="bg-white p-5 rounded-2xl border border-slate-200 flex items-center justify-center mx-auto w-fit shadow-inner">
+        <div id="qrCodeRenderBox"></div>
+      </div>
+
+      <p id="qrModalUrlText" class="text-center text-xs font-semibold text-brand-600 dark:text-brand-400 mt-4 break-all"></p>
+
+      <div class="mt-5 grid grid-cols-2 gap-2.5">
+        <button
+          type="button"
+          id="downloadQrBtn"
+          class="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white text-xs sm:text-sm font-semibold transition-colors"
+        >
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+          </svg>
+          <span>Baixar PNG</span>
+        </button>
+
+        <button
+          type="button"
+          id="copyQrLinkBtn"
+          class="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs sm:text-sm font-semibold transition-colors"
+        >
+          <span>Copiar URL</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =====================================================================
+       NOTIFICAÇÃO TOAST FLUTUANTE
+       ===================================================================== -->
+  <div id="toastNotification" class="fixed bottom-5 right-5 z-50 pointer-events-none opacity-0 translate-y-3 transition-all duration-300">
+    <div class="flex items-center gap-2.5 px-4 py-3 rounded-2xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-xl text-sm font-medium">
+      <svg class="w-4 h-4 text-emerald-400 dark:text-emerald-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+      </svg>
+      <span id="toastMessage">Link copiado!</span>
+    </div>
+  </div>
+
+  <!-- =====================================================================
+       LÓGICA JAVASCRIPT DA APLICAÇÃO
+       ===================================================================== -->
+  <script>
+    (function () {
+      'use strict';
+
+      // -------------------------------------------------------------------
+      // 1. CONSTANTES E ESTADO DA APLICAÇÃO
+      // -------------------------------------------------------------------
+      const STORAGE_KEY = 'encurtapro_history_v1';
+      const THEME_KEY = 'encurtapro_theme_v1';
+      let linkHistory = [];
+      let currentLatestShortUrl = '';
+      let currentQrUrl = '';
+      let toastTimeout = null;
+
+      // -------------------------------------------------------------------
+      // 2. REFERÊNCIAS AOS ELEMENTOS DO DOM
+      // -------------------------------------------------------------------
+      const shortenForm = document.getElementById('shortenForm');
+      const longUrlInput = document.getElementById('longUrlInput');
+      const clearInputBtn = document.getElementById('clearInputBtn');
+      const shortenSubmitBtn = document.getElementById('shortenSubmitBtn');
+      const btnIconDefault = document.getElementById('btnIconDefault');
+      const btnIconSpinner = document.getElementById('btnIconSpinner');
+      const btnLabel = document.getElementById('btnLabel');
+
+      const toggleOptionsBtn = document.getElementById('toggleOptionsBtn');
+      const optionsChevron = document.getElementById('optionsChevron');
+      const advancedOptionsPanel = document.getElementById('advancedOptionsPanel');
+      const providerSelect = document.getElementById('providerSelect');
+      const aliasDomainPrefix = document.getElementById('aliasDomainPrefix');
+      const customAliasInput = document.getElementById('customAliasInput');
+      const aliasHintText = document.getElementById('aliasHintText');
+
+      const errorAlertBox = document.getElementById('errorAlertBox');
+      const errorAlertMessage = document.getElementById('errorAlertMessage');
+
+      const latestResultCard = document.getElementById('latestResultCard');
+      const shortUrlDisplay = document.getElementById('shortUrlDisplay');
+      const originalUrlDisplay = document.getElementById('originalUrlDisplay');
+      const savingsBadge = document.getElementById('savingsBadge');
+      const copyMainBtn = document.getElementById('copyMainBtn');
+      const copyMainBtnText = document.getElementById('copyMainBtnText');
+      const openQrMainBtn = document.getElementById('openQrMainBtn');
+      const visitMainLinkBtn = document.getElementById('visitMainLinkBtn');
+
+      const historyListContainer = document.getElementById('historyListContainer');
+      const emptyHistoryState = document.getElementById('emptyHistoryState');
+      const historyControls = document.getElementById('historyControls');
+      const historySearchInput = document.getElementById('historySearchInput');
+      const clearHistoryBtn = document.getElementById('clearHistoryBtn');
+      const historyBadgeCount = document.getElementById('historyBadgeCount');
+      const totalLinksCount = document.getElementById('totalLinksCount');
+
+      const qrModalOverlay = document.getElementById('qrModalOverlay');
+      const closeQrModalBtn = document.getElementById('closeQrModalBtn');
+      const qrCodeRenderBox = document.getElementById('qrCodeRenderBox');
+      const qrModalUrlText = document.getElementById('qrModalUrlText');
+      const downloadQrBtn = document.getElementById('downloadQrBtn');
+      const copyQrLinkBtn = document.getElementById('copyQrLinkBtn');
+
+      const themeToggleBtn = document.getElementById('themeToggleBtn');
+      const toastNotification = document.getElementById('toastNotification');
+      const toastMessage = document.getElementById('toastMessage');
+
+      // -------------------------------------------------------------------
+      // 3. GERENCIAMENTO DE TEMA (LIGHT / DARK)
+      // -------------------------------------------------------------------
+      function initTheme() {
+        try {
+          const savedTheme = localStorage.getItem(THEME_KEY);
+          const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+          if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+            document.documentElement.classList.add('dark');
+          } else {
+            document.documentElement.classList.remove('dark');
+          }
+        } catch (err) {
+          // Ignora erros de acesso ao localStorage
+        }
+      }
+
+      themeToggleBtn.addEventListener('click', () => {
+        const isDark = document.documentElement.classList.toggle('dark');
+        try {
+          localStorage.setItem(THEME_KEY, isDark ? 'dark' : 'light');
+        } catch (err) {
+          // Ignora erro de armazenamento
+        }
+      });
+
+      // -------------------------------------------------------------------
+      // 4. UTILITÁRIOS: TOAST, CLIPBOARD E VALIDAÇÃO DE URL
+      // -------------------------------------------------------------------
+
+      /**
+       * Exibe uma notificação discreta no canto inferior direito.
+       */
+      function showToast(message) {
+        toastMessage.textContent = message;
+        toastNotification.classList.remove('opacity-0', 'translate-y-3', 'pointer-events-none');
+        toastNotification.classList.add('opacity-100', 'translate-y-0');
+
+        if (toastTimeout) clearTimeout(toastTimeout);
+        toastTimeout = setTimeout(() => {
+          toastNotification.classList.add('opacity-0', 'translate-y-3', 'pointer-events-none');
+          toastNotification.classList.remove('opacity-100', 'translate-y-0');
+        }, 2800);
+      }
+
+      /**
+       * Copia texto para a área de transferência usando document.execCommand('copy')
+       * para garantir compatibilidade total em iframes e navegadores locais.
+       */
+      function copyTextToClipboard(text) {
+        try {
+          const tempInput = document.createElement('textarea');
+          tempInput.value = text;
+          tempInput.setAttribute('readonly', '');
+          tempInput.style.position = 'fixed';
+          tempInput.style.top = '-9999px';
+          tempInput.style.left = '-9999px';
+          document.body.appendChild(tempInput);
+          tempInput.select();
+          tempInput.setSelectionRange(0, 99999);
+          const successful = document.execCommand('copy');
+          document.body.removeChild(tempInput);
+
+          if (successful) {
+            showToast('Link copiado para a área de transferência!');
+            return true;
+          }
+        } catch (err) {
+          console.error('Erro ao copiar texto:', err);
+        }
+        showToast('Não foi possível copiar automaticamente.');
+        return false;
+      }
+
+      /**
+       * Normaliza e valida uma URL digitada pelo usuário.
+       * Se não houver protocolo (ex: "google.com"), adiciona "https://".
+       */
+      function normalizeAndValidateUrl(rawInput) {
+        let trimmed = rawInput.trim();
+        if (!trimmed) {
+          throw new Error('Por favor, insira uma URL antes de encurtar.');
+        }
+
+        // Adiciona https:// se o usuário esqueceu o protocolo
+        if (!/^https?:\/\//i.test(trimmed)) {
+          trimmed = 'https://' + trimmed;
+        }
+
+        let parsedUrl;
+        try {
+          parsedUrl = new URL(trimmed);
+        } catch (e) {
+          throw new Error('O endereço digitado não parece ser uma URL válida.');
+        }
+
+        if (parsedUrl.protocol !== 'http:' && parsedUrl.protocol !== 'https:') {
+          throw new Error('Apenas links HTTP ou HTTPS são suportados.');
+        }
+
+        // Verifica se possui um domínio válido com ponto (ex: site.com)
+        if (!parsedUrl.hostname || !parsedUrl.hostname.includes('.') || parsedUrl.hostname.endsWith('.')) {
+          throw new Error('Informe um domínio válido (exemplo: https://seusite.com.br).');
+        }
+
+        return parsedUrl.href;
+      }
+
+      /**
+       * Valida o apelido personalizado conforme o provedor selecionado.
+       */
+      function validateCustomAlias(alias, provider) {
+        if (!alias) return '';
+        const clean = alias.trim();
+        if (!clean) return '';
+
+        if (provider === 'isgd' || provider === 'vgd') {
+          if (!/^[a-zA-Z0-9_]{5,30}$/.test(clean)) {
+            throw new Error('Para is.gd / v.gd, o apelido deve ter entre 5 e 30 caracteres (apenas letras, números ou _).');
+          }
+        } else if (provider === 'spoome') {
+          if (!/^[a-zA-Z0-9_-]{3,30}$/.test(clean)) {
+            throw new Error('Para spoo.me, o apelido deve ter entre 3 e 30 caracteres (letras, números, - ou _).');
+          }
+        }
+        return clean;
+      }
+
+      // -------------------------------------------------------------------
+      // 5. MOTORES DE ENCURTAMENTO DE URL (JSONP + FETCH FALLBACK)
+      // -------------------------------------------------------------------
+
+      /**
+       * Realiza requisição JSONP via injeção de tag <script>.
+       * Contorna bloqueios de CORS de forma nativa mesmo abrindo o HTML localmente.
+       */
+      function requestJsonp(baseUrl, params) {
+        return new Promise((resolve, reject) => {
+          const callbackName = '__shortener_cb_' + Date.now() + '_' + Math.floor(Math.random() * 100000);
+          const script = document.createElement('script');
+          let isSettled = false;
+
+          const cleanup = () => {
+            if (window[callbackName]) {
+              try {
+                delete window[callbackName];
+              } catch (e) {
+                window[callbackName] = undefined;
+              }
+            }
+            if (script.parentNode) {
+              script.parentNode.removeChild(script);
+            }
+          };
+
+          const timeoutId = setTimeout(() => {
+            if (!isSettled) {
+              isSettled = true;
+              cleanup();
+              reject(new Error('Tempo limite esgotado ao conectar com o servidor.'));
+            }
+          }, 10000);
+
+          window[callbackName] = function (data) {
+            if (!isSettled) {
+              isSettled = true;
+              clearTimeout(timeoutId);
+              cleanup();
+              resolve(data);
+            }
+          };
+
+          script.onerror = function () {
+            if (!isSettled) {
+              isSettled = true;
+              clearTimeout(timeoutId);
+              cleanup();
+              reject(new Error('Falha de rede ao comunicar com o serviço de encurtamento.'));
+            }
+          };
+
+          const query = new URLSearchParams({
+            ...params,
+            format: 'json',
+            callback: callbackName
+          });
+
+          script.src = `${baseUrl}?${query.toString()}`;
+          document.body.appendChild(script);
+        });
+      }
+
+      /**
+       * Encurta usando is.gd ou v.gd via JSONP.
+       */
+      async function shortenWithIsGdFamily(domain, longUrl, customAlias) {
+        const endpoint = `https://${domain}/create.php`;
+        const params = { url: longUrl };
+        if (customAlias) {
+          params.shorturl = customAlias;
+        }
+
+        const data = await requestJsonp(endpoint, params);
+
+        if (data && data.shorturl) {
+          return data.shorturl;
+        }
+
+        if (data && data.errormessage) {
+          // Traduz mensagens comuns da API is.gd para Português
+          const msg = data.errormessage.toLowerCase();
+          if (msg.includes('already exists') || data.errorcode === 2) {
+            throw new Error(`O apelido "${customAlias}" já está em uso ou é inválido. Tente outro.`);
+          }
+          if (msg.includes('rate limit') || data.errorcode === 3) {
+            throw new Error('Limite temporário de requisições atingido. Aguarde alguns segundos.');
+          }
+          if (data.errorcode === 1) {
+            throw new Error('A URL informada foi recusada pelo servidor. Verifique se o link está correto.');
+          }
+          throw new Error(data.errormessage);
+        }
+
+        throw new Error('Resposta inesperada do servidor.');
+      }
+
+      /**
+       * Encurta usando spoo.me via fetch POST.
+       */
+      async function shortenWithSpooMe(longUrl, customAlias) {
+        const bodyParams = new URLSearchParams();
+        bodyParams.append('url', longUrl);
+        if (customAlias) {
+          bodyParams.append('alias', customAlias);
+        }
+
+        const response = await fetch('https://spoo.me/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Accept': 'application/json'
+          },
+          body: bodyParams.toString()
+        });
+
+        const data = await response.json().catch(() => ({}));
+
+        if (!response.ok) {
+          if (response.status === 400 || response.status === 409) {
+            throw new Error(data.message || 'Apelido já em uso ou URL inválida no spoo.me.');
+          }
+          if (response.status === 429) {
+            throw new Error('Muitas requisições seguidas no spoo.me. Tente novamente em instantes.');
+          }
+          throw new Error('Erro ao encurtar pelo serviço spoo.me.');
+        }
+
+        if (data && data.short_url) {
+          return data.short_url;
+        }
+
+        throw new Error('Não foi possível obter o link curto do spoo.me.');
+      }
+
+      /**
+       * Orquestra o encurtamento com fallback automático se não houver apelido fixo.
+       */
+      async function shortenUrlOrchestrator(longUrl, provider, customAlias) {
+        if (provider === 'spoome') {
+          return await shortenWithSpooMe(longUrl, customAlias);
+        }
+
+        if (provider === 'vgd') {
+          return await shortenWithIsGdFamily('v.gd', longUrl, customAlias);
+        }
+
+        // Padrão: is.gd com fallback automático para v.gd caso ocorra falha de rede sem apelido
+        try {
+          return await shortenWithIsGdFamily('is.gd', longUrl, customAlias);
+        } catch (primaryErr) {
+          if (!customAlias && !primaryErr.message.includes('recusada')) {
+            return await shortenWithIsGdFamily('v.gd', longUrl, '');
+          }
+          throw primaryErr;
+        }
+      }
+
+      // -------------------------------------------------------------------
+      // 6. GERENCIAMENTO DE HISTÓRICO (LOCALSTORAGE & RENDERIZAÇÃO)
+      // -------------------------------------------------------------------
+      function loadHistoryFromStorage() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            if (Array.isArray(parsed)) {
+              linkHistory = parsed;
+            }
+          }
+        } catch (err) {
+          linkHistory = [];
+        }
+      }
+
+      function saveHistoryToStorage() {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(linkHistory));
+        } catch (err) {
+          console.warn('Não foi possível salvar histórico no localStorage:', err);
+        }
+      }
+
+      function calculateSavingsPercentage(originalUrl, shortUrl) {
+        if (!originalUrl || !shortUrl || originalUrl.length <= shortUrl.length) {
+          return 0;
+        }
+        return Math.round(((originalUrl.length - shortUrl.length) / originalUrl.length) * 100);
+      }
+
+      function formatDatePtBr(isoString) {
+        try {
+          const date = new Date(isoString);
+          return date.toLocaleDateString('pt-BR', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+          });
+        } catch (e) {
+          return '';
+        }
+      }
+
+      function escapeHtml(str) {
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+      }
+
+      function renderHistoryList(filterQuery = '') {
+        const total = linkHistory.length;
+        historyBadgeCount.textContent = total;
+        totalLinksCount.textContent = total;
+
+        if (total === 0) {
+          historyControls.classList.add('hidden');
+          historyListContainer.innerHTML = '';
+          historyListContainer.appendChild(emptyHistoryState);
+          emptyHistoryState.classList.remove('hidden');
+          return;
+        }
+
+        historyControls.classList.remove('hidden');
+        emptyHistoryState.classList.add('hidden');
+
+        const query = filterQuery.trim().toLowerCase();
+        const filteredItems = query
+          ? linkHistory.filter(
+              (item) =>
+                item.shortUrl.toLowerCase().includes(query) ||
+                item.originalUrl.toLowerCase().includes(query)
+            )
+          : linkHistory;
+
+        if (filteredItems.length === 0) {
+          historyListContainer.innerHTML = `
+            <div class="text-center py-8 text-sm text-slate-500 dark:text-slate-400">
+              Nenhum link encontrado para "<strong>${escapeHtml(filterQuery)}</strong>".
+            </div>
+          `;
+          return;
+        }
+
+        historyListContainer.innerHTML = filteredItems
+          .map((item) => {
+            const safeShort = escapeHtml(item.shortUrl);
+            const safeOrig = escapeHtml(item.originalUrl);
+            const dateFormatted = formatDatePtBr(item.createdAt);
+            const savings = calculateSavingsPercentage(item.originalUrl, item.shortUrl);
+
+            return `
+              <article class="group rounded-2xl bg-slate-50/90 dark:bg-slate-800/50 hover:bg-slate-100/80 dark:hover:bg-slate-800 border border-slate-200/70 dark:border-slate-700/70 p-4 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div class="min-w-0 flex-1">
+                  <div class="flex flex-wrap items-center gap-2">
+                    <a
+                      href="${safeShort}"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="text-sm sm:text-base font-bold text-brand-600 dark:text-brand-400 hover:underline break-all"
+                    >
+                      ${safeShort}
+                    </a>
+                    ${
+                      savings > 0
+                        ? `<span class="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-300">-${savings}%</span>`
+                        : ''
+                    }
+                    <span class="text-[11px] text-slate-400 dark:text-slate-500">${dateFormatted}</span>
+                  </div>
+                  <p class="text-xs text-slate-500 dark:text-slate-400 truncate mt-1" title="${safeOrig}">
+                    ${safeOrig}
+                  </p>
+                </div>
+
+                <!-- Botões de ação do item -->
+                <div class="flex items-center gap-1.5 shrink-0 self-end sm:self-center">
+                  <button
+                    type="button"
+                    data-action="copy"
+                    data-url="${safeShort}"
+                    class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white dark:bg-slate-900 hover:bg-brand-50 dark:hover:bg-brand-950/60 text-slate-700 dark:text-slate-200 hover:text-brand-600 dark:hover:text-brand-400 border border-slate-200 dark:border-slate-700 text-xs font-semibold transition-colors"
+                    title="Copiar link curto"
+                  >
+                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                    </svg>
+                    <span>Copiar</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    data-action="qr"
+                    data-url="${safeShort}"
+                    class="p-2 rounded-xl bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 transition-colors"
+                    title="Ver QR Code"
+                  >
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
+                    </svg>
+                  </button>
+
+                  <button
+                    type="button"
+                    data-action="delete"
+                    data-id="${escapeHtml(item.id)}"
+                    class="p-2 rounded-xl bg-white dark:bg-slate-900 hover:bg-rose-50 dark:hover:bg-rose-950/60 text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 border border-slate-200 dark:border-slate-700 transition-colors"
+                    title="Remover do histórico"
+                  >
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                  </button>
+                </div>
+              </article>
+            `;
+          })
+          .join('');
+      }
+
+      // -------------------------------------------------------------------
+      // 7. MODAL DE QR CODE
+      // -------------------------------------------------------------------
+      function openQrModal(url) {
+        currentQrUrl = url;
+        qrModalUrlText.textContent = url;
+        qrCodeRenderBox.innerHTML = '';
+
+        try {
+          if (typeof QRCode !== 'undefined') {
+            new QRCode(qrCodeRenderBox, {
+              text: url,
+              width: 196,
+              height: 196,
+              colorDark: '#0f172a',
+              colorLight: '#ffffff',
+              correctLevel: QRCode.CorrectLevel.M
+            });
+          } else {
+            qrCodeRenderBox.innerHTML = '<p class="text-xs text-slate-500 p-4">Biblioteca de QR Code indisponível offline.</p>';
+          }
+        } catch (err) {
+          qrCodeRenderBox.innerHTML = '<p class="text-xs text-rose-500 p-4">Erro ao gerar QR Code.</p>';
+        }
+
+        qrModalOverlay.classList.remove('hidden');
+      }
+
+      function closeQrModal() {
+        qrModalOverlay.classList.add('hidden');
+      }
+
+      downloadQrBtn.addEventListener('click', () => {
+        try {
+          const canvas = qrCodeRenderBox.querySelector('canvas');
+          const img = qrCodeRenderBox.querySelector('img');
+          let dataUrl = '';
+
+          if (canvas) {
+            dataUrl = canvas.toDataURL('image/png');
+          } else if (img && img.src) {
+            dataUrl = img.src;
+          }
+
+          if (!dataUrl) {
+            showToast('QR Code ainda não está pronto para download.');
+            return;
+          }
+
+          const link = document.createElement('a');
+          link.href = dataUrl;
+          link.download = 'qrcode-link-curto.png';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          showToast('Imagem QR Code baixada!');
+        } catch (err) {
+          showToast('Erro ao baixar imagem do QR Code.');
+        }
+      });
+
+      copyQrLinkBtn.addEventListener('click', () => {
+        if (currentQrUrl) {
+          copyTextToClipboard(currentQrUrl);
+        }
+      });
+
+      closeQrModalBtn.addEventListener('click', closeQrModal);
+      qrModalOverlay.addEventListener('click', (e) => {
+        if (e.target === qrModalOverlay) closeQrModal();
+      });
+
+      // -------------------------------------------------------------------
+      // 8. EVENTOS DE INTERAÇÃO DO FORMULÁRIO E HISTÓRICO
+      // -------------------------------------------------------------------
+
+      // Atualiza prefixo de domínio ao trocar provedor
+      providerSelect.addEventListener('change', () => {
+        const val = providerSelect.value;
+        if (val === 'isgd') {
+          aliasDomainPrefix.textContent = 'is.gd/';
+          aliasHintText.textContent = 'Use de 5 a 30 caracteres (letras, números ou underline _).';
+        } else if (val === 'vgd') {
+          aliasDomainPrefix.textContent = 'v.gd/';
+          aliasHintText.textContent = 'Use de 5 a 30 caracteres (letras, números ou underline _).';
+        } else if (val === 'spoome') {
+          aliasDomainPrefix.textContent = 'spoo.me/';
+          aliasHintText.textContent = 'Use de 3 a 30 caracteres (letras, números, hífen - ou _).';
+        }
+      });
+
+      // Alterna painel de opções avançadas
+      toggleOptionsBtn.addEventListener('click', () => {
+        const isHidden = advancedOptionsPanel.classList.toggle('hidden');
+        optionsChevron.style.transform = isHidden ? 'rotate(0deg)' : 'rotate(180deg)';
+      });
+
+      // Exibe/oculta botão de limpar input
+      longUrlInput.addEventListener('input', () => {
+        if (longUrlInput.value.trim().length > 0) {
+          clearInputBtn.classList.remove('hidden');
+        } else {
+          clearInputBtn.classList.add('hidden');
+        }
+        errorAlertBox.classList.add('hidden');
+      });
+
+      clearInputBtn.addEventListener('click', () => {
+        longUrlInput.value = '';
+        clearInputBtn.classList.add('hidden');
+        errorAlertBox.classList.add('hidden');
+        longUrlInput.focus();
+      });
+
+      function setLoadingState(isLoading) {
+        shortenSubmitBtn.disabled = isLoading;
+        if (isLoading) {
+          btnIconDefault.classList.add('hidden');
+          btnIconSpinner.classList.remove('hidden');
+          btnLabel.textContent = 'Encurtando...';
+        } else {
+          btnIconDefault.classList.remove('hidden');
+          btnIconSpinner.classList.add('hidden');
+          btnLabel.textContent = 'Encurtar URL';
+        }
+      }
+
+      function showFormError(message) {
+        errorAlertMessage.textContent = message;
+        errorAlertBox.classList.remove('hidden');
+      }
+
+      // Submissão do formulário de encurtamento
+      shortenForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        errorAlertBox.classList.add('hidden');
+
+        try {
+          const validUrl = normalizeAndValidateUrl(longUrlInput.value);
+          const provider = providerSelect.value;
+          const validAlias = validateCustomAlias(customAliasInput.value, provider);
+
+          setLoadingState(true);
+
+          const shortUrl = await shortenUrlOrchestrator(validUrl, provider, validAlias);
+          currentLatestShortUrl = shortUrl;
+
+          // Atualiza o cartão de resultado principal
+          shortUrlDisplay.textContent = shortUrl;
+          shortUrlDisplay.href = shortUrl;
+          visitMainLinkBtn.href = shortUrl;
+          originalUrlDisplay.textContent = `Destino: ${validUrl}`;
+
+          const savedPct = calculateSavingsPercentage(validUrl, shortUrl);
+          if (savedPct > 0) {
+            savingsBadge.textContent = `-${savedPct}% caracteres`;
+            savingsBadge.classList.remove('hidden');
+          } else {
+            savingsBadge.classList.add('hidden');
+          }
+
+          latestResultCard.classList.remove('hidden');
+          copyMainBtnText.textContent = 'Copiar Link';
+
+          // Adiciona ao topo do histórico (evitando duplicata idêntica consecutiva)
+          const newEntry = {
+            id: 'lnk_' + Date.now() + '_' + Math.floor(Math.random() * 1000),
+            shortUrl,
+            originalUrl: validUrl,
+            provider,
+            createdAt: new Date().toISOString()
+          };
+
+          linkHistory = [
+            newEntry,
+            ...linkHistory.filter((item) => item.shortUrl !== shortUrl)
+          ].slice(0, 50); // Mantém até 50 links recentes
+
+          saveHistoryToStorage();
+          renderHistoryList(historySearchInput.value);
+
+          // Limpa o apelido para o próximo link
+          customAliasInput.value = '';
+          showToast('URL encurtada com sucesso!');
+        } catch (err) {
+          showFormError(err.message || 'Ocorreu um erro inesperado ao tentar encurtar a URL.');
+        } finally {
+          setLoadingState(false);
+        }
+      });
+
+      // Botão Copiar no resultado principal
+      copyMainBtn.addEventListener('click', () => {
+        if (!currentLatestShortUrl) return;
+        const ok = copyTextToClipboard(currentLatestShortUrl);
+        if (ok) {
+          copyMainBtnText.textContent = 'Copiado!';
+          setTimeout(() => {
+            copyMainBtnText.textContent = 'Copiar Link';
+          }, 2000);
+        }
+      });
+
+      // Botão QR Code no resultado principal
+      openQrMainBtn.addEventListener('click', () => {
+        if (currentLatestShortUrl) {
+          openQrModal(currentLatestShortUrl);
+        }
+      });
+
+      // Delegação de eventos na lista de histórico (Copiar, QR Code, Excluir)
+      historyListContainer.addEventListener('click', (e) => {
+        const actionBtn = e.target.closest('button[data-action]');
+        if (!actionBtn) return;
+
+        const action = actionBtn.getAttribute('data-action');
+        if (action === 'copy') {
+          const url = actionBtn.getAttribute('data-url');
+          if (url) copyTextToClipboard(url);
+        } else if (action === 'qr') {
+          const url = actionBtn.getAttribute('data-url');
+          if (url) openQrModal(url);
+        } else if (action === 'delete') {
+          const id = actionBtn.getAttribute('data-id');
+          linkHistory = linkHistory.filter((item) => item.id !== id);
+          saveHistoryToStorage();
+          renderHistoryList(historySearchInput.value);
+          showToast('Link removido do histórico.');
+        }
+      });
+
+      // Filtro de busca no histórico
+      historySearchInput.addEventListener('input', () => {
+        renderHistoryList(historySearchInput.value);
+      });
+
+      // Limpar histórico com confirmação inline (sem window.confirm)
+      let clearConfirmTimer = null;
+      clearHistoryBtn.addEventListener('click', () => {
+        const isConfirming = clearHistoryBtn.getAttribute('data-confirm') === 'true';
+        if (!isConfirming) {
+          clearHistoryBtn.setAttribute('data-confirm', 'true');
+          clearHistoryBtn.textContent = 'Confirmar limpeza?';
+          clearConfirmTimer = setTimeout(() => {
+            clearHistoryBtn.setAttribute('data-confirm', 'false');
+            clearHistoryBtn.textContent = 'Limpar tudo';
+          }, 3500);
+        } else {
+          if (clearConfirmTimer) clearTimeout(clearConfirmTimer);
+          linkHistory = [];
+          saveHistoryToStorage();
+          historySearchInput.value = '';
+          renderHistoryList('');
+          clearHistoryBtn.setAttribute('data-confirm', 'false');
+          clearHistoryBtn.textContent = 'Limpar tudo';
+          showToast('Histórico limpo com sucesso.');
+        }
+      });
+
+      // Fechar modal com tecla ESC
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !qrModalOverlay.classList.contains('hidden')) {
+          closeQrModal();
+        }
+      });
+
+      // -------------------------------------------------------------------
+      // 9. INICIALIZAÇÃO
+      // -------------------------------------------------------------------
+      initTheme();
+      loadHistoryFromStorage();
+      renderHistoryList();
+    })();
+  </script>
+</body>
+</html>

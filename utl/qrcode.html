@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gerador de QR Code — Texto, Links e Documentos</title>
+  <!-- Fonte Inter para excelente legibilidade -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Biblioteca leve e confiável para geração da matriz QR Code -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+          },
+        },
+      },
+    };
+  </script>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col selection:bg-indigo-100 selection:text-indigo-900">
+
+  <!-- Cabeçalho Superior -->
+  <header class="bg-white border-b border-slate-200/80 sticky top-0 z-30">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3.5 flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center shadow-sm shadow-indigo-200 shrink-0">
+          <!-- Ícone SVG de QR Code -->
+          <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="7" rx="1" />
+            <rect x="14" y="3" width="7" height="7" rx="1" />
+            <rect x="3" y="14" width="7" height="7" rx="1" />
+            <path d="M14 14h3v3h-3z" />
+            <path d="M17 17h4v4h-4z" />
+            <path d="M14 20h1" />
+            <path d="M20 14v1" />
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-lg sm:text-xl font-bold text-slate-900 tracking-tight leading-tight">Gerador de QR Code</h1>
+          <p class="text-xs text-slate-500">Crie, copie e cole em documentos, provas e atividades</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200/70">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          Pronto para colar (Ctrl+V)
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Conteúdo Principal -->
+  <main class="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
+
+      <!-- Coluna Esquerda: Seleção de Tipo, Entrada de Dados e Personalização (7 colunas) -->
+      <section class="lg:col-span-7 space-y-6">
+
+        <!-- Card Principal de Conteúdo -->
+        <div class="bg-white rounded-2xl border border-slate-200/90 shadow-sm overflow-hidden">
+          <!-- Abas de Tipo de Conteúdo -->
+          <div class="p-3 sm:p-4 bg-slate-50/70 border-b border-slate-200/80">
+            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2.5 px-1">
+              1. Escolha o tipo de conteúdo
+            </label>
+            <div class="grid grid-cols-2 sm:grid-cols-5 gap-2" role="tablist" aria-label="Tipos de QR Code">
+              <!-- Aba: Texto Simples -->
+              <button type="button" data-tab="text" class="tab-btn flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-sm font-medium transition-all cursor-pointer bg-indigo-600 text-white shadow-sm">
+                <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                  <line x1="16" y1="13" x2="8" y2="13"/>
+                  <line x1="16" y1="17" x2="8" y2="17"/>
+                </svg>
+                <span>Texto</span>
+              </button>
+
+              <!-- Aba: Link / URL -->
+              <button type="button" data-tab="url" class="tab-btn flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-sm font-medium transition-all cursor-pointer bg-white text-slate-600 hover:bg-slate-100 border border-slate-200/80">
+                <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                  <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+                </svg>
+                <span>Link</span>
+              </button>
+
+              <!-- Aba: Wi-Fi -->
+              <button type="button" data-tab="wifi" class="tab-btn flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-sm font-medium transition-all cursor-pointer bg-white text-slate-600 hover:bg-slate-100 border border-slate-200/80">
+                <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M5 12.55a11 11 0 0 1 14.08 0"/>
+                  <path d="M1.42 9a16 16 0 0 1 21.16 0"/>
+                  <path d="M8.53 16.11a6 6 0 0 1 6.95 0"/>
+                  <line x1="12" y1="20" x2="12.01" y2="20"/>
+                </svg>
+                <span>Wi-Fi</span>
+              </button>
+
+              <!-- Aba: WhatsApp -->
+              <button type="button" data-tab="whatsapp" class="tab-btn flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-sm font-medium transition-all cursor-pointer bg-white text-slate-600 hover:bg-slate-100 border border-slate-200/80">
+                <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+                </svg>
+                <span>WhatsApp</span>
+              </button>
+
+              <!-- Aba: E-mail -->
+              <button type="button" data-tab="email" class="tab-btn col-span-2 sm:col-span-1 flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-sm font-medium transition-all cursor-pointer bg-white text-slate-600 hover:bg-slate-100 border border-slate-200/80">
+                <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="2" y="4" width="20" height="16" rx="2"/>
+                  <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+                </svg>
+                <span>E-mail</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Formulários Dinâmicos -->
+          <div class="p-5 sm:p-6 space-y-5">
+
+            <!-- PAINEL 1: TEXTO SIMPLES -->
+            <div id="panel-text" class="tab-panel space-y-3">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <label for="input-text" class="text-sm font-semibold text-slate-800">
+                  Digite ou cole o texto desejado
+                </label>
+                <div class="flex items-center gap-2">
+                  <button type="button" id="btn-clear-text" class="text-xs font-medium text-slate-500 hover:text-slate-700 px-2.5 py-1 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer">
+                    Limpar
+                  </button>
+                  <button type="button" id="btn-copy-input-text" class="inline-flex items-center gap-1.5 text-xs font-semibold text-indigo-600 hover:text-indigo-700 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg transition-colors cursor-pointer">
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                    </svg>
+                    Copiar texto na memória
+                  </button>
+                </div>
+              </div>
+              <textarea
+                id="input-text"
+                rows="4"
+                placeholder="Escreva aqui o texto, resposta de atividade, instrução ou aviso..."
+                class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all resize-y"
+              >Atividade 01: Escaneie este código para conferir a dica da questão!</textarea>
+              <div class="flex flex-wrap items-center justify-between gap-2 pt-1">
+                <span id="text-char-count" class="text-xs text-slate-500">68 caracteres</span>
+                <button type="button" id="btn-generate-and-copy-text" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs sm:text-sm font-medium shadow-sm transition-all cursor-pointer">
+                  <svg class="w-4 h-4 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                  Gerar QR Code e Copiar Texto para Memória
+                </button>
+              </div>
+            </div>
+
+            <!-- PAINEL 2: LINK / URL -->
+            <div id="panel-url" class="tab-panel hidden space-y-3">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <label for="input-url" class="text-sm font-semibold text-slate-800">
+                  Endereço do site, vídeo, formulário ou arquivo
+                </label>
+                <div class="flex items-center gap-1.5">
+                  <button type="button" data-prefix="https://" class="prefix-btn text-xs font-medium bg-slate-100 hover:bg-slate-200 text-slate-700 px-2.5 py-1 rounded-lg transition-colors cursor-pointer">
+                    + https://
+                  </button>
+                  <button type="button" id="btn-copy-url-text" class="text-xs font-semibold text-indigo-600 hover:text-indigo-700 bg-indigo-50 hover:bg-indigo-100 px-2.5 py-1 rounded-lg transition-colors cursor-pointer">
+                    Copiar link
+                  </button>
+                </div>
+              </div>
+              <input
+                type="url"
+                id="input-url"
+                placeholder="https://www.exemplo.com.br/atividade"
+                value="https://pt.wikipedia.org/wiki/C%C3%B3digo_QR"
+                class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-800 placeholder:text-slate-400 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all"
+              />
+              <p class="text-xs text-slate-500">
+                Dica: Ideal para links do Google Forms, YouTube, Google Drive, Kahoot ou artigos de apoio.
+              </p>
+            </div>
+
+            <!-- PAINEL 3: WI-FI -->
+            <div id="panel-wifi" class="tab-panel hidden space-y-4">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label for="input-wifi-ssid" class="block text-sm font-semibold text-slate-800 mb-1.5">Nome da Rede (SSID)</label>
+                  <input
+                    type="text"
+                    id="input-wifi-ssid"
+                    placeholder="Ex: WiFi_Escola_Sala02"
+                    class="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-800 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all"
+                  />
+                </div>
+                <div>
+                  <label for="input-wifi-pass" class="block text-sm font-semibold text-slate-800 mb-1.5">Senha da Rede</label>
+                  <input
+                    type="text"
+                    id="input-wifi-pass"
+                    placeholder="Digite a senha do Wi-Fi"
+                    class="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-800 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all"
+                  />
+                </div>
+              </div>
+              <div>
+                <label for="input-wifi-enc" class="block text-sm font-semibold text-slate-800 mb-1.5">Tipo de Segurança</label>
+                <select id="input-wifi-enc" class="w-full sm:w-1/2 rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-800 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all">
+                  <option value="WPA">WPA / WPA2 / WPA3 (Padrão)</option>
+                  <option value="WEP">WEP</option>
+                  <option value="nopass">Rede Aberta (Sem senha)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- PAINEL 4: WHATSAPP -->
+            <div id="panel-whatsapp" class="tab-panel hidden space-y-4">
+              <div>
+                <label for="input-wa-phone" class="block text-sm font-semibold text-slate-800 mb-1.5">Número com DDD (Brasil +55)</label>
+                <input
+                  type="tel"
+                  id="input-wa-phone"
+                  placeholder="Ex: 48 99999-9999"
+                  class="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-800 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all"
+                />
+              </div>
+              <div>
+                <label for="input-wa-msg" class="block text-sm font-semibold text-slate-800 mb-1.5">Mensagem inicial (opcional)</label>
+                <textarea
+                  id="input-wa-msg"
+                  rows="2"
+                  placeholder="Olá! Gostaria de tirar uma dúvida sobre a atividade..."
+                  class="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-800 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all resize-y"
+                ></textarea>
+              </div>
+            </div>
+
+            <!-- PAINEL 5: E-MAIL -->
+            <div id="panel-email" class="tab-panel hidden space-y-4">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label for="input-email-to" class="block text-sm font-semibold text-slate-800 mb-1.5">E-mail de destino</label>
+                  <input
+                    type="email"
+                    id="input-email-to"
+                    placeholder="professor@escola.com.br"
+                    class="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-800 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all"
+                  />
+                </div>
+                <div>
+                  <label for="input-email-subject" class="block text-sm font-semibold text-slate-800 mb-1.5">Assunto</label>
+                  <input
+                    type="text"
+                    id="input-email-subject"
+                    placeholder="Entrega de Trabalho"
+                    class="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-800 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all"
+                  />
+                </div>
+              </div>
+              <div>
+                <label for="input-email-body" class="block text-sm font-semibold text-slate-800 mb-1.5">Corpo da mensagem (opcional)</label>
+                <textarea
+                  id="input-email-body"
+                  rows="2"
+                  placeholder="Olá, segue em anexo..."
+                  class="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-800 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all resize-y"
+                ></textarea>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Card de Personalização para Atividades e Documentos -->
+        <div class="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-5 sm:p-6 space-y-5">
+          <div class="flex items-center justify-between">
+            <h2 class="text-sm font-bold uppercase tracking-wider text-slate-500">
+              2. Personalizar para Documento / Impressão
+            </h2>
+            <button type="button" id="btn-reset-style" class="text-xs font-medium text-slate-500 hover:text-indigo-600 transition-colors cursor-pointer">
+              Restaurar padrão
+            </button>
+          </div>
+
+          <!-- Legenda opcional incorporada na imagem -->
+          <div>
+            <label for="input-caption" class="block text-sm font-semibold text-slate-800 mb-1.5">
+              Texto/Legenda abaixo do QR Code <span class="font-normal text-slate-400">(opcional — sai junto na imagem)</span>
+            </label>
+            <input
+              type="text"
+              id="input-caption"
+              maxlength="48"
+              placeholder="Ex: Escaneie para ver o vídeo • Questão 03"
+              class="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all"
+            />
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-1">
+            <!-- Cores -->
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-2">Cor do QR Code</label>
+              <div class="flex items-center gap-2">
+                <button type="button" data-fg="#0f172a" data-bg="#ffffff" class="color-preset w-8 h-8 rounded-lg bg-slate-900 ring-2 ring-offset-2 ring-indigo-500 cursor-pointer" title="Preto Clássico (Melhor para impressão)"></button>
+                <button type="button" data-fg="#1e3a8a" data-bg="#ffffff" class="color-preset w-8 h-8 rounded-lg bg-blue-900 hover:scale-105 transition-transform cursor-pointer" title="Azul Marinho"></button>
+                <button type="button" data-fg="#065f46" data-bg="#ffffff" class="color-preset w-8 h-8 rounded-lg bg-emerald-800 hover:scale-105 transition-transform cursor-pointer" title="Verde Escuro"></button>
+                <button type="button" data-fg="#4c1d95" data-bg="#ffffff" class="color-preset w-8 h-8 rounded-lg bg-violet-900 hover:scale-105 transition-transform cursor-pointer" title="Roxo Profundo"></button>
+                <label class="relative w-8 h-8 rounded-lg border border-slate-300 overflow-hidden cursor-pointer flex items-center justify-center bg-gradient-to-tr from-rose-500 via-amber-400 to-indigo-500" title="Escolher cor personalizada">
+                  <input type="color" id="input-fg-color" value="#0f172a" class="opacity-0 absolute inset-0 w-full h-full cursor-pointer" />
+                </label>
+              </div>
+            </div>
+
+            <!-- Estilo dos pontos -->
+            <div>
+              <label for="select-dot-style" class="block text-xs font-semibold text-slate-700 mb-2">Formato dos Pontos</label>
+              <select id="select-dot-style" class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 focus:border-indigo-500 outline-none">
+                <option value="square">Quadrado Clássico</option>
+                <option value="rounded">Arredondado Moderno</option>
+              </select>
+            </div>
+
+            <!-- Correção de Erro -->
+            <div>
+              <label for="select-ecc" class="block text-xs font-semibold text-slate-700 mb-2">Nitidez / Impressão</label>
+              <select id="select-ecc" class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 focus:border-indigo-500 outline-none">
+                <option value="M">Padrão (15%)</option>
+                <option value="H" selected>Alta (30% - Papel)</option>
+                <option value="Q">Média-Alta (25%)</option>
+                <option value="L">Compacto (7%)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Coluna Direita: Pré-visualização e Ações de Cópia/Download (5 colunas) -->
+      <aside class="lg:col-span-5 lg:sticky lg:top-24">
+        <div class="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-5 sm:p-6 flex flex-col items-center">
+          <div class="w-full flex items-center justify-between mb-4">
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-500">
+              3. Seu QR Code Pronto
+            </span>
+            <span id="qr-status-badge" class="text-xs font-medium text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
+              Alta Resolução
+            </span>
+          </div>
+
+          <!-- Área de Pré-visualização com fundo suave -->
+          <div class="w-full bg-slate-100/90 rounded-2xl p-6 flex flex-col items-center justify-center border border-slate-200/80 relative group">
+            <div class="bg-white p-3 rounded-2xl shadow-md border border-slate-200/70 transition-transform duration-200 group-hover:scale-[1.01]">
+              <!-- Canvas oculto de alta definição (1024px) para cópia e download nítidos -->
+              <canvas id="qr-canvas" class="hidden"></canvas>
+              <!-- Imagem sincronizada para permitir também clique direito -> Copiar imagem -->
+              <img
+                id="qr-preview-img"
+                alt="QR Code gerado"
+                class="w-56 h-auto sm:w-64 rounded-lg block select-all"
+              />
+            </div>
+            <p class="text-[11px] text-slate-500 mt-3 text-center">
+              Dica: Você também pode clicar com o botão direito na imagem acima e escolher <strong>"Copiar imagem"</strong>.
+            </p>
+          </div>
+
+          <!-- Botões Principais de Ação -->
+          <div class="w-full space-y-2.5 mt-5">
+            <!-- Botão 1: Copiar Imagem do QR Code para colar em documentos -->
+            <button
+              type="button"
+              id="btn-copy-image"
+              class="w-full flex items-center justify-center gap-2.5 px-5 py-3.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 active:scale-[0.99] text-white font-semibold text-sm shadow-md shadow-indigo-200 transition-all cursor-pointer"
+            >
+              <svg class="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+              </svg>
+              <span>Copiar Imagem do QR Code (Colar no Doc)</span>
+            </button>
+
+            <!-- Botões Secundários lado a lado -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <!-- Baixar PNG -->
+              <button
+                type="button"
+                id="btn-download-png"
+                class="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-medium text-sm transition-all cursor-pointer"
+              >
+                <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="7 10 12 15 17 10"/>
+                  <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+                <span>Baixar PNG</span>
+              </button>
+
+              <!-- Copiar Conteúdo Textual na Memória -->
+              <button
+                type="button"
+                id="btn-copy-payload"
+                class="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-medium text-sm border border-slate-200/90 transition-all cursor-pointer"
+              >
+                <svg class="w-4 h-4 shrink-0 text-slate-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+                  <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
+                </svg>
+                <span>Copiar Texto</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Resumo do conteúdo codificado -->
+          <div class="w-full mt-5 pt-4 border-t border-slate-100">
+            <div class="flex items-center justify-between text-xs text-slate-500 mb-1">
+              <span class="font-medium">Conteúdo gravado no QR Code:</span>
+              <span id="payload-type-label" class="font-semibold text-indigo-600">Texto</span>
+            </div>
+            <div id="payload-preview" class="text-xs text-slate-600 bg-slate-50 rounded-lg px-3 py-2 border border-slate-200/70 break-all max-h-16 overflow-y-auto font-mono">
+              Atividade 01: Escaneie este código para conferir a dica da questão!
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <!-- Rodapé discreto -->
+  <footer class="border-t border-slate-200/70 bg-white py-4 px-4 text-center text-xs text-slate-500">
+    Funciona 100% no seu navegador • Nenhum dado é enviado para servidores externos.
+  </footer>
+
+  <!-- Toast de Notificação Flutuante -->
+  <div
+    id="toast-container"
+    aria-live="polite"
+    class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none max-w-sm w-[calc(100vw-2.5rem)]"
+  ></div>
+
+  <!-- Modal Auxiliar caso o navegador bloqueie cópia direta de imagem via script -->
+  <div id="fallback-modal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl border border-slate-200 space-y-4">
+      <div class="flex items-start justify-between gap-3">
+        <div>
+          <h3 class="text-base font-bold text-slate-900">Como colar no seu documento</h3>
+          <p class="text-xs text-slate-500 mt-0.5">Seu navegador restringiu a cópia automática de imagem nesta janela.</p>
+        </div>
+        <button type="button" id="btn-close-modal" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 cursor-pointer">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="bg-slate-50 rounded-xl p-4 flex flex-col items-center border border-slate-200">
+        <img id="modal-qr-img" alt="QR Code para copiar" class="w-44 h-auto rounded-lg shadow-xs bg-white p-2" />
+        <p class="text-xs text-slate-700 font-medium mt-3 text-center">
+          1. Clique com o <strong>botão direito</strong> na imagem acima e selecione <strong>"Copiar imagem"</strong>.<br/>
+          2. Vá ao seu documento (Word, Docs, Canva) e pressione <strong>Ctrl + V</strong>.
+        </p>
+      </div>
+
+      <div class="flex justify-end gap-2">
+        <button type="button" id="btn-modal-download" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold cursor-pointer">
+          Ou Baixar PNG Agora
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /**
+     * Gerador de QR Code Interativo em Arquivo Único
+     * Suporta: Texto Livre, Links, Wi-Fi, WhatsApp e E-mail
+     * Recursos: Cópia de texto para memória, Cópia da imagem PNG para colar em documentos e Download em Alta Resolução.
+     */
+    (function () {
+      'use strict';
+
+      // Habilita suporte completo a UTF-8 (acentos, cedilha, emojis) na biblioteca qrcode-generator
+      if (typeof qrcode !== 'undefined' && qrcode.stringToBytesFuncs && qrcode.stringToBytesFuncs['UTF-8']) {
+        qrcode.stringToBytes = qrcode.stringToBytesFuncs['UTF-8'];
+      }
+
+      // Estado central da aplicação
+      const state = {
+        activeTab: 'text',
+        fgColor: '#0f172a',
+        bgColor: '#ffffff',
+        dotStyle: 'square',
+        ecc: 'H',
+        caption: '',
+      };
+
+      // Referências aos elementos do DOM
+      const elements = {
+        tabBtns: document.querySelectorAll('.tab-btn'),
+        tabPanels: document.querySelectorAll('.tab-panel'),
+        inputText: document.getElementById('input-text'),
+        textCharCount: document.getElementById('text-char-count'),
+        btnClearText: document.getElementById('btn-clear-text'),
+        btnCopyInputText: document.getElementById('btn-copy-input-text'),
+        btnGenerateAndCopyText: document.getElementById('btn-generate-and-copy-text'),
+        inputUrl: document.getElementById('input-url'),
+        btnCopyUrlText: document.getElementById('btn-copy-url-text'),
+        prefixBtns: document.querySelectorAll('.prefix-btn'),
+        inputWifiSsid: document.getElementById('input-wifi-ssid'),
+        inputWifiPass: document.getElementById('input-wifi-pass'),
+        inputWifiEnc: document.getElementById('input-wifi-enc'),
+        inputWaPhone: document.getElementById('input-wa-phone'),
+        inputWaMsg: document.getElementById('input-wa-msg'),
+        inputEmailTo: document.getElementById('input-email-to'),
+        inputEmailSubject: document.getElementById('input-email-subject'),
+        inputEmailBody: document.getElementById('input-email-body'),
+        inputCaption: document.getElementById('input-caption'),
+        colorPresets: document.querySelectorAll('.color-preset'),
+        inputFgColor: document.getElementById('input-fg-color'),
+        selectDotStyle: document.getElementById('select-dot-style'),
+        selectEcc: document.getElementById('select-ecc'),
+        btnResetStyle: document.getElementById('btn-reset-style'),
+        qrCanvas: document.getElementById('qr-canvas'),
+        qrPreviewImg: document.getElementById('qr-preview-img'),
+        qrStatusBadge: document.getElementById('qr-status-badge'),
+        btnCopyImage: document.getElementById('btn-copy-image'),
+        btnDownloadPng: document.getElementById('btn-download-png'),
+        btnCopyPayload: document.getElementById('btn-copy-payload'),
+        payloadPreview: document.getElementById('payload-preview'),
+        payloadTypeLabel: document.getElementById('payload-type-label'),
+        toastContainer: document.getElementById('toast-container'),
+        fallbackModal: document.getElementById('fallback-modal'),
+        modalQrImg: document.getElementById('modal-qr-img'),
+        btnCloseModal: document.getElementById('btn-close-modal'),
+        btnModalDownload: document.getElementById('btn-modal-download'),
+      };
+
+      /**
+       * Exibe uma notificação Toast elegante (substitui alert())
+       * @param {string} message - Mensagem principal
+       * @param {'success'|'info'|'warning'} type - Estilo visual
+       */
+      function showToast(message, type = 'success') {
+        const toast = document.createElement('div');
+        const colors = {
+          success: 'bg-slate-900 text-white border-slate-700',
+          info: 'bg-indigo-600 text-white border-indigo-500',
+          warning: 'bg-amber-600 text-white border-amber-500',
+        };
+
+        const iconSvg =
+          type === 'warning'
+            ? '<svg class="w-4 h-4 text-amber-200 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>'
+            : '<svg class="w-4 h-4 text-emerald-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>';
+
+        toast.className = `pointer-events-auto flex items-center gap-2.5 px-4 py-3 rounded-xl border shadow-lg text-xs sm:text-sm font-medium transition-all duration-300 transform translate-y-2 opacity-0 ${colors[type] || colors.success}`;
+        toast.innerHTML = `${iconSvg}<span>${message}</span>`;
+
+        elements.toastContainer.appendChild(toast);
+
+        requestAnimationFrame(() => {
+          toast.classList.remove('translate-y-2', 'opacity-0');
+        });
+
+        setTimeout(() => {
+          toast.classList.add('translate-y-2', 'opacity-0');
+          setTimeout(() => toast.remove(), 300);
+        }, 3200);
+      }
+
+      /**
+       * Copia qualquer string para a área de transferência (memória)
+       * Utiliza navigator.clipboard com fallback garantido para document.execCommand('copy')
+       */
+      async function copyTextToMemory(text, successMessage = 'Texto copiado para a memória!') {
+        if (!text || !text.trim()) {
+          showToast('Não há texto para copiar.', 'warning');
+          return false;
+        }
+
+        try {
+          if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(text);
+            showToast(successMessage, 'success');
+            return true;
+          }
+        } catch (err) {
+          // Segue para o fallback clássico abaixo
+        }
+
+        try {
+          const tempTextarea = document.createElement('textarea');
+          tempTextarea.value = text;
+          tempTextarea.setAttribute('readonly', '');
+          tempTextarea.style.position = 'fixed';
+          tempTextarea.style.opacity = '0';
+          document.body.appendChild(tempTextarea);
+          tempTextarea.select();
+          tempTextarea.setSelectionRange(0, 99999);
+          const ok = document.execCommand('copy');
+          document.body.removeChild(tempTextarea);
+
+          if (ok) {
+            showToast(successMessage, 'success');
+            return true;
+          }
+        } catch (fallbackErr) {
+          console.error('Erro ao copiar texto:', fallbackErr);
+        }
+
+        showToast('Não foi possível copiar automaticamente. Selecione e use Ctrl+C.', 'warning');
+        return false;
+      }
+
+      /**
+       * Monta o conteúdo final (payload) conforme a aba ativa
+       */
+      function getPayload() {
+        switch (state.activeTab) {
+          case 'text': {
+            const val = elements.inputText.value;
+            return {
+              data: val.trim() ? val : 'Digite um texto para gerar o QR Code',
+              isEmpty: !val.trim(),
+              label: 'Texto Livre',
+            };
+          }
+          case 'url': {
+            let url = elements.inputUrl.value.trim();
+            if (url && !/^[a-zA-Z][a-zA-Z\d+\-.]*:/.test(url)) {
+              url = 'https://' + url;
+            }
+            return {
+              data: url || 'https://exemplo.com.br',
+              isEmpty: !elements.inputUrl.value.trim(),
+              label: 'Link / URL',
+            };
+          }
+          case 'wifi': {
+            const ssid = elements.inputWifiSsid.value.trim();
+            const pass = elements.inputWifiPass.value;
+            const enc = elements.inputWifiEnc.value;
+            const escapeWifi = (str) => str.replace(/([\\;,:"])/g, '\\$1');
+            const wifiStr =
+              enc === 'nopass'
+                ? `WIFI:T:nopass;S:${escapeWifi(ssid || 'Rede_WiFi')};;`
+                : `WIFI:T:${enc};S:${escapeWifi(ssid || 'Rede_WiFi')};P:${escapeWifi(pass)};;`;
+            return {
+              data: wifiStr,
+              isEmpty: !ssid,
+              label: 'Rede Wi-Fi',
+            };
+          }
+          case 'whatsapp': {
+            const rawPhone = elements.inputWaPhone.value.replace(/\D/g, '');
+            const phoneWithCountry = rawPhone
+              ? rawPhone.startsWith('55') && rawPhone.length >= 12
+                ? rawPhone
+                : '55' + rawPhone
+              : '5511999999999';
+            const msg = elements.inputWaMsg.value.trim();
+            const waUrl = msg
+              ? `https://wa.me/${phoneWithCountry}?text=${encodeURIComponent(msg)}`
+              : `https://wa.me/${phoneWithCountry}`;
+            return {
+              data: waUrl,
+              isEmpty: !rawPhone,
+              label: 'WhatsApp',
+            };
+          }
+          case 'email': {
+            const to = elements.inputEmailTo.value.trim();
+            const subject = elements.inputEmailSubject.value.trim();
+            const body = elements.inputEmailBody.value.trim();
+            const params = [];
+            if (subject) params.push(`subject=${encodeURIComponent(subject)}`);
+            if (body) params.push(`body=${encodeURIComponent(body)}`);
+            const mailto = `mailto:${to || 'contato@exemplo.com.br'}${params.length ? '?' + params.join('&') : ''}`;
+            return {
+              data: mailto,
+              isEmpty: !to,
+              label: 'E-mail',
+            };
+          }
+          default:
+            return { data: 'QR Code', isEmpty: false, label: 'Texto' };
+        }
+      }
+
+      /**
+       * Desenha um retângulo com cantos arredondados no Canvas 2D
+       */
+      function drawRoundedRect(ctx, x, y, width, height, radius) {
+        const r = Math.min(radius, width / 2, height / 2);
+        ctx.beginPath();
+        ctx.moveTo(x + r, y);
+        ctx.arcTo(x + width, y, x + width, y + height, r);
+        ctx.arcTo(x + width, y + height, x, y + height, r);
+        ctx.arcTo(x, y + height, x, y, r);
+        ctx.arcTo(x, y, x + width, y, r);
+        ctx.closePath();
+        ctx.fill();
+      }
+
+      /**
+       * Gera e renderiza o QR Code em alta resolução (1024px) no Canvas e sincroniza com a tag <img>
+       */
+      function renderQRCode() {
+        const payload = getPayload();
+
+        // Atualiza contadores e visualização textual do payload
+        elements.textCharCount.textContent = `${elements.inputText.value.length} caracteres`;
+        elements.payloadPreview.textContent = payload.data;
+        elements.payloadTypeLabel.textContent = payload.label;
+
+        if (payload.isEmpty) {
+          elements.qrStatusBadge.textContent = 'Exemplo';
+          elements.qrStatusBadge.className = 'text-xs font-medium text-amber-700 bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-200';
+        } else {
+          elements.qrStatusBadge.textContent = 'Pronto para colar';
+          elements.qrStatusBadge.className = 'text-xs font-medium text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200';
+        }
+
+        try {
+          // Cria instância QR automática (tipo 0 ajusta tamanho conforme volume de texto)
+          const qr = qrcode(0, state.ecc);
+          qr.addData(payload.data);
+          qr.make();
+
+          const moduleCount = qr.getModuleCount();
+          const quietZone = 4; // Margem branca obrigatória para leitura rápida por câmeras
+          const totalModules = moduleCount + quietZone * 2;
+
+          const baseSize = 1024; // Resolução nítida para colar em Word/Docs e imprimir
+          const moduleSize = baseSize / totalModules;
+          const captionText = state.caption.trim();
+          const captionHeight = captionText ? 110 : 0;
+
+          const canvas = elements.qrCanvas;
+          canvas.width = baseSize;
+          canvas.height = baseSize + captionHeight;
+
+          const ctx = canvas.getContext('2d');
+
+          // Fundo sólido
+          ctx.fillStyle = state.bgColor;
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+          // Desenho dos módulos escuros
+          ctx.fillStyle = state.fgColor;
+          const radius = state.dotStyle === 'rounded' ? moduleSize * 0.36 : 0;
+
+          for (let row = 0; row < moduleCount; row++) {
+            for (let col = 0; col < moduleCount; col++) {
+              if (qr.isDark(row, col)) {
+                const x = (col + quietZone) * moduleSize;
+                const y = (row + quietZone) * moduleSize;
+
+                if (state.dotStyle === 'rounded') {
+                  // Pequeno espaçamento sutil para estética moderna mantendo leitura 100% confiável
+                  const inset = moduleSize * 0.06;
+                  drawRoundedRect(ctx, x + inset, y + inset, moduleSize - inset * 2, moduleSize - inset * 2, radius);
+                } else {
+                  // Sobreposição mínima de 0.4px evita linhas fantasma sub-pixel em PDFs
+                  ctx.fillRect(x, y, moduleSize + 0.4, moduleSize + 0.4);
+                }
+              }
+            }
+          }
+
+          // Renderiza legenda opcional na parte inferior da imagem
+          if (captionText) {
+            ctx.fillStyle = state.fgColor;
+            ctx.font = '600 42px Inter, system-ui, -apple-system, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(captionText, baseSize / 2, baseSize + captionHeight / 2 - 12, baseSize - 96);
+          }
+
+          // Sincroniza imagem visível para cópia nativa e pré-visualização
+          const dataUrl = canvas.toDataURL('image/png');
+          elements.qrPreviewImg.src = dataUrl;
+          elements.modalQrImg.src = dataUrl;
+        } catch (error) {
+          console.error('Erro ao gerar QR Code:', error);
+          showToast('O texto é muito longo para este nível de correção. Tente resumir ou mudar para "Compacto".', 'warning');
+        }
+      }
+
+      /**
+       * Copia a imagem PNG do QR Code diretamente para a área de transferência
+       */
+      async function copyQRImageToClipboard() {
+        const canvas = elements.qrCanvas;
+
+        try {
+          if (!navigator.clipboard || typeof ClipboardItem === 'undefined') {
+            throw new Error('ClipboardItem não suportado neste contexto.');
+          }
+
+          const blob = await new Promise((resolve, reject) => {
+            canvas.toBlob((b) => (b ? resolve(b) : reject(new Error('Falha ao gerar blob PNG'))), 'image/png');
+          });
+
+          await navigator.clipboard.write([
+            new ClipboardItem({ 'image/png': blob }),
+          ]);
+
+          showToast('Imagem do QR Code copiada! Cole no seu documento com Ctrl + V.', 'success');
+        } catch (err) {
+          console.warn('Fallback para cópia manual de imagem:', err);
+          elements.fallbackModal.classList.remove('hidden');
+        }
+      }
+
+      /**
+       * Faz download da imagem PNG em alta resolução
+       */
+      function downloadQRCodePng() {
+        const link = document.createElement('a');
+        const safeCaption = state.caption
+          .trim()
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/^-|-$/g, '');
+        const filename = safeCaption ? `qrcode-${safeCaption}.png` : `qrcode-${state.activeTab}.png`;
+
+        link.download = filename;
+        link.href = elements.qrCanvas.toDataURL('image/png');
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        showToast(`Arquivo "${filename}" baixado com sucesso!`, 'success');
+      }
+
+      /**
+       * Alterna entre as abas (Texto, Link, Wi-Fi, WhatsApp, E-mail)
+       */
+      function switchTab(tabName) {
+        state.activeTab = tabName;
+
+        elements.tabBtns.forEach((btn) => {
+          const isSelected = btn.dataset.tab === tabName;
+          if (isSelected) {
+            btn.className = 'tab-btn flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-sm font-medium transition-all cursor-pointer bg-indigo-600 text-white shadow-sm';
+          } else {
+            btn.className = 'tab-btn flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-sm font-medium transition-all cursor-pointer bg-white text-slate-600 hover:bg-slate-100 border border-slate-200/80';
+          }
+        });
+
+        elements.tabPanels.forEach((panel) => {
+          panel.classList.toggle('hidden', panel.id !== `panel-${tabName}`);
+        });
+
+        renderQRCode();
+      }
+
+      // --- Registro de Eventos ---
+
+      // Abas
+      elements.tabBtns.forEach((btn) => {
+        btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+      });
+
+      // Entradas de texto em tempo real
+      const liveInputs = [
+        elements.inputText,
+        elements.inputUrl,
+        elements.inputWifiSsid,
+        elements.inputWifiPass,
+        elements.inputWifiEnc,
+        elements.inputWaPhone,
+        elements.inputWaMsg,
+        elements.inputEmailTo,
+        elements.inputEmailSubject,
+        elements.inputEmailBody,
+      ];
+
+      liveInputs.forEach((el) => {
+        el.addEventListener('input', renderQRCode);
+        el.addEventListener('change', renderQRCode);
+      });
+
+      // Botões específicos da aba Texto
+      elements.btnClearText.addEventListener('click', () => {
+        elements.inputText.value = '';
+        elements.inputText.focus();
+        renderQRCode();
+      });
+
+      elements.btnCopyInputText.addEventListener('click', () => {
+        copyTextToMemory(elements.inputText.value, 'Texto copiado na memória! Use Ctrl+V para colar.');
+      });
+
+      elements.btnGenerateAndCopyText.addEventListener('click', () => {
+        renderQRCode();
+        copyTextToMemory(elements.inputText.value, 'QR Code gerado e texto copiado para a memória!');
+      });
+
+      // Atalhos da aba Link
+      elements.prefixBtns.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const prefix = btn.dataset.prefix;
+          const current = elements.inputUrl.value.trim();
+          if (!current.startsWith(prefix)) {
+            elements.inputUrl.value = prefix + current.replace(/^https?:\/\//i, '');
+            renderQRCode();
+          }
+          elements.inputUrl.focus();
+        });
+      });
+
+      elements.btnCopyUrlText.addEventListener('click', () => {
+        const payload = getPayload();
+        copyTextToMemory(payload.data, 'Link copiado para a memória!');
+      });
+
+      // Personalização
+      elements.inputCaption.addEventListener('input', (e) => {
+        state.caption = e.target.value;
+        renderQRCode();
+      });
+
+      elements.colorPresets.forEach((preset) => {
+        preset.addEventListener('click', () => {
+          state.fgColor = preset.dataset.fg;
+          state.bgColor = preset.dataset.bg;
+          elements.inputFgColor.value = state.fgColor;
+
+          elements.colorPresets.forEach((p) => p.classList.remove('ring-2', 'ring-offset-2', 'ring-indigo-500'));
+          preset.classList.add('ring-2', 'ring-offset-2', 'ring-indigo-500');
+          renderQRCode();
+        });
+      });
+
+      elements.inputFgColor.addEventListener('input', (e) => {
+        state.fgColor = e.target.value;
+        elements.colorPresets.forEach((p) => p.classList.remove('ring-2', 'ring-offset-2', 'ring-indigo-500'));
+        renderQRCode();
+      });
+
+      elements.selectDotStyle.addEventListener('change', (e) => {
+        state.dotStyle = e.target.value;
+        renderQRCode();
+      });
+
+      elements.selectEcc.addEventListener('change', (e) => {
+        state.ecc = e.target.value;
+        renderQRCode();
+      });
+
+      elements.btnResetStyle.addEventListener('click', () => {
+        state.fgColor = '#0f172a';
+        state.bgColor = '#ffffff';
+        state.dotStyle = 'square';
+        state.ecc = 'H';
+        state.caption = '';
+
+        elements.inputCaption.value = '';
+        elements.inputFgColor.value = '#0f172a';
+        elements.selectDotStyle.value = 'square';
+        elements.selectEcc.value = 'H';
+
+        elements.colorPresets.forEach((p, idx) => {
+          p.classList.toggle('ring-2', idx === 0);
+          p.classList.toggle('ring-offset-2', idx === 0);
+          p.classList.toggle('ring-indigo-500', idx === 0);
+        });
+
+        renderQRCode();
+        showToast('Estilo restaurado para o padrão de impressão.', 'info');
+      });
+
+      // Ações Principais (Copiar Imagem, Baixar PNG, Copiar Conteúdo)
+      elements.btnCopyImage.addEventListener('click', copyQRImageToClipboard);
+      elements.btnDownloadPng.addEventListener('click', downloadQRCodePng);
+      elements.btnCopyPayload.addEventListener('click', () => {
+        const payload = getPayload();
+        copyTextToMemory(payload.data, 'Conteúdo copiado para a memória!');
+      });
+
+      // Controles do Modal Auxiliar
+      elements.btnCloseModal.addEventListener('click', () => {
+        elements.fallbackModal.classList.add('hidden');
+      });
+
+      elements.fallbackModal.addEventListener('click', (e) => {
+        if (e.target === elements.fallbackModal) {
+          elements.fallbackModal.classList.add('hidden');
+        }
+      });
+
+      elements.btnModalDownload.addEventListener('click', () => {
+        downloadQRCodePng();
+        elements.fallbackModal.classList.add('hidden');
+      });
+
+      // Renderização inicial ao carregar a página
+      window.addEventListener('DOMContentLoaded', renderQRCode);
+      if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        renderQRCode();
+      }
+    })();
+  </script>
+</body>
+</html>
