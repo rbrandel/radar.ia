@@ -1,0 +1,169 @@
+{
+  "lancamentos": [
+    {
+      "d": "2026-11-19",
+      "n": "Hy4 Flash",
+      "o": "Tencent",
+      "c": "modelos",
+      "p": "dev",
+      "l": "nao-informada",
+      "s": "Modelo de mistura de especialistas da Tencent com pesos para baixar: 220 bilhões de parâmetros no total e cerca de 12 bilhões ativos por token. Aceita texto e imagem, gera texto e tem contexto de 1 milhão de tokens. Os pesos estão no Hugging Face, no ModelScope e no GitCode, nas versões instruct, FP8 e base, e há uma versão GGUF para apps compatíveis com llama.cpp.",
+      "a": "A licença é a Tencent Hy License, própria da Tencent: leia o arquivo LICENSE antes de usar em produto. A página não informa a GPU necessária nem a data de lançamento; a data acima é a da notícia da abertura dos pesos. Os comparativos são da própria Tencent.",
+      "t": "Confira primeiro os requisitos de memória, porque a página não informa a GPU necessária. Com uma máquina de várias GPUs, rode a versão FP8 com vLLM ou SGLang, como nos exemplos da página. Teste um pedido seu com texto e imagem e compare o resultado com o modelo que você usa hoje.",
+      "f": {
+        "n": "Hugging Face (Tencent)",
+        "u": "https://huggingface.co/tencent/Hy4-flash"
+      }
+    },
+    {
+      "d": "2026-11-19",
+      "n": "GPT-Live-1.1",
+      "o": "OpenAI",
+      "c": "voz",
+      "p": "dev",
+      "l": "nao-informada",
+      "s": "Modelo de voz da OpenAI que ouve enquanto fala, para conversas em vários idiomas. Segundo a página do modelo, transcreve a fala com mais precisão e mantém sotaque e voz mais consistentes entre idiomas do que o GPT-Live-1. Aceita streaming e chamada de funções e permite delegar ao backend as tarefas que exigem raciocínio ou ferramentas. Está na API como gpt-live-1.1.",
+      "a": "A sessão ativa custa US$ 0,05 por minuto. O modo em espera, que vale em sessões WebRTC enquanto a inferência está pausada, custa US$ 0,02 por minuto. O uso do modelo de backend e das ferramentas é cobrado à parte. A página não traz data nem lista de idiomas.",
+      "t": "Monte uma sessão de teste com um roteiro curto no idioma que você usa. Peça que o agente repita um número de pedido e um código soletrado, e troque de idioma no meio da conversa para ver se sotaque e voz se mantêm. Deixe a sessão em silêncio por alguns minutos e compare o custo ativo com o de espera.",
+      "f": {
+        "n": "OpenAI (documentação)",
+        "u": "https://developers.openai.com/api/docs/models/gpt-live-1.1"
+      }
+    },
+    {
+      "d": "2026-11-18",
+      "n": "GPT-6.2 Astra e GPT-6.2 Sol",
+      "o": "OpenAI",
+      "c": "modelos",
+      "p": "dev",
+      "l": "nao-informada",
+      "s": "Dois modelos novos da OpenAI. O Astra é indicado para os projetos mais difíceis, e o Sol, para o trabalho do dia a dia, sucedendo o GPT-6.1 Sol. Estão no ChatGPT Work e no Codex para usuários Plus, Pro, Enterprise e Edu e na API, como gpt-6.2-astra e gpt-6.2-sol, ambos com o modo Ultrafast.",
+      "a": "Na API, o Astra custa US$ 8 por milhão de tokens de entrada e US$ 40 de saída; o Sol, US$ 2 e US$ 10. Os comparativos da página são da própria OpenAI, e ela não informa o tamanho do contexto. A página não traz data; a de 18/11 vem da cobertura do lançamento.",
+      "t": "Escolha de 5 a 10 pedidos reais seus, como corrigir um bug ou resumir um contrato, e rode os mesmos no Sol e no modelo que você usa hoje. Anote acertos, tokens gastos e custo por tarefa. Teste o Astra só onde o Sol falhar, porque ele custa quatro vezes mais por token.",
+      "f": {
+        "n": "OpenAI",
+        "u": "https://openai.com/index/introducing-gpt-6-2-astra-sol"
+      }
+    },
+    {
+      "d": "2026-11-18",
+      "n": "Gemini 4 Neon",
+      "o": "Google",
+      "c": "modelos",
+      "p": "dev",
+      "l": "nao-informada",
+      "s": "Modelo intermediário da família Gemini 4, entre o Carbon, para os projetos longos mais difíceis, e o Hydrogen, para a execução rápida do dia a dia. Tem contexto de 1 milhão de tokens. Está no Google AI Studio, na API Gemini paga, no Antigravity e no app Gemini para assinantes Google AI Pro e Ultra, e no Gemini for business.",
+      "a": "Na API, custa US$ 3 por milhão de tokens de entrada e US$ 15 de saída. Segundo o Google, custa 32% menos por tarefa que o Carbon no nível de raciocínio alto, que é o padrão. Os rankings e os resultados de testes citados na página são do próprio Google.",
+      "t": "No Google AI Studio, pegue uma tarefa de programação que você já fez e rode o mesmo pedido no Neon e no Hydrogen. Compare tempo, tokens gastos e acerto e estime o custo por tarefa com o preço de cada um (US$ 3 e US$ 15 no Neon). Use o resultado para decidir quando o Hydrogen basta.",
+      "f": {
+        "n": "Google (blog)",
+        "u": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-neon/"
+      }
+    },
+    {
+      "d": "2026-11-18",
+      "n": "Atlas AI e séries temporais (versão Q4 2026)",
+      "o": "Cognite",
+      "c": "agentes",
+      "p": "negocios",
+      "l": "nao-informada",
+      "s": "Versão do quarto trimestre da plataforma de dados industriais da Cognite, centrada no Atlas AI. Traz um novo agente padrão, em prévia privada, que responde sobre a frota de ativos e entrega relatórios e arquivos, e um agente com \"computador\" que analisa diagramas P&ID e imagens e faz cálculos, em prévia pública e só no Azure. Para dados de sensores, chegam séries temporais de estado e preenchimento de lacunas.",
+      "a": "O preenchimento de lacunas reconstrói sinais comprimidos de historiadores na hora da consulta e mantém as falhas de sensor visíveis. Há conector com o Grafana e com o Microsoft Copilot, em prévia pública. A página não informa preço nem licença, e os ganhos de tempo citados são da própria Cognite.",
+      "t": "Escolha um ativo seu com sensor e histórico e teste um recurso que já está em produção, como as séries temporais de estado, que calculam duração, transições e contagem de cada estado. Veja nas notas completas (docs.cognite.com/cdf/whatsnew) o que exige Atlas AI ou Azure antes de planejar o uso.",
+      "f": {
+        "n": "Cognite Hub",
+        "u": "https://hub.cognite.com/product-updates-494/q4-2026-product-release-industrial-intelligence-ready-for-work-7193"
+      }
+    },
+    {
+      "d": "2026-11-17",
+      "n": "Multiagent no Perplexity Computer",
+      "o": "Perplexity",
+      "c": "agentes",
+      "p": "negocios",
+      "l": "nao-informada",
+      "s": "Nível de esforço acima do Ultra no Perplexity Computer, para os trabalhos mais complexos. Um agente líder, o Claude Fable 5.2, planeja a tarefa e distribui partes a até 16 agentes que rodam em paralelo com modelos diferentes, trocam resultados e conferem o trabalho uns dos outros. A equipe padrão reúne Opus 5.5, GPT 6.1 Sol e Gemini 4 Carbon.",
+      "a": "Está disponível para todos os assinantes do Perplexity Max na web. A página não informa o preço nem o consumo de créditos e não traz números de desempenho.",
+      "t": "Se você tem o Perplexity Max, escolha uma tarefa que cruze várias fontes, como comparar fornecedores com preço e prazo, e rode no esforço Ultra e no Multiagent. Compare qualidade, tempo e consumo de créditos e confira cada número do relatório na fonte antes de usar.",
+      "f": {
+        "n": "Perplexity (blog)",
+        "u": "https://www.perplexity.ai/hub/blog/introducing-computer-multiagent"
+      }
+    },
+    {
+      "d": "2026-11-17",
+      "n": "HeyGen Avatar 6",
+      "o": "HeyGen",
+      "c": "video",
+      "p": "criativo",
+      "l": "nao-informada",
+      "s": "Modelo de avatar da HeyGen que gera vídeo de uma pessoa falando a partir de um roteiro ou de um áudio, com gestos que seguem o contexto e o tom da fala. O avatar sai de cerca de 30 segundos de vídeo, e a geração é em 2K. Os avatares pessoais que já existem passam a usar o Avatar 6 sem nova gravação.",
+      "a": "O primeiro vídeo é grátis e sem cartão. Depois o uso é por créditos, com planos a partir de US$ 29 por mês por 600 créditos, segundo a página do modelo. Avatares realistas de pessoas exigem verificação de identidade ao vivo e consentimento. Os testes de realismo são da própria HeyGen.",
+      "t": "Gere o vídeo grátis com um roteiro seu de 30 segundos, sem usar a imagem de outra pessoa sem autorização. Grave o áudio em vez de digitar o texto e veja se os gestos acompanham o tom da fala. Antes de publicar, confira lábios e gestos e decida se vai avisar que o vídeo foi feito com IA.",
+      "f": {
+        "n": "HeyGen",
+        "u": "https://www.heygen.com/models/heygen-avatar-6"
+      }
+    }
+  ],
+  "candidatos_semana": [
+    {
+      "id": "c1",
+      "name": "GPT-6.2 Sol",
+      "org": "OpenAI",
+      "badge": "Modelo para o dia a dia",
+      "url": "https://chatgpt.com",
+      "teste": "Com o plano Plus ou superior, rode de 5 a 10 pedidos seus no Sol e no modelo que você usa hoje e compare acerto e custo."
+    },
+    {
+      "id": "c2",
+      "name": "HeyGen Avatar 6",
+      "org": "HeyGen",
+      "badge": "Vídeo com avatar",
+      "url": "https://www.heygen.com",
+      "teste": "Gere o vídeo grátis com um roteiro seu de 30 segundos e veja se os gestos acompanham o tom da fala."
+    },
+    {
+      "id": "u1",
+      "grupo": "uso",
+      "name": "ChatGPT",
+      "org": "OpenAI",
+      "badge": "OpenAI",
+      "url": "https://chatgpt.com"
+    },
+    {
+      "id": "u2",
+      "grupo": "uso",
+      "name": "Gemini",
+      "org": "Google",
+      "badge": "Google",
+      "url": "https://gemini.google.com"
+    },
+    {
+      "id": "u3",
+      "grupo": "uso",
+      "name": "Microsoft Copilot",
+      "org": "Microsoft",
+      "badge": "Microsoft",
+      "url": "https://copilot.microsoft.com"
+    },
+    {
+      "id": "u4",
+      "grupo": "uso",
+      "name": "Perplexity",
+      "org": "Perplexity",
+      "badge": "Perplexity",
+      "url": "https://www.perplexity.ai"
+    }
+  ],
+  "destaque_uso": {
+    "titulo": "Mais usadas no Brasil",
+    "nota": "A Comscore cita estas plataformas entre as de IA mais acessadas no Brasil no relatório Retrospectiva Digital 2025, com dados de 2025. A ordem aqui é alfabética, sem ranking. O Canva, também citado, fica fora desta votação.",
+    "teste": "Mesmo teste para todas: cole um texto ou uma tabela sua e peça 3 conclusões, cada uma com uma ação. Confira os números no original antes de votar.",
+    "fonte": {
+      "n": "ABC da Comunicação, sobre o relatório da Comscore",
+      "u": "https://www.abcdacomunicacao.com.br/chatgpt-e-gemini-impulsionam-alta-de-176-e-501-nas-visitas-a-ias-no-pais-aponta-relatorio-da-comscore/"
+    },
+    "conferido": "2026-11-13"
+  }
+}

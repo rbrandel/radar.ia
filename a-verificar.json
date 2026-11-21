@@ -19,17 +19,17 @@
     "p": "criativo",
     "l": "nao-informada",
     "s": "Modelo de imagem da MiniMax que gera imagens a partir de texto e edita com até 16 imagens de referência, em até 20 megapixels, com saída em 1K, 2K ou 4K, segundo a Runware, que o hospeda.",
-    "_aviso": "Data conflitante: o llmreference diz 10/11/2026 e o OrcaRouter diz 03/11/2026 para o modelo (10/11 seria só o expansor de prompt). Não achei o comunicado da MiniMax. O OrcaRouter e o llmreference citam pesos abertos no Hugging Face com licença comunitária própria, que exclui UE, Reino Unido, Coreia do Sul e EUA; leia o texto da licença antes de afirmar \"aberto\". Preço na Runware (conferir): US$ 0,016 por imagem em 1K ou 2K no modo padrão. Fonte para completar o campo f: https://runware.ai/minimax-h3-image"
+    "_aviso": "Datas que não fecham: o OrcaRouter diz 03/11, o llmreference diz 10/11, o startupresearcher diz 11/11, e os repositórios no Hugging Face aparecem criados em 08/11 na lista coletada. Não achei o comunicado da MiniMax. O startupresearcher diz que os pesos estão no Hugging Face e que o modelo está na API Platform, no MiniMax Code e no Hailuo AI, mas não informa a licença. O OrcaRouter e o llmreference citam licença comunitária própria, que exclui UE, Reino Unido, Coreia do Sul e EUA: leia o texto da licença antes de afirmar \"aberto\". Preço na Runware (conferir): US$ 0,016 por imagem em 1K ou 2K no modo padrão. Fonte para completar f: https://runware.ai/minimax-h3-image"
   },
   {
-    "d": "2026-11-05",
+    "d": "2026-11-12",
     "n": "Inkling 2 Small",
     "o": "Thinking Machines",
     "c": "modelos",
     "p": "dev",
     "l": "nao-informada",
     "s": "Modelo de mistura de especialistas com 594 bilhões de parâmetros no total e 17 bilhões ativos por token, que aceita texto e imagem. Na Tinker, plataforma de ajuste fino da empresa, custa US$ 0,30 por milhão de tokens de entrada e US$ 1,00 de saída, segundo o letsdatascience.",
-    "_aviso": "Lançado em 05/11, fora da janela desta edição. Em 09/11 os pesos ainda não podiam ser baixados (licença Apache 2.0 planejada, sem data). O resumo do The Neuron de 13/11 diz que os pesos já estão no Hugging Face sob Apache 2.0, citando um post no X que não consegui abrir. Se a página do modelo no Hugging Face confirmar, o item vale como liberação dos pesos, com a data do dia. Fonte para completar f: https://letsdatascience.com/blog/inkling-2-small-30-cents-per-million-tokens-weights-still-locked"
+    "_aviso": "O modelo foi lançado em 05/11, fora da janela, com pesos fechados. O letsdatascience (atualização de 12/11) diz que os pesos já podem ser baixados no Hugging Face, mas a página não confirma a licença final (Apache 2.0 estava prevista). Não consegui abrir a página do modelo no Hugging Face. Se ela confirmar os pesos e a licença, o item vale como liberação dos pesos, com a data de 12/11. Fonte para completar f: https://letsdatascience.com/news/thinking-machines-lab-releases-inkling-2-small-a-594b-moe-mo-2b2a96ce"
   },
   {
     "d": "2026-11-13",
@@ -39,7 +39,7 @@
     "p": "criativo",
     "l": "nao-informada",
     "s": "O The Neuron de 13/11 diz que o Atlas, da World Labs, está aberto a todos, com apps e interfaces para desenvolvedores que reconstroem cenas 3D a partir de imagens e geram vídeos ou ativos de cena 3D.",
-    "_aviso": "Só achei essa menção, que cita um post no X. O Atlas já existia em acesso antecipado desde 01/09/2026. A data acima é a da notícia, não a do anúncio. Confirme no site ou no blog da World Labs a data, o preço e o que mudou antes de usar."
+    "_aviso": "Só achei essa menção, que cita um post no X. O Atlas já existia em acesso antecipado desde 01/09/2026. A data acima é a da notícia, não a do anúncio. Confirme no site ou no blog da World Labs a data, o preço e o que mudou antes de usar. Atualização de 21/11: o AI Daily Digest de 19/11 diz que o Atlas foi lançado em 01/09 segundo as fontes mais sólidas e que a data de 12/11 vem de um agregador e é disputada. Provável descarte."
   },
   {
     "d": "2026-11-13",
@@ -53,13 +53,13 @@
   },
   {
     "d": "2026-11-10",
-    "n": "Muse Ember 1.0 e modelos especializados do Muse",
+    "n": "Modelos especializados do Muse (Active Memory e Active Focus)",
     "o": "Meta",
     "c": "modelos",
     "p": "negocios",
     "l": "nao-informada",
     "s": "O The Neuron de 13/11 descreve versões especializadas dos modelos da Meta, com Active Memory e Active Focus, em liberação no Muse e no Meta AI. Os números de desempenho citados são da própria Meta.",
-    "_aviso": "Não consegui abrir a página da Meta (research.meta.ai). Os rastreadores listam o Muse Ember 1.0 em 09 ou 10/11, sem fonte. Confirme data, nome do modelo e disponibilidade na fonte da Meta."
+    "_aviso": "O Muse Ember em si foi conferido e está no arquivo principal (Digital Trends, 09/11). Este item é só o que o The Neuron de 13/11 descreveu sobre versões especializadas, com Active Memory e Active Focus, e não achei fonte para isso. Confirme nome, data e disponibilidade no blog de pesquisa da Meta antes de usar."
   },
   {
     "d": "2026-11-12",
@@ -70,5 +70,75 @@
     "l": "nao-informada",
     "s": "O The Neuron de 13/11 descreve variantes de prévia do Granite 4.1, de 3B e 8B, treinadas para separar instruções de dados externos por meio de uma marcação própria (LLMON). A própria descrição as chama de experimentais.",
     "_aviso": "Fonte primária (blog da IBM no Hugging Face) não localizada por mim. Falta confirmar data, licença e como testar."
+  },
+  {
+    "d": "2026-11-10",
+    "n": "Nex-N2.6",
+    "o": "Nex AGI",
+    "c": "modelos",
+    "p": "dev",
+    "l": "nao-informada",
+    "s": "Modelo de agente da Nex AGI, reeducado sobre o GLM-5.3-Flash, com cerca de 321 bilhões de parâmetros, indicado para uso de computador, programação e tarefas longas com ferramentas. Tem contexto de 262 mil tokens e aceita texto e imagem. Na listagem do OpenRouter, custa US$ 0,12 por milhão de tokens de entrada e US$ 0,40 de saída.",
+    "_aviso": "Sem fonte primária: não há post de lançamento nem benchmarks do fornecedor, e o repositório no Hugging Face pede autenticação (pesos não públicos), segundo o OrcaRouter. A licença não é informada. A afirmação de menos raciocínio repetitivo e de melhor uso de ferramentas vem do fornecedor e não foi reproduzida por terceiros. O preço aparece com 20% de desconto sobre a tabela. Fonte para completar f: https://openrouter.ai/nex-agi/nex-n2.6"
+  },
+  {
+    "d": "2026-11-17",
+    "n": "MAI Realtime 1",
+    "o": "Microsoft",
+    "c": "voz",
+    "p": "dev",
+    "l": "nao-informada",
+    "s": "Primeiro modelo de fala para fala da Microsoft AI, que processa a voz direto, sem encadear transcrição, texto e síntese. Em prévia limitada, com preço base de US$ 0,01 por minuto de áudio e raciocínio cobrado à parte, segundo o Scalevise.",
+    "_aviso": "A página da Microsoft (microsoft.ai/news/introducing-mai-realtime-1/) não abriu nesta sessão; os dados vêm do Scalevise e do voiceaispace. A prévia é limitada, via MAI Labs, e não informa idiomas. A comparação com o GPT Realtime 2.1 é da Microsoft e não traz números. Confirme data, acesso e preço na página da Microsoft."
+  },
+  {
+    "d": "2026-11-18",
+    "n": "MAI Code 2 e MAI Code 2 Flash",
+    "o": "Microsoft",
+    "c": "modelos",
+    "p": "dev",
+    "l": "nao-informada",
+    "s": "Modelos de programação da Microsoft AI: um para desenvolvimento complexo e o Flash para correções rotineiras, descritos como de menor custo, segundo o The Neuron de 18/11.",
+    "_aviso": "As datas divergem: 17/11 (InfoWorld, via emergent.sh) e 18/11 (The Neuron). A página da Microsoft (microsoft.ai/news/introducing-mai-code-2-and-mai-code-2-flash/) não abriu. Sem preço nem licença."
+  },
+  {
+    "d": "2026-11-19",
+    "n": "Gemini com uso do computador no Mac",
+    "o": "Google",
+    "c": "agentes",
+    "p": "negocios",
+    "l": "nao-informada",
+    "s": "Agente do Gemini que organiza arquivos locais, preenche formulários e opera apps do Mac enquanto a pessoa trabalha. Começa em inglês, para assinantes Google AI Plus, Pro e Ultra nos EUA, segundo o TechCrunch citado pelo The Neuron.",
+    "_aviso": "Só a cobertura (TechCrunch de 19/11, via The Neuron de 20/11); o anúncio do Google não foi aberto. Pela descrição, não vale para o Brasil por enquanto. Confirme no blog do Google."
+  },
+  {
+    "d": "2026-11-18",
+    "n": "ChatGPT for Sales",
+    "o": "OpenAI",
+    "c": "agentes",
+    "p": "negocios",
+    "l": "nao-informada",
+    "s": "Plugin de vendas do ChatGPT, com mais de 30 integrações de parceiros, como Salesforce, HubSpot e Gong, para pesquisar clientes em potencial, preparar apresentações e atualizar o CRM.",
+    "_aviso": "A fonte primária (openai.com/index/introducing-chatgpt-for-sales/) é citada pelo The Neuron de 18/11 e pelo boletim da Trew Knowledge, mas eu não a abri. Plano e disponibilidade no Brasil não confirmados."
+  },
+  {
+    "d": "2026-11-17",
+    "n": "Suno Visuals",
+    "o": "Suno",
+    "c": "video",
+    "p": "criativo",
+    "l": "nao-informada",
+    "s": "Recurso do Suno que transforma músicas em videoclipes de 15 segundos, que podem ser combinados em vídeos mais longos. A geração de vídeo exige créditos pagos adicionais.",
+    "_aviso": "Só a cobertura (Bloomberg de 17/11, via The Neuron de 18/11); o anúncio do Suno não foi aberto. O valor dos créditos não é informado."
+  },
+  {
+    "d": "2026-11-18",
+    "n": "Genie 4 (Project Genie e API Gemini)",
+    "o": "Google DeepMind",
+    "c": "video",
+    "p": "criativo",
+    "l": "nao-informada",
+    "s": "Modelo de mundo do Google DeepMind que cria ambientes interativos em 720p e 24 quadros por segundo, com áudio nativo e controles ao vivo. No Project Genie, está liberado para assinantes Google AI Ultra nos EUA, em computador e Android, e quem assina o Pro entra em lista de espera, segundo o AI Daily Digest de 19/11.",
+    "_aviso": "As fontes divergem: o digest de 19/11 diz que o acesso por API ainda não abriu, e o The Neuron de 20/11 cita uma API do Genie 4 no Gemini API, com post no blog do Google. Não abri nenhuma das páginas do Google. Confirme data, acesso e preço."
   }
 ]
