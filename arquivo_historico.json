@@ -1,5 +1,95 @@
 [
   {
+    "d": "2026-10-27",
+    "n": "Agent Tree",
+    "o": "Não informada",
+    "c": "agentes",
+    "p": "dev",
+    "l": "aberto",
+    "s": "Monitor em terminal, de código aberto, que mostra ao vivo a árvore de tarefas e execução de agentes.",
+    "a": "Melhora observabilidade e debugging de workflows multiagente.",
+    "t": "Aplique em ambientes de agentes, testes e acompanhamento de execução em tempo real.",
+    "f": {
+      "n": "AI Agent Store (semana)",
+      "u": "https://aiagentstore.ai/ai-agent-news/this-week"
+    }
+  },
+  {
+    "d": "2026-10-27",
+    "n": "Identidade e Controle para Agentes",
+    "o": "IBM",
+    "c": "agentes",
+    "p": "negocios",
+    "l": "nao-informada",
+    "s": "Soluções para autenticar, identificar e controlar agentes em ambientes corporativos.",
+    "a": "Garante governança e segurança para automações com múltiplos agentes.",
+    "t": "Use para auditar permissões, identidade e fluxos de decisão em operações corporativas.",
+    "f": {
+      "n": "AI Agents Directory",
+      "u": "https://aiagentsdirectory.com/news/ai-agents-news-brief-october-27-2026"
+    }
+  },
+  {
+    "d": "2026-10-26",
+    "n": "GPT-6.1 Terra",
+    "o": "OpenAI",
+    "c": "modelos",
+    "p": "dev",
+    "l": "nao-informada",
+    "s": "Modelo da OpenAI pensado para ser mais rápido e econômico em visão, escrita e raciocínio multimodal.",
+    "a": "Reduz custo e latência mantendo bom nível de qualidade em uso prático.",
+    "t": "Ideal para copilots, análise de documentos e suporte operacional com visão.",
+    "f": {
+      "n": "AI Agents Directory",
+      "u": "https://aiagentsdirectory.com/news/ai-agents-news-brief-october-27-2026"
+    }
+  },
+  {
+    "d": "2026-10-26",
+    "n": "Bubble Agent 2 e Bubble MCP",
+    "o": "Bubble",
+    "c": "agentes",
+    "p": "dev",
+    "l": "nao-informada",
+    "s": "Agente de IA da Bubble reconstruído com integração MCP em beta para fluxos de desenvolvimento.",
+    "a": "Simplifica integração com ferramentas e contextos externos em apps produtivos.",
+    "t": "Use para conectar IA a plataformas internas com automação contextual.",
+    "f": {
+      "n": "AI Agent Store (semana)",
+      "u": "https://aiagentstore.ai/ai-agent-news/this-week"
+    }
+  },
+  {
+    "d": "2026-10-26",
+    "n": "Joule Work e Joule Studio",
+    "o": "SAP",
+    "c": "agentes",
+    "p": "negocios",
+    "l": "nao-informada",
+    "s": "Expansão do assistente Joule com agentes para execução de fluxos de trabalho e automação de processos.",
+    "a": "Ajuda empresas a transformar processos internos em automações com menor fricção.",
+    "t": "Aplicável em operações, vendas, compras e suporte interno com supervisão humana.",
+    "f": {
+      "n": "AI Agents Directory",
+      "u": "https://aiagentsdirectory.com/news/ai-agents-news-brief-october-27-2026"
+    }
+  },
+  {
+    "d": "2026-10-26",
+    "n": "Siri com IA em novos idiomas",
+    "o": "Apple",
+    "c": "agentes",
+    "p": "negocios",
+    "l": "nao-informada",
+    "s": "Atualização de iOS/macOS que amplia suporte de linguagem para francês, japonês e coreano com IA assistida.",
+    "a": "Expande adoção de assistentes em uso cotidiano para mercados internacionais.",
+    "t": "Use para validar experiência de voz em contexto global e acessibilidade.",
+    "f": {
+      "n": "AI News Today",
+      "u": "https://www.donvitocodes.com/ai-news"
+    }
+  },
+  {
     "d": "2026-10-24",
     "n": "Doubao-Seedance-1.0-pro-fast",
     "o": "ByteDance",
