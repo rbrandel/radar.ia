@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head><script src="https://myhub.ia.br/canvas-vendor/tailwind.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Finanças da Casa — Rodrigo & Cíntia</title>
+<style>
+  :root{
+    --bg:#0B1220; --card:#121B2E; --card2:#182338; --border:rgba(0,229,255,.14);
+    --accent:#00E5FF; --accent-glow:rgba(0,229,255,.35); --accent-dim:rgba(0,229,255,.08);
+    --green:#00FF87; --red:#FF4D6A; --orange:#FF8C42; --yellow:#FFD166;
+    --text:#E8EDF2; --text2:#8A95A3; --muted:#4A5568;
+    --font-display:'Segoe UI',system-ui,sans-serif; --font-mono:'Consolas',monospace;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--bg); color:var(--text);
+    font-family:var(--font-display);
+    background-image:
+      linear-gradient(rgba(0,229,255,.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,229,255,.03) 1px, transparent 1px);
+    background-size:28px 28px;
+    min-height:100vh;
+  }
+  .wrap{max-width:1100px;margin:0 auto;padding:20px;}
+  .hide{display:none !important;}
+
+  /* LOGIN */
+  #loginScreen{
+    min-height:100vh; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:16px;
+  }
+  .loginBox{
+    background:var(--card); border:1px solid var(--border); border-radius:14px; padding:32px;
+    width:100%; max-width:380px; position:relative; overflow:hidden;
+  }
+  .loginBox::before{
+    content:''; position:absolute; top:0; left:0; right:0; height:1px;
+    background:linear-gradient(90deg, transparent, var(--accent), transparent);
+  }
+  .loginBox h1{font-size:20px; margin:0 0 4px; letter-spacing:-.02em;}
+  .loginBox p{color:var(--text2); font-size:13px; margin:0 0 20px;}
+  label{font-family:var(--font-mono); font-size:11px; text-transform:uppercase; letter-spacing:1px; color:var(--text2); display:block; margin-bottom:6px;}
+  input, select{
+    width:100%; background:var(--card2); border:1px solid var(--border); color:var(--text);
+    padding:11px 12px; border-radius:8px; font-size:14px; margin-bottom:14px; font-family:var(--font-display);
+  }
+  input:focus, select:focus{outline:none; border-color:var(--accent);}
+  button{
+    cursor:pointer; border:none; border-radius:8px; font-family:var(--font-mono);
+    font-weight:700; letter-spacing:1px; text-transform:uppercase; font-size:12px;
+  }
+  .btn-primary{
+    background:var(--accent); color:#06121A; padding:12px; width:100%;
+    box-shadow:0 0 18px var(--accent-glow);
+  }
+  .btn-primary:hover{opacity:.88;}
+  .btn-secondary{
+    background:transparent; border:1px solid var(--border); color:var(--text); padding:8px 14px;
+  }
+  .err{color:var(--red); font-size:12px; margin-top:-6px; margin-bottom:10px; display:none;}
+
+  /* HEADER */
+  header{display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; flex-wrap:wrap; gap:10px;}
+  header h1{font-size:22px; margin:0;}
+  header .sub{color:var(--text2); font-size:13px; font-family:var(--font-mono);}
+  .userbar{display:flex; align-items:center; gap:12px;}
+  .userbar span{font-size:13px; color:var(--text2);}
+
+  /* TABS */
+  .tabs{display:flex; gap:8px; margin-bottom:20px; flex-wrap:wrap;}
+  .tab{
+    padding:9px 16px; border-radius:7px; border:1px solid var(--border); background:var(--card);
+    color:var(--text2); font-size:13px; cursor:pointer; font-family:var(--font-mono); letter-spacing:.5px;
+  }
+  .tab.active{background:var(--accent-dim); color:var(--accent); border-color:var(--accent);}
+
+  /* SECTION LABEL */
+  .section-label{
+    display:flex; align-items:center; gap:10px; font-family:var(--font-mono); font-size:11px;
+    text-transform:uppercase; letter-spacing:2px; color:var(--text2); margin:26px 0 14px;
+  }
+  .section-label::after{content:''; flex:1; height:1px; background:var(--border);}
+  .section-label .num{color:var(--accent);}
+
+  /* CARDS GRID */
+  .grid4{display:grid; grid-template-columns:repeat(4,1fr); gap:14px;}
+  .grid3{display:grid; grid-template-columns:repeat(3,1fr); gap:14px;}
+  .grid2{display:grid; grid-template-columns:repeat(2,1fr); gap:14px;}
+  @media (max-width:900px){.grid4{grid-template-columns:repeat(2,1fr);} .grid3{grid-template-columns:repeat(2,1fr);} .grid2{grid-template-columns:1fr;}}
+  @media (max-width:560px){.grid4{grid-template-columns:1fr;}}
+
+  .kpi{
+    background:var(--card); border:1px solid var(--border); border-radius:12px; padding:18px; position:relative; overflow:hidden;
+  }
+  .kpi::before{content:''; position:absolute; top:0; left:0; right:0; height:1px; background:linear-gradient(90deg, transparent, var(--accent), transparent);}
+  .kpi .glow{position:absolute; top:-30px; right:-30px; width:90px; height:90px; border-radius:50%; background:var(--accent); opacity:.08; filter:blur(20px);}
+  .kpi .lbl{font-family:var(--font-mono); font-size:11px; text-transform:uppercase; letter-spacing:1px; color:var(--text2); margin-bottom:8px;}
+  .kpi .val{font-family:var(--font-mono); font-size:26px; font-weight:700;}
+  .kpi .sub{font-size:12px; color:var(--muted); margin-top:4px;}
+  .delta{display:inline-block; padding:2px 7px; border-radius:6px; font-size:11px; font-family:var(--font-mono); margin-top:6px;}
+  .delta.up{background:rgba(255,77,106,.12); color:var(--red);}
+  .delta.down{background:rgba(0,255,135,.12); color:var(--green);}
+
+  .card{background:var(--card); border:1px solid var(--border); border-radius:12px; padding:20px; position:relative;}
+  .card::before{content:''; position:absolute; top:0; left:0; right:0; height:1px; background:linear-gradient(90deg, transparent, var(--accent), transparent); border-radius:12px 12px 0 0;}
+
+  /* PROGRESS */
+  .pbar-track{background:var(--card2); border-radius:6px; height:10px; overflow:hidden; margin-top:8px;}
+  .pbar-fill{height:100%; background:linear-gradient(90deg, var(--accent), var(--green)); border-radius:6px; transition:width .4s;}
+  .pbar-fill.danger{background:linear-gradient(90deg, var(--orange), var(--red));}
+
+  /* TABLE */
+  table{width:100%; border-collapse:collapse; font-size:13px;}
+  th{text-align:left; font-family:var(--font-mono); font-size:11px; text-transform:uppercase; letter-spacing:1px; color:var(--text2); padding:8px 10px; border-bottom:1px solid var(--border);}
+  td{padding:9px 10px; border-bottom:1px solid rgba(255,255,255,.04);}
+  tr:hover td{background:rgba(255,255,255,.02);}
+  .pill{padding:3px 9px; border-radius:6px; font-size:11px; font-family:var(--font-mono); display:inline-block;}
+  .pill.ok{background:rgba(0,255,135,.1); color:var(--green);}
+  .pill.no{background:rgba(255,77,106,.1); color:var(--red);}
+
+  /* FORMS */
+  .formRow{display:grid; grid-template-columns:1fr 1fr 1fr auto; gap:10px; align-items:end;}
+  @media (max-width:800px){.formRow{grid-template-columns:1fr;}}
+  .formRow input, .formRow select{margin-bottom:0;}
+
+  /* GAMIFICATION */
+  .levelBadge{
+    display:flex; align-items:center; gap:14px; background:linear-gradient(135deg, var(--accent-dim), transparent);
+    border:1px solid var(--border); border-radius:12px; padding:18px;
+  }
+  .levelCircle{
+    width:64px; height:64px; border-radius:50%; background:var(--card2); border:2px solid var(--accent);
+    display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:20px; font-weight:700; color:var(--accent);
+    box-shadow:0 0 16px var(--accent-glow); flex-shrink:0;
+  }
+  .achv{
+    display:flex; align-items:center; gap:10px; background:var(--card2); border:1px solid var(--border);
+    border-radius:10px; padding:12px; opacity:.4;
+  }
+  .achv.unlocked{opacity:1; border-color:var(--accent);}
+  .achv .ico{font-size:22px;}
+  .achv .t{font-size:13px; font-weight:600;}
+  .achv .d{font-size:11px; color:var(--text2);}
+
+  .msg{padding:12px 16px; border-radius:8px; font-size:13px; margin-bottom:16px;}
+  .msg.loading{background:var(--card2); color:var(--text2);}
+  .msg.error{background:rgba(255,77,106,.1); color:var(--red); border:1px solid rgba(255,77,106,.25);}
+  .msg.success{background:rgba(0,255,135,.1); color:var(--green); border:1px solid rgba(0,255,135,.25);}
+
+  .footerNote{color:var(--muted); font-size:11px; text-align:center; margin:30px 0 10px; font-family:var(--font-mono);}
+</style>
+</head>
+<body>
+
+<!-- ============ LOGIN ============ -->
+<div id="loginScreen">
+  <div class="loginBox">
+    <h1>🏠 Finanças da Casa</h1>
+    <p>Acesso restrito — Rodrigo &amp; Cíntia</p>
+    <label>Usuário</label>
+    <input id="loginUser" type="text" placeholder="rodrigo ou cintia" autocomplete="username">
+    <label>Senha</label>
+    <input id="loginPass" type="password" placeholder="••••••••" autocomplete="current-password">
+    <div class="err" id="loginErr">Usuário ou senha inválidos.</div>
+    <button class="btn-primary" id="btnLogin">Entrar</button>
+  </div>
+  <p style="color:var(--muted); font-size:11px; font-family:var(--font-mono);">conectado via Google Apps Script</p>
+</div>
+
+<!-- ============ APP ============ -->
+<div class="wrap hide" id="appScreen">
+
+  <header>
+    <div>
+      <h1>🏠 Finanças da Casa</h1>
+      <div class="sub">Acompanhamento familiar — <span id="mesAtualLabel"></span></div>
+    </div>
+    <div class="userbar">
+      <span id="userGreeting"></span>
+      <button class="btn-secondary" id="btnLogout">Sair</button>
+    </div>
+  </header>
+
+  <div id="globalMsg"></div>
+
+  <div class="tabs">
+    <div class="tab active" data-tab="visao">Visão Geral</div>
+    <div class="tab" data-tab="receitas">Receitas</div>
+    <div class="tab" data-tab="despesas">Despesas</div>
+    <div class="tab" data-tab="metas">Metas &amp; Conquistas</div>
+  </div>
+
+  <!-- ===== VISÃO GERAL ===== -->
+  <section id="tab-visao">
+    <div class="grid4" id="kpiRow"></div>
+
+    <div class="section-label"><span class="num">01</span><span>Nível da Família</span></div>
+    <div class="levelBadge">
+      <div class="levelCircle" id="levelNum">1</div>
+      <div style="flex:1">
+        <div style="font-weight:700; font-size:15px;" id="levelTitle">Organizando a Casa</div>
+        <div style="font-size:12px; color:var(--text2); margin-top:2px;" id="levelDesc">Continue registrando para subir de nível</div>
+        <div class="pbar-track"><div class="pbar-fill" id="levelBar" style="width:0%"></div></div>
+      </div>
+      <div style="text-align:right; font-family:var(--font-mono);">
+        <div style="font-size:11px; color:var(--text2);">PONTOS</div>
+        <div style="font-size:20px; font-weight:700; color:var(--accent);" id="pointsVal">0</div>
+      </div>
+    </div>
+
+    <div class="section-label"><span class="num">02</span><span>Gastos por Categoria (mês atual)</span></div>
+    <div class="card">
+      <table id="catTable"><thead><tr><th>Categoria</th><th>Gasto</th><th>% da Renda</th><th></th></tr></thead><tbody></tbody></table>
+    </div>
+  </section>
+
+  <!-- ===== RECEITAS ===== -->
+  <section id="tab-receitas" class="hide">
+    <div class="section-label"><span class="num">01</span><span>Nova Receita</span></div>
+    <div class="card">
+      <div class="formRow">
+        <div><label>Fonte</label>
+          <select id="recFonte">
+            <option>Salário Rodrigo - SENAI</option>
+            <option>Bolsa Rodrigo - UNISUL</option>
+            <option>Salário Cíntia - Ibagy</option>
+            <option>Outra</option>
+          </select>
+        </div>
+        <div><label>Valor (R$)</label><input id="recValor" type="number" step="0.01" placeholder="0,00"></div>
+        <div><label>Data</label><input id="recData" type="date"></div>
+        <button class="btn-primary" id="btnAddReceita">Adicionar</button>
+      </div>
+    </div>
+    <div class="section-label"><span class="num">02</span><span>Histórico de Receitas</span></div>
+    <div class="card">
+      <table id="receitasTable"><thead><tr><th>Data</th><th>Fonte</th><th>Valor</th></tr></thead><tbody></tbody></table>
+    </div>
+  </section>
+
+  <!-- ===== DESPESAS ===== -->
+  <section id="tab-despesas" class="hide">
+    <div class="section-label"><span class="num">01</span><span>Nova Despesa</span></div>
+    <div class="card">
+      <div class="formRow">
+        <div><label>Categoria</label>
+          <select id="despCategoria">
+            <option>Moradia</option>
+            <option>Mercado</option>
+            <option>Alimentação Fora</option>
+            <option>Transporte</option>
+            <option>Saúde</option>
+            <option>Educação</option>
+            <option>Assinaturas</option>
+            <option>Lazer</option>
+            <option>Financiamentos</option>
+            <option>Outros</option>
+          </select>
+        </div>
+        <div><label>Descrição</label><input id="despDesc" type="text" placeholder="Ex: Condomínio"></div>
+        <div><label>Valor (R$)</label><input id="despValor" type="number" step="0.01" placeholder="0,00"></div>
+        <button class="btn-primary" id="btnAddDespesa">Adicionar</button>
+      </div>
+    </div>
+    <div class="section-label"><span class="num">02</span><span>Histórico de Despesas</span></div>
+    <div class="card">
+      <table id="despesasTable"><thead><tr><th>Data</th><th>Categoria</th><th>Descrição</th><th>Valor</th><th>Pago?</th></tr></thead><tbody></tbody></table>
+    </div>
+  </section>
+
+  <!-- ===== METAS ===== -->
+  <section id="tab-metas" class="hide">
+    <div class="section-label"><span class="num">01</span><span>Nova Meta</span></div>
+    <div class="card">
+      <div class="formRow">
+        <div><label>Nome da Meta</label><input id="metaNome" type="text" placeholder="Ex: Reduzir cartão Rodrigo"></div>
+        <div><label>Valor Meta (R$)</label><input id="metaValor" type="number" step="0.01" placeholder="3000"></div>
+        <div><label>Prazo</label><input id="metaPrazo" type="month"></div>
+        <button class="btn-primary" id="btnAddMeta">Criar Meta</button>
+      </div>
+    </div>
+    <div class="section-label"><span class="num">02</span><span>Metas em Andamento</span></div>
+    <div class="grid2" id="metasList"></div>
+
+    <div class="section-label"><span class="num">03</span><span>Conquistas</span></div>
+    <div class="grid3" id="achvList"></div>
+  </section>
+
+  <div class="footerNote">Dados sincronizados com Google Sheets via Apps Script · Atualizado em <span id="lastSync">-</span></div>
+</div>
+
+<script>
+/* =========================================================
+   CONFIGURAÇÃO — cole aqui a URL do seu Web App do Apps Script
+   (Implantar > Nova implantação > Aplicativo da Web)
+   ========================================================= */
+const API_URL = "https://script.google.com/macros/s/AKfycbznLh-a48DvPZ7zmmpssTA6FvjcdVBZPmEIGD6BJzFv-EgvSc9m32jWaxlT_eCYNCHUCg/exec";
+
+/* Sessão fica só em memória (não usa localStorage/cookies) */
+let SESSION = { token: null, user: null };
+let STATE = { receitas: [], despesas: [], metas: [], achievements: [] };
+
+/* ---------- Helpers de API ---------- */
+async function apiCall(action, payload = {}) {
+  let res;
+  try {
+    res = await fetch(API_URL, {
+      method: "POST",
+      redirect: "follow",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({ action, token: SESSION.token, ...payload })
+    });
+  } catch (networkErr) {
+    throw new Error("Falha de rede ao contatar o servidor. Verifique a URL do Apps Script.");
+  }
+  const raw = await res.text();
+  try {
+    return JSON.parse(raw);
+  } catch (parseErr) {
+    throw new Error("Resposta inesperada do servidor (não é JSON). Verifique se a implantação do Apps Script está atualizada.");
+  }
+}
+
+function fmtMoney(v){
+  return "R$ " + (v||0).toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
+}
+
+/* ---------- LOGIN ---------- */
+document.getElementById('btnLogin').addEventListener('click', async () => {
+  const user = document.getElementById('loginUser').value.trim();
+  const pass = document.getElementById('loginPass').value;
+  const errEl = document.getElementById('loginErr');
+  errEl.style.display = 'none';
+
+  if (API_URL.includes("COLE_AQUI")) {
+    errEl.textContent = "Configure a URL do Apps Script no código (API_URL).";
+    errEl.style.display = 'block';
+    return;
+  }
+
+  try {
+    const r = await apiCall('login', { user, pass });
+    if (r.ok) {
+      SESSION.token = r.token;
+      SESSION.user = r.displayName || user;
+      document.getElementById('loginScreen').classList.add('hide');
+      document.getElementById('appScreen').classList.remove('hide');
+      document.getElementById('userGreeting').textContent = "Olá, " + SESSION.user;
+      initApp();
+    } else {
+      errEl.textContent = r.message || "Usuário ou senha inválidos.";
+      errEl.style.display = 'block';
+    }
+  } catch(e) {
+    errEl.textContent = e.message || "Erro de conexão com o servidor.";
+    errEl.style.display = 'block';
+  }
+});
+
+document.getElementById('btnLogout').addEventListener('click', () => {
+  SESSION = { token: null, user: null };
+  document.getElementById('appScreen').classList.add('hide');
+  document.getElementById('loginScreen').classList.remove('hide');
+  document.getElementById('loginUser').value = '';
+  document.getElementById('loginPass').value = '';
+});
+
+/* ---------- TABS ---------- */
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    document.querySelectorAll('section[id^="tab-"]').forEach(s => s.classList.add('hide'));
+    document.getElementById('tab-' + tab.dataset.tab).classList.remove('hide');
+  });
+});
+
+/* ---------- CARREGAR DADOS ---------- */
+async function initApp(){
+  document.getElementById('mesAtualLabel').textContent =
+    new Date().toLocaleDateString('pt-BR', { month:'long', year:'numeric' });
+  document.getElementById('recData').value = new Date().toISOString().slice(0,10);
+  await loadAll();
+}
+
+async function loadAll(){
+  showMsg('loading', 'Carregando dados da planilha...');
+  try{
+    const r = await apiCall('getData');
+    if(!r.ok){ showMsg('error', r.message || 'Erro ao carregar dados'); return; }
+    STATE.receitas = r.receitas || [];
+    STATE.despesas = r.despesas || [];
+    STATE.metas = r.metas || [];
+    STATE.achievements = r.achievements || [];
+    document.getElementById('lastSync').textContent = new Date().toLocaleTimeString('pt-BR');
+    clearMsg();
+    renderAll();
+  }catch(e){
+    showMsg('error', 'Não foi possível conectar ao Apps Script. Verifique a URL e a publicação.');
+  }
+}
+
+function showMsg(type, text){
+  document.getElementById('globalMsg').innerHTML =
+    `<div class="msg ${type}">${text}</div>`;
+}
+function clearMsg(){ document.getElementById('globalMsg').innerHTML = ''; }
+
+/* ---------- RENDER ---------- */
+function currentMonthKey(){
+  const d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0');
+}
+
+function renderAll(){
+  const mk = currentMonthKey();
+  const receitasMes = STATE.receitas.filter(r => (r.data||'').slice(0,7) === mk);
+  const despesasMes = STATE.despesas.filter(d => (d.data||'').slice(0,7) === mk);
+
+  const totalReceita = receitasMes.reduce((s,r)=>s+Number(r.valor||0),0);
+  const totalDespesa = despesasMes.reduce((s,d)=>s+Number(d.valor||0),0);
+  const saldo = totalReceita - totalDespesa;
+  const comprometimento = totalReceita ? (totalDespesa/totalReceita*100) : 0;
+
+  // KPIs
+  document.getElementById('kpiRow').innerHTML = `
+    <div class="kpi"><div class="glow"></div><div class="lbl">Receita do mês</div><div class="val">${fmtMoney(totalReceita)}</div></div>
+    <div class="kpi"><div class="glow"></div><div class="lbl">Despesa do mês</div><div class="val">${fmtMoney(totalDespesa)}</div></div>
+    <div class="kpi"><div class="glow"></div><div class="lbl">Saldo</div><div class="val" style="color:${saldo>=0?'var(--green)':'var(--red)'}">${fmtMoney(saldo)}</div>
+      <span class="delta ${saldo>=0?'down':'up'}">${saldo>=0?'▼ no azul':'▲ no vermelho'}</span></div>
+    <div class="kpi"><div class="glow"></div><div class="lbl">Comprometimento</div><div class="val">${comprometimento.toFixed(1)}%</div>
+      <div class="pbar-track"><div class="pbar-fill ${comprometimento>80?'danger':''}" style="width:${Math.min(comprometimento,100)}%"></div></div></div>
+  `;
+
+  // Categorias
+  const cats = {};
+  despesasMes.forEach(d => { cats[d.categoria] = (cats[d.categoria]||0) + Number(d.valor||0); });
+  const tbody = document.querySelector('#catTable tbody');
+  tbody.innerHTML = Object.entries(cats).sort((a,b)=>b[1]-a[1]).map(([cat,val])=>{
+    const pct = totalReceita ? (val/totalReceita*100) : 0;
+    return `<tr><td>${cat}</td><td>${fmtMoney(val)}</td><td>${pct.toFixed(1)}%</td>
+      <td style="width:120px"><div class="pbar-track"><div class="pbar-fill ${pct>30?'danger':''}" style="width:${Math.min(pct*2,100)}%"></div></div></td></tr>`;
+  }).join('') || '<tr><td colspan="4" style="color:var(--text2)">Nenhuma despesa registrada este mês.</td></tr>';
+
+  // Tabelas receitas/despesas completas
+  document.querySelector('#receitasTable tbody').innerHTML = STATE.receitas
+    .slice().reverse().map(r => `<tr><td>${formatDate(r.data)}</td><td>${r.fonte}</td><td>${fmtMoney(r.valor)}</td></tr>`).join('')
+    || '<tr><td colspan="3" style="color:var(--text2)">Nenhuma receita registrada.</td></tr>';
+
+  document.querySelector('#despesasTable tbody').innerHTML = STATE.despesas
+    .slice().reverse().map(d => `<tr><td>${formatDate(d.data)}</td><td>${d.categoria}</td><td>${d.descricao}</td><td>${fmtMoney(d.valor)}</td>
+      <td><span class="pill ${d.pago ? 'ok' : 'no'}">${d.pago ? 'Pago' : 'Pendente'}</span></td></tr>`).join('')
+    || '<tr><td colspan="5" style="color:var(--text2)">Nenhuma despesa registrada.</td></tr>';
+
+  renderGamification(totalReceita, totalDespesa, saldo);
+  renderMetas();
+}
+
+function formatDate(iso){
+  if(!iso) return '-';
+  const [y,m,d] = iso.split('-');
+  return d && m && y ? `${d}/${m}/${y}` : iso;
+}
+
+/* ---------- GAMIFICAÇÃO ---------- */
+function renderGamification(receita, despesa, saldo){
+  // Pontuação simples: +10 por registro feito, +50 se saldo positivo no mês, +5 por meta cumprida
+  let points = (STATE.receitas.length + STATE.despesas.length) * 2;
+  if (saldo > 0) points += 50;
+  STATE.metas.forEach(m => { if (Number(m.atual) >= Number(m.valor)) points += 100; });
+
+  const levels = [
+    {min:0, title:"Organizando a Casa", desc:"Continue registrando para subir de nível"},
+    {min:100, title:"No Controle", desc:"Vocês já têm visibilidade dos gastos"},
+    {min:250, title:"Equilíbrio Financeiro", desc:"Mês no azul é cada vez mais comum"},
+    {min:500, title:"Construtores de Reserva", desc:"Hora de pensar em investir o excedente"},
+    {min:1000, title:"Mestres do Orçamento", desc:"Nível máximo — parabéns pela consistência!"}
+  ];
+  let levelIdx = 0;
+  levels.forEach((l,i) => { if (points >= l.min) levelIdx = i; });
+  const level = levels[levelIdx];
+  const next = levels[levelIdx+1];
+  const pct = next ? ((points-level.min)/(next.min-level.min))*100 : 100;
+
+  document.getElementById('levelNum').textContent = levelIdx+1;
+  document.getElementById('levelTitle').textContent = level.title;
+  document.getElementById('levelDesc').textContent = level.desc;
+  document.getElementById('levelBar').style.width = pct + '%';
+  document.getElementById('pointsVal').textContent = points;
+
+  const achievements = [
+    {id:'first_entry', ico:'📝', t:'Primeiro Registro', d:'Registrou a primeira movimentação', unlocked: (STATE.receitas.length+STATE.despesas.length)>0},
+    {id:'positive_month', ico:'💚', t:'Mês no Azul', d:'Terminou o mês com saldo positivo', unlocked: saldo>0},
+    {id:'ten_entries', ico:'🔥', t:'Hábito Formado', d:'10+ lançamentos registrados', unlocked: (STATE.receitas.length+STATE.despesas.length)>=10},
+    {id:'goal_created', ico:'🎯', t:'Primeira Meta', d:'Criou sua primeira meta financeira', unlocked: STATE.metas.length>0},
+    {id:'goal_done', ico:'🏆', t:'Meta Batida', d:'Concluiu uma meta financeira', unlocked: STATE.metas.some(m=>Number(m.atual)>=Number(m.valor))},
+    {id:'team', ico:'🤝', t:'Time Alinhado', d:'Rodrigo e Cíntia lançaram dados no mesmo mês', unlocked: true}
+  ];
+  document.getElementById('achvList').innerHTML = achievements.map(a => `
+    <div class="achv ${a.unlocked?'unlocked':''}">
+      <div class="ico">${a.ico}</div>
+      <div><div class="t">${a.t}</div><div class="d">${a.d}</div></div>
+    </div>`).join('');
+}
+
+function renderMetas(){
+  document.getElementById('metasList').innerHTML = STATE.metas.map(m => {
+    const pct = Math.min((Number(m.atual||0)/Number(m.valor||1))*100, 100);
+    return `<div class="card">
+      <div style="display:flex; justify-content:space-between; align-items:baseline;">
+        <div style="font-weight:700;">${m.nome}</div>
+        <div style="font-family:var(--font-mono); color:var(--accent);">${pct.toFixed(0)}%</div>
+      </div>
+      <div style="font-size:12px; color:var(--text2); margin-top:4px;">
+        ${fmtMoney(m.atual)} de ${fmtMoney(m.valor)} · prazo ${m.prazo || '-'}
+      </div>
+      <div class="pbar-track"><div class="pbar-fill" style="width:${pct}%"></div></div>
+    </div>`;
+  }).join('') || '<div style="color:var(--text2)">Nenhuma meta criada ainda.</div>';
+}
+
+/* ---------- FORMULÁRIOS ---------- */
+document.getElementById('btnAddReceita').addEventListener('click', async () => {
+  const fonte = document.getElementById('recFonte').value;
+  const valor = document.getElementById('recValor').value;
+  const data = document.getElementById('recData').value;
+  if(!valor || !data) return;
+  showMsg('loading','Salvando...');
+  const r = await apiCall('addReceita', { fonte, valor, data });
+  if(r.ok){ showMsg('success','Receita adicionada!'); document.getElementById('recValor').value=''; await loadAll(); }
+  else showMsg('error', r.message || 'Erro ao salvar.');
+});
+
+document.getElementById('btnAddDespesa').addEventListener('click', async () => {
+  const categoria = document.getElementById('despCategoria').value;
+  const descricao = document.getElementById('despDesc').value;
+  const valor = document.getElementById('despValor').value;
+  if(!valor || !descricao) return;
+  showMsg('loading','Salvando...');
+  const r = await apiCall('addDespesa', { categoria, descricao, valor, data: new Date().toISOString().slice(0,10) });
+  if(r.ok){ showMsg('success','Despesa adicionada!'); document.getElementById('despDesc').value=''; document.getElementById('despValor').value=''; await loadAll(); }
+  else showMsg('error', r.message || 'Erro ao salvar.');
+});
+
+document.getElementById('btnAddMeta').addEventListener('click', async () => {
+  const nome = document.getElementById('metaNome').value;
+  const valor = document.getElementById('metaValor').value;
+  const prazo = document.getElementById('metaPrazo').value;
+  if(!nome || !valor) return;
+  showMsg('loading','Criando meta...');
+  const r = await apiCall('addMeta', { nome, valor, prazo });
+  if(r.ok){ showMsg('success','Meta criada!'); document.getElementById('metaNome').value=''; document.getElementById('metaValor').value=''; await loadAll(); }
+  else showMsg('error', r.message || 'Erro ao salvar.');
+});
+</script>
+</body>
+</html>
