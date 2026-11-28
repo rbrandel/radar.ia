@@ -291,34 +291,23 @@
 
 <script>
 /* =========================================================
-   CONFIGURAÇÃO — cole aqui a URL do seu Web App do Apps Script
-   (Implantar > Nova implantação > Aplicativo da Web)
+   COMUNICAÇÃO COM O BACKEND
+   Este HTML agora é servido pelo próprio Apps Script (doGet),
+   então usamos google.script.run — sem fetch, sem CORS.
    ========================================================= */
-const API_URL = "https://script.google.com/macros/s/AKfycbznLh-a48DvPZ7zmmpssTA6FvjcdVBZPmEIGD6BJzFv-EgvSc9m32jWaxlT_eCYNCHUCg/exec";
 
 /* Sessão fica só em memória (não usa localStorage/cookies) */
 let SESSION = { token: null, user: null };
 let STATE = { receitas: [], despesas: [], metas: [], achievements: [] };
 
-/* ---------- Helpers de API ---------- */
-async function apiCall(action, payload = {}) {
-  let res;
-  try {
-    res = await fetch(API_URL, {
-      method: "POST",
-      redirect: "follow",
-      headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify({ action, token: SESSION.token, ...payload })
-    });
-  } catch (networkErr) {
-    throw new Error("Falha de rede ao contatar o servidor. Verifique a URL do Apps Script.");
-  }
-  const raw = await res.text();
-  try {
-    return JSON.parse(raw);
-  } catch (parseErr) {
-    throw new Error("Resposta inesperada do servidor (não é JSON). Verifique se a implantação do Apps Script está atualizada.");
-  }
+/* Promisifica google.script.run para usar com async/await */
+function runServer(fnName, ...args) {
+  return new Promise((resolve, reject) => {
+    google.script.run
+      .withSuccessHandler(resolve)
+      .withFailureHandler(err => reject(new Error(err.message || "Erro de comunicação com o servidor.")))
+      [fnName](...args);
+  });
 }
 
 function fmtMoney(v){
@@ -332,14 +321,8 @@ document.getElementById('btnLogin').addEventListener('click', async () => {
   const errEl = document.getElementById('loginErr');
   errEl.style.display = 'none';
 
-  if (API_URL.includes("COLE_AQUI")) {
-    errEl.textContent = "Configure a URL do Apps Script no código (API_URL).";
-    errEl.style.display = 'block';
-    return;
-  }
-
   try {
-    const r = await apiCall('login', { user, pass });
+    const r = await runServer('apiLogin', user, pass);
     if (r.ok) {
       SESSION.token = r.token;
       SESSION.user = r.displayName || user;
@@ -386,7 +369,7 @@ async function initApp(){
 async function loadAll(){
   showMsg('loading', 'Carregando dados da planilha...');
   try{
-    const r = await apiCall('getData');
+    const r = await runServer('apiGetData', SESSION.token);
     if(!r.ok){ showMsg('error', r.message || 'Erro ao carregar dados'); return; }
     STATE.receitas = r.receitas || [];
     STATE.despesas = r.despesas || [];
@@ -396,7 +379,7 @@ async function loadAll(){
     clearMsg();
     renderAll();
   }catch(e){
-    showMsg('error', 'Não foi possível conectar ao Apps Script. Verifique a URL e a publicação.');
+    showMsg('error', e.message || 'Não foi possível conectar ao servidor.');
   }
 }
 
@@ -464,7 +447,7 @@ function formatDate(iso){
 
 /* ---------- GAMIFICAÇÃO ---------- */
 function renderGamification(receita, despesa, saldo){
-  // Pontuação simples: +10 por registro feito, +50 se saldo positivo no mês, +5 por meta cumprida
+  // Pontuação simples: +2 por registro feito, +50 se saldo positivo no mês, +100 por meta cumprida
   let points = (STATE.receitas.length + STATE.despesas.length) * 2;
   if (saldo > 0) points += 50;
   STATE.metas.forEach(m => { if (Number(m.atual) >= Number(m.valor)) points += 100; });
@@ -526,9 +509,11 @@ document.getElementById('btnAddReceita').addEventListener('click', async () => {
   const data = document.getElementById('recData').value;
   if(!valor || !data) return;
   showMsg('loading','Salvando...');
-  const r = await apiCall('addReceita', { fonte, valor, data });
-  if(r.ok){ showMsg('success','Receita adicionada!'); document.getElementById('recValor').value=''; await loadAll(); }
-  else showMsg('error', r.message || 'Erro ao salvar.');
+  try {
+    const r = await runServer('apiAddReceita', SESSION.token, { fonte, valor, data });
+    if(r.ok){ showMsg('success','Receita adicionada!'); document.getElementById('recValor').value=''; await loadAll(); }
+    else showMsg('error', r.message || 'Erro ao salvar.');
+  } catch(e) { showMsg('error', e.message || 'Erro ao salvar.'); }
 });
 
 document.getElementById('btnAddDespesa').addEventListener('click', async () => {
@@ -537,9 +522,11 @@ document.getElementById('btnAddDespesa').addEventListener('click', async () => {
   const valor = document.getElementById('despValor').value;
   if(!valor || !descricao) return;
   showMsg('loading','Salvando...');
-  const r = await apiCall('addDespesa', { categoria, descricao, valor, data: new Date().toISOString().slice(0,10) });
-  if(r.ok){ showMsg('success','Despesa adicionada!'); document.getElementById('despDesc').value=''; document.getElementById('despValor').value=''; await loadAll(); }
-  else showMsg('error', r.message || 'Erro ao salvar.');
+  try {
+    const r = await runServer('apiAddDespesa', SESSION.token, { categoria, descricao, valor, data: new Date().toISOString().slice(0,10) });
+    if(r.ok){ showMsg('success','Despesa adicionada!'); document.getElementById('despDesc').value=''; document.getElementById('despValor').value=''; await loadAll(); }
+    else showMsg('error', r.message || 'Erro ao salvar.');
+  } catch(e) { showMsg('error', e.message || 'Erro ao salvar.'); }
 });
 
 document.getElementById('btnAddMeta').addEventListener('click', async () => {
@@ -548,9 +535,11 @@ document.getElementById('btnAddMeta').addEventListener('click', async () => {
   const prazo = document.getElementById('metaPrazo').value;
   if(!nome || !valor) return;
   showMsg('loading','Criando meta...');
-  const r = await apiCall('addMeta', { nome, valor, prazo });
-  if(r.ok){ showMsg('success','Meta criada!'); document.getElementById('metaNome').value=''; document.getElementById('metaValor').value=''; await loadAll(); }
-  else showMsg('error', r.message || 'Erro ao salvar.');
+  try {
+    const r = await runServer('apiAddMeta', SESSION.token, { nome, valor, prazo });
+    if(r.ok){ showMsg('success','Meta criada!'); document.getElementById('metaNome').value=''; document.getElementById('metaValor').value=''; await loadAll(); }
+    else showMsg('error', r.message || 'Erro ao salvar.');
+  } catch(e) { showMsg('error', e.message || 'Erro ao salvar.'); }
 });
 </script>
 </body>
